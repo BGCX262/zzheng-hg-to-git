@@ -1,0 +1,166 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if activity_form %}
+
+  <div>
+
+    <form id="activity-form" class="xl-form" action="." method="POST">
+
+      <div class="field">
+        <div class="label">Title: *</div>
+        <div class="input required">{{ activity_form.title|safe }}</div>
+        {% if activity_form.title.errors %}
+          <div class="error-list">{{ activity_form.title.errors|safe }}</div>
+        {% endif %}
+        <div class="help-text">Give a brief summary of the activity.</div>
+      </div>
+
+      <div class="field">
+        <div class="label">Content: *</div>
+        <div class="input required">{{ activity_form.content|safe }}</div>
+        {% if activity_form.content.errors %}
+          <div class="error-list">{{ activity_form.content.errors|safe }}</div>
+        {% endif %}
+        <div class="help-text">Describe the activity in details.</div>
+      </div>
+
+      <div class="field">
+        <div class="label">Date: *</div>
+        <div id="activity-date" class="input required">{{ activity_form.date|safe }}</div>
+        {% if activity_form.date.errors %}
+          <div class="error-list">{{ activity_form.date.errors|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <div class="label">Address:</div>
+        <div id="address" class="input">{{ activity_form.address|safe }}</div>
+        {% if activity_form.address.errors %}
+          <div class="error-list">{{ activity_form.address.errors|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <div class="label">City: *</div>
+        <div id="city" class="input required">{{ activity_form.city|safe }}</div>
+        {% if activity_form.city.errors %}
+          <div class="error-list">{{ activity_form.city.errors|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+
+        <div class="label">Geo Location:</div>
+        <div id="geo-pt" class="hidden">{{ activity_form.geo_pt|safe }}</div>
+        {% if activity_form.geo_pt.errors %}
+          <div class="error-list">{{ activity_form.geo_pt.errors|safe }}</div>
+        {% endif %}
+        <div id="geo-pt-message" class="disabled-value">
+          {% if activity.geo_pt %}
+            Latitude: {{ activity.geo_pt.lat }}, longitude: {{ activity.geo_pt.lon }}.
+          {% else %}
+            Geo position not specified.
+          {% endif %}
+        </div>
+
+        <div class="help-text">
+          <div>
+            <a href="javascript:void(0);" onclick="findInMap();">find the address in map</a>
+          </div>
+          <div id="map" class="hidden">
+            <div id="map-canvas" class="map"></div>
+            <div>
+              <a href="javascript:void(0);" onclick="clearMap();">clear map</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="field">
+        <div class="label">Places:</div>
+        <div class="input">{{ activity_form.places|safe }}</div>
+        {% if activity_form.places.errors %}
+          <div class="error-list">{{ activity_form.places.errors|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <div class="label">Related link:</div>
+        <div class="input">{{ activity_form.related_link|safe }}</div>
+        {% if activity_form.related_link.errors %}
+          <div class="error-list">{{ activity_form.related_link.errors|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <input class="button" type="submit" value="{{ submit_value|escape|default:'Submit' }}"/>
+        &nbsp; or,
+        {% if activity_form.instance %}
+          <a href="{% url friday.view_activity group_uid=group.uid activity_id=activity_form.instance.id %}">
+            return to activity
+          </a>
+        {% else %}
+          <a href="{% url friday.view_all_activities group_uid=group.uid %}">
+            view activities
+          </a>
+        {% endif %}
+      </div>
+
+    </form><!--/#activity-form-->
+
+    <script type="text/javascript">//<![CDATA[
+
+      $(function() {
+        $("#activity-date input").datepicker({
+          showButtonPanel: true,
+          dateFormat: "yy-mm-dd"
+        });
+      });
+
+      function findInMap() {
+        var address = jQuery.trim($("#address :input").val());
+        var city = jQuery.trim($("#city :input").val());
+        if (address == "") {
+          $("#map").hide();
+          $("#geo-pt :input").val("");
+          $("#geo-pt-message").text("Geo position not specified. Please specify an address.");
+        } else {
+          $("#map").show();
+          friday.findInMap(
+            address + ", " + city,
+            "#map-canvas",
+            function(lat, lon) {
+              $("#geo-pt :input").val(lat + "," + lon);
+              $("#geo-pt-message").text("Latitude: " + lat + ", longitude: " + lon + ".");
+            },
+            function(address_not_found) {
+              $("#map").hide();
+              $("#geo-pt :input").val("");
+              $("#geo-pt-message").text("The address you specified cannot be found.");
+            }
+          );
+        }
+      }
+
+      function clearMap() {
+        $("#map").hide();
+        $("#geo-pt :input").val("");
+        $("#geo-pt-message").text("Geo position not specified.");
+      }
+
+    //]]></script>
+
+  </div>
+
+{% endif %}
+
+
+

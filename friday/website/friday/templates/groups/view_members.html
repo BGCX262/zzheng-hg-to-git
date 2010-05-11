@@ -1,0 +1,104 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-22.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Members of {{ group|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block main %}
+
+  <div class="section">
+    <h1>Group members ...</h1>
+  </div>
+
+  <div class="section">
+
+    <table class="table">
+
+      <thead>
+        <tr>
+          <th><span class="nowrap">Name</span></th>
+          <th><span class="nowrap"><a href="?order=user">Email address</a></span></th>
+          <th><span class="nowrap"><a href="?order=-join_date">Join date</a></span></th>
+          <th><span class="nowrap">Role</span></th>
+          {% if group_access.can_moderate %}
+            <th><span class="nowrap">Manage</span></th>
+          {% endif %}
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <!-- pending members ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+        {% for member in group.pending_members %}
+          <tr class="highlighted">
+            <td>
+              <span class="big noswap">
+                <a href="{% url friday.view_profile username=member.username %}">{{ member|escape }}</a>
+              </span>
+            </td>
+            <td><span class="nowrap">{{ member.email|safe_email }}</span></td>
+            <td><span class="nowrap">{{ member.join_date|prettify_datetime }}</span></td>
+            <td><span class="nowrap">pending</span></td>
+            {% if group_access.can_moderate %}
+              <td>
+                <span class="nowrap">
+                  <a href="{% url friday.review_member group_uid=group.uid username=member.username %}">
+                    Review
+                  </a>
+                </span>
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+
+        <!-- approved members ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+        {% for member in members %}
+          <tr>
+            <td>
+              <span class="big noswap">
+                <a href="{% url friday.view_profile username=member.username %}">{{ member|escape }}</a>
+              </span>
+            </td>
+            <td><span class="nowrap">{{ member.email|safe_email }}</span></td>
+            <td><span class="nowrap">{{ member.join_date|prettify_datetime }}</span></td>
+            <td><span class="nowrap">{{ member.role|escape }}</span></td>
+            {% if group_access.can_moderate %}
+              <td>
+                <span class="nowrap">
+                  {% if group_access.can_administrate %}
+                    <a href="{% url friday.edit_member group_uid=group.uid username=member.username %}">
+                      Edit
+                    </a>
+                  {% else %}
+                    --
+                  {% endif %}
+                </span>
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+{% endblock %}
+
+
+

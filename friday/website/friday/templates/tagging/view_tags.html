@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-04.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Tags {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  {% if category %}
+
+    <div class="section">
+      <h2>Tag Cloud ({{ category }}):</h2>
+      <div id="load-tag-cloud"></div>
+      <script type="text/javascript">//<![CDATA[
+        $(function() {
+          $("#load-tag-cloud").load("{% url friday.view_tag_cloud category=category %}");
+        });
+      //]]></script>
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>
+      Tags
+      {% if category %}
+        in category "{{ category|escape }}"
+      {% endif %}
+      ...
+    </h1>
+  </div>
+
+  <div class="section">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th><span class="nowrap">Tag</span></th>
+          <th><span class="nowrap">Category</span></th>
+          <th><span class="nowrap">Count</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tag in tags %}
+          <tr>
+            <td><span class="nowrap">{{ tag.name|escape }}</span></td>
+            <td>
+              <span class="nowrap">
+                <a href="{% url friday.view_tags category=tag.category %}">{{ tag.category }}</a>
+              </span>
+            </td>
+            <td><span class="nowrap">{{ tag.count }}</span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if category %}
+      <div class="table-info">
+        <a href="{% url friday.view_tags %}">View all tags</a>
+      </div>
+    {% endif %}
+
+  </div>
+
+{% endblock %}
+

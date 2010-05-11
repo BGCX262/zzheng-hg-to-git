@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-06.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Code Viewer {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_head %}
+
+  <!-- Google Code Prettify -->
+  <link rel="stylesheet" type="text/css" media="screen,print" href="{{ static_ }}/css/prettify.css"/>
+  <style type="text/css"><!--
+    /* Override Google Code Prettify style. */
+    pre.prettyprint {
+      margin: 4px 0 4px 0;
+      padding: 4px;
+    }
+  --></style>
+  <script src="{{ static_ }}/js/prettify.js" type="text/javascript"></script>
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block main %}
+
+  <!-- path ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+    <h1>
+      <a href="{% url friday.view_code path='' %}">Code Viewer:</a>
+      {% for parent in entry.parents %}
+        <a href="{% url friday.view_code path=parent.path %}">{{ parent.name|escape }}</a> /
+      {% endfor %}
+      {{ entry.name|escape }} {{ entry.is_dir|yesno:"/," }}
+    </h1>
+    {% if not entry.exists %}
+      <p class="code">
+        <img src="{{ static_ }}/images/error.png" alt="Error"/>
+        This file does not exist.
+      </p>
+    {% endif %}
+    {% if entry.is_file %}
+      <p class="code">
+        <img src="{{ static_ }}/images/download.png" alt="Download"/>
+        <a href="?download=true">download this file</a>
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- children ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  {% if entry.children %}
+
+    <div class="section">
+      <table class="table">
+        <thead>
+          <tr>
+            <th><span class="nowrap">Name</span></th>
+            <th><span class="nowrap">Mimetype</span></th>
+            <th><span class="nowrap">Size (bytes)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for child in entry.children %}
+            <tr>
+              <td>
+                <span class="nowrap">
+                  {% if child.is_dir or child.is_file %}
+                    {% if child.is_dir %}
+                      <img src="{{ static_ }}/images/folder.png" alt="Directory"/>
+                    {% else %}
+                      <img src="{{ static_ }}/images/file.png" alt="File"/>
+                    {% endif %}
+                  {% else %}
+                    <img src="{{ static_ }}/images/error.png" alt="Unknown"/>
+                  {% endif %}
+                  <code>
+                    <a href="{% url friday.view_code path=child.path %}">{{ child.name|escape }}</a>
+                  </code>
+                </span>
+              </td>
+              <td>
+                {% if child.mimetype %}
+                  <code class="nowrap">{{ child.mimetype|escape }}</code>
+                {% else %}
+                  <code class="na nowrap">N/A</code>
+                {% endif %}
+              </td>
+              <td><code class="nowrap">{{ child.size|default_if_none:"N/A" }}</code></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% endif %}
+
+  <!-- text content ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  {% if entry.is_text_file %}
+
+    <div class="section">
+      <pre class="prettyprint">{{ entry.content|escape|linebreaksbr }}</pre>
+      <script type="text/javascript">//<![CDATA[
+        $(function() {
+          prettyPrint();
+        });
+      //]]></script>
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+
+

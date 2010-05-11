@@ -1,0 +1,71 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-11.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if dish %}
+
+  <div id="dish-{{ dish.id }}" class="post">
+
+    {% if dish.photo_url %}
+      <div class="right">
+        <img src="{{ dish.photo_url }}" alt="Photo"/>
+      </div>
+    {% endif %}
+
+    <div class="post-head">
+      <a href="#TODO">{{ dish.name|escape }}</a>
+      {% if dish.is_spicy %}
+        <img class="icon" src="{{ static_ }}/images/spicy.png" alt="Spicy"/>
+      {% endif %}
+      {% if dish.is_vegetarian %}
+        <img class="icon" src="{{ static_ }}/images/vegetarian.png" alt="Vegetarian"/>
+      {% endif %}
+      {% if dish.price %}
+        - {{ dish.price|escape }}
+      {% endif %}
+    </div>
+
+    {% if dish.description %}
+      <div class="post-body">{{ dish.description|escape|linebreaks }}</div>
+    {% endif %}
+
+    <div class="post-foot">
+      <img class="icon" src="{{ static_ }}/images/like.png" alt="Like"/>
+      {{ dish.fans.count }} persons like this
+      {% if user_ %}
+        {% for fan in dish.fans %}
+          {% ifequal user_ fan.user %}
+            (including you)
+          {% endifequal %}
+        {% endfor %}
+        &bull;
+        <a href="javascript:void(0);" onclick="likeOrUnlikeDish_{{ dish.id }}();">Like / Un-like</a>
+      {% endif %}
+    </div>
+
+    <div class="clear"></div>
+
+    {% if user_ %}
+      <script type="text/javascript">//<![CDATA[
+        function likeOrUnlikeDish_{{ dish.id }}() {
+          $.post(
+            "{% url friday.like_or_unlike_dish resto_uid=resto.uid dish_id=dish.id %}",
+            function(data) {
+              $("#dish-{{ dish.id }}").after(data).remove();
+            }
+          );
+        }
+      //]]></script>
+    {% endif %}
+
+  </div>
+
+{% endif %}
+
+
+

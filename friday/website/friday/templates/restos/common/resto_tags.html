@@ -1,0 +1,70 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-04-28.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+<div id="resto-tags" class="ajax-box">
+
+  {% if resto and resto.tags %}
+
+    <div class="tags">
+      <ul>
+        {% for tag in resto.tags %}
+          <li id="tag-{{ tag|uniqueid }}">
+            <img class="icon" src="{{ static_ }}/images/tag.png" alt="Tag"/>
+            <a href="{% url friday.view_restos_by_tag %}?tag_name={{ tag|urlencode }}">{{ tag|escape }}</a>
+            {% if resto_access.can_edit %}
+              <a class="remove-tag" href="javascript:void(0);" onclick="removeRestoTag('#tag-{{ tag|uniqueid }}', '{{ tag|escape }}');">x</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    {% if resto_access.can_edit %}
+      <script type="text/javascript">//<![CDATA[
+        function removeRestoTag(tag_html_id, name) {
+          $.post(
+            "{% url friday.remove_resto_tag resto_uid=resto.uid %}",
+            {name: name},
+            function(data) {
+              $(tag_html_id).after(data).remove();
+            }
+          );
+        }
+      //]]></script>
+    {% endif %}
+
+  {% endif %}
+
+  {% if resto_tag_form %}
+
+    <div class="ajax-view">
+      <p><a href="javascript:void(0);" onclick="friday.toggle('#resto-tags');">Add tags</a></p>
+    </div>
+
+    <form id="resto-tag-form" class="ajax-edit s-form hidden"
+          action="{% url friday.view_resto_tags resto_uid=resto.uid %}"
+          method="POST"
+          onsubmit="return friday.submitAjaxForm('#resto-tags', '#resto-tag-form');">
+      <input type="hidden" name="action" value="add"/>
+      <div class="input">{{ resto_tag_form.names|safe }}</div>
+      {% if resto_tag_form.names.errors %}
+        <div class="error-list">{{ resto_tag_form.names.errors|safe }}</div>
+      {% endif %}
+      <div>
+        <input class="button" type="submit" value="Add"/>
+        &nbsp;
+        <a href="javascript:void(0);" onclick="friday.toggle('#resto-tags');">cancel</a>
+      </div>
+    </form>
+
+  {% endif %}
+
+</div>
+

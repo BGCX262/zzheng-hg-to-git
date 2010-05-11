@@ -1,0 +1,81 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-11.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if inductee_form %}
+
+  <form id="inductee-form" class="xl-form" action="." method="POST">
+
+    <div class="field">
+
+      {% if not inductee_form.instance %}
+
+        <div class="label">Unique ID of the inductee: *</div>
+        <div class="input required">{{ inductee_form.uid|safe }}</div>
+        {% if inductee_form.uid.errors %}
+          <div class="error-list">{{ inductee_form.uid.errors|safe }}</div>
+        {% endif %}
+        <div class="help-text">
+          The unique ID will be part of the inductee page's URL.
+          It cannot be changed later.
+        </div>
+
+      {% else %}
+
+        <div class="label">Unique ID of the inductee:</div>
+        <div class="hidden">{{ inductee_form.uid|safe }}</div>
+        <div class="disabled-value">{{ inductee_form.instance.uid|escape }}</div>
+
+      {% endif %}
+
+    </div>
+
+    <div class="field">
+      <div class="label">Name of the inductee: *</div>
+      <div class="input required">{{ inductee_form.name|safe }}</div>
+      {% if inductee_form.name.errors %}
+        <div class="error-list">{{ inductee_form.name.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Username of the inductee: *</div>
+      <div class="input required">{{ inductee_form.user|safe }}</div>
+      {% if inductee_form.user.errors %}
+        <div class="error-list">{{ inductee_form.user.errors|safe }}</div>
+      {% endif %}
+      <div class="help-text">
+        Specify the username or the email address of the inductee.
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="label">Biography:</div>
+      <div class="input">{{ inductee_form.biography|safe }}</div>
+      {% if inductee_form.biography.errors %}
+        <div class="error-list">{{ inductee_form.biography.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <input class="button" type="submit" value="{{ inductee_form.instance|yesno:'Update,Add' }}"/>
+      &nbsp; or,
+      {% if inductee_form.instance %}
+        {% with inductee_form.instance as inductee %}
+          <a href="{% url friday.view_inductee group_uid=inductee.group.uid inductee_uid=inductee.uid %}">return to inductee page</a>
+        {% endwith %}
+      {% else %}
+        <a href="{% url friday.view_hall_of_fame group_uid=group.uid %}">return to Hall of Fame</a>
+      {% endif %}
+    </div>
+
+  </form>
+
+{% endif %}
+
+

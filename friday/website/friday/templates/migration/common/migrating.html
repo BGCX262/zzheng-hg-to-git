@@ -1,0 +1,22 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-12.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if is_complete %}
+
+  <div class="nowrap">
+    <img src="{{ static_ }}/images/ok.png" alt="Done"/> Done
+  </div>
+
+{% else %}
+
+  <div id="migrate-{{ model_name }}" class="nowrap">
+    <img src="{{ static_ }}/images/ajax_loader.gif" alt="Migrating"/> {{ succeeded }} / {{ failed }}
+  </div>
+
+{% endif %}

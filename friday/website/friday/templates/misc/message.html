@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-12.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} {{ title|escape|default:"Untitled ..." }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1><span class="prefix">&raquo;</span> {{ title|escape|default:"Untitled ..." }}</h1>
+    <p>
+      {% if message %}
+        {{ message|escape }}
+      {% else %}
+        <i>No message returned.</i>
+      {% endif %}
+    </p>
+  </div>
+
+{% endblock %}{# content #}
+

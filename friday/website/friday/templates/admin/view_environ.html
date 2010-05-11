@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Environment {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Environment</h1>
+  </div>
+  
+  {% if django_settings %}
+    <div class="section">
+      <h2>
+        Django settings
+        <a href="javascript:void(0);" onclick="$('#django_settings').toggle();">[toggle]</a>
+      </h2>
+      <div id="django_settings" class="code">
+        {% for item in django_settings %}
+          {{ item|escape }}<br/>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if os_environ %}
+    <div class="section">
+      <h2>
+        os.environ
+        <a href="javascript:void(0);" onclick="$('#os_environ').toggle();">[toggle]</a>
+      </h2>
+      <div id="os_environ" class="code">
+        {% for item in os_environ %}
+          {{ item|escape }}<br/>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if sys_path %}
+    <div class="section">
+      <h2>
+        sys.path
+        <a href="javascript:void(0);" onclick="$('#sys_path').toggle();">[toggle]</a>
+      </h2>
+      <div id="sys_path" class="code">
+        {% for path in sys_path %}
+          {{ path|escape }}<br/>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if cookies %}
+    <div class="section">
+      <h2>
+        cookies
+        <a href="javascript:void(0);" onclick="$('#cookies').toggle();">[toggle]</a>
+      </h2>
+      <div id="cookies" class="code">
+        {% for item in cookies %}
+          {{ item|escape }}<br/>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if request_meta %}
+    <div class="section">
+      <h2>
+        request.META
+        <a href="javascript:void(0);" onclick="$('#request_meta').toggle();">[toggle]</a>
+      </h2>
+      <div id="request_meta" class="code">
+        {% for item in request_meta %}
+          {{ item|escape }}<br/>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+
+

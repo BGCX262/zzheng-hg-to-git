@@ -1,0 +1,92 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+
+<div id="attenders" class="ajax">
+
+  {#______________________________________________________________________________________________#}
+
+  <div class="section">
+
+    <h2>
+      {% if attenders %}
+        {{ attenders.count }} attender(s):
+      {% else %}
+        No attender yet.
+      {% endif %}
+    </h2>
+
+    {% if attenders %}
+
+      <div class="user-list">
+
+        {% for attender in attenders %}
+
+          <div class="user">
+            <div class="user-avatar">
+              <a href="{% url friday.view_profile username=attender.username %}">
+                <img src="{% url friday.view_avatar username=attender.username %}" alt="{{ attender|escape }}"/>
+              </a>
+            </div>
+            <div class="user-info">
+              <a href="{% url friday.view_profile username=attender.username %}">
+                {{ attender|escape }}
+              </a>
+              {% ifequal attender.user user_ %}
+                <b>(you)</b>
+              {% endifequal %}
+            </div>
+          </div>
+
+        {% endfor %}
+
+        <div class="clear"></div>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+
+  {#______________________________________________________________________________________________#}
+
+  {% if user_ %}
+
+    <div class="section">
+
+      <form id="attend-activity-form" class="ajax-edit xs-form"
+            action="{% url friday.view_attenders group_uid=group.uid activity_id=activity.id %}"
+            method="POST"
+            onsubmit="return friday.submitAjaxForm('#attenders', '#attend-activity-form');">
+
+        {% if activity_access.can_join %}
+          <input type="hidden" name="action" value="join"/>
+          <input class="button" type="submit" value="I'd like to attend"/>
+          <span class="input">
+            with <input type="text" name="with_friends"/> friends
+          </span>
+        {% endif %}
+
+        {% if activity_access.can_quit %}
+          <input type="hidden" name="action" value="quit"/>
+          <input class="button" type="submit" value="I would not attend"/>
+        {% endif %}
+
+        <span class="ajax-error hidden">
+          Failed to process your request: server error.
+        </span>
+
+      </form>
+
+    </div>
+
+  {% endif %}
+
+</div>
+
+

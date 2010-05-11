@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-26.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% block banner %}
+
+  {% if resto %}
+
+    <div id="resto-banner" class="{{ resto.background_url|yesno:'exotic,simple' }}">
+
+      {% if resto.background_url %}
+        <img class="background" src="{{ resto.background_url }}" alt="{{ resto|escape }}"/>
+      {% else %}
+        <img class="background" src="{{ static_ }}/images/none.gif" alt="{{ resto|escape }}"/>
+      {% endif %}
+
+      <div class="banner-opaque"></div>
+
+      <div class="banner-text">
+        {% if resto.logo_icon_url %}
+          <img class="icon" src="{{ resto.logo_icon_url }}" alt="{{ resto|escape }}"/>
+        {% else %}
+          <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="{{ resto|escape }}"/>
+        {% endif %}
+        <h1>{{ resto|escape }}</h1>
+        <div class="links">
+          <a href="{% url friday.view_resto resto_uid=resto.uid %}">Resto Home</a>
+          {% if resto.website %}
+            &bull; <a href="{{ resto.website }}">Website</a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+

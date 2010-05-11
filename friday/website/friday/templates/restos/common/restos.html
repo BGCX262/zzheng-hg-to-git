@@ -1,0 +1,67 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+<div class="ajax">
+
+  {% if restos %}
+
+    {% for resto in restos %}
+
+      <div class="post">
+
+        <div class="post-head">
+          <a href="{% url friday.view_resto resto_uid=resto.uid %}">{{ resto|escape }}</a>
+        </div>
+
+        <div class="post-body">
+          {% if resto.description %}
+            {{ resto.description|escape|linebreaks }}
+          {% else %}
+            <p>This restaurant has no description.</p>
+          {% endif %}
+        </div>
+
+        <div class="post-foot">
+          <div>
+            <img class="icon" src="{{ static_ }}/images/address.png" alt="Address"/>
+            {{ resto.address|escape }},
+            {{ resto.city|escape }}
+            {{ resto.post_code|escape|default:"" }}
+            {% if resto.tels %}
+              &nbsp;
+              <img class="icon" src="{{ static_ }}/images/tel.png" alt="Tel"/>
+              {{ resto.tels|join:" / "|escape }}
+            {% endif %}
+          </div>
+          {% if resto.tags %}
+            <div>
+              {% for tag in resto.tags %}
+                <img class="icon" src="{{ static_ }}/images/tag.png" alt="Tag"/>
+                <a href="{% url friday.view_restos_by_tag %}?tag_name={{ tag|urlencode }}">{{ tag|escape }}</a>
+                &nbsp;
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+  {% else %}
+
+    <p class="na">No restaurants found.</p>
+
+  {% endif %}
+
+</div>
+
+
+

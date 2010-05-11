@@ -1,0 +1,48 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+
+{% if groups %}
+
+  <div class="ajax">
+
+    {% for group in groups %}
+
+      <div class="post">
+
+        <div class="post-head">
+          <a href="{% url friday.view_group group_uid=group.uid %}">{{ group|escape }}</a>
+        </div>
+
+        <div class="post-body">
+          {% if group.description %}
+            {{ group.description|escape|linebreaks }}
+          {% else %}
+            <p class="aux">This group does not have a description.</p>
+          {% endif %}
+        </div>
+
+        <div class="post-foot">
+          <img class="icon" src="{{ static_ }}/images/group.png" alt="Group"/>
+          <a href="{% url friday.view_members group_uid=group.uid %}">{{ group.members.count }} members</a>
+          &bull;
+          created {{ group.create_date|prettify_datetime }}
+          by <a href="{% url friday.view_profile username=group.creator.username %}">{{ group.creator|escape }}</a>
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+  </div><!--/.ajax-->
+
+{% endif %}
+
+

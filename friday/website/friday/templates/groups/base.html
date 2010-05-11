@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-18.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% block banner %}
+
+  {% if group %}
+
+    <div id="group-banner" class="{{ group.background_url|yesno:'exotic,simple' }}">
+
+      {% if group.background_url %}
+        <img class="background" src="{{ group.background_url }}" alt="{{ group|escape }}"/>
+      {% else %}
+        <img class="background" src="{{ static_ }}/images/none.gif" alt="{{ group|escape }}"/>
+      {% endif %}
+
+      <div class="banner-opaque"></div>
+
+      <div class="banner-text">
+
+        {% if group.logo_icon_url %}
+          <img class="icon" src="{{ group.logo_icon_url }}" alt="{{ group|escape }}"/>
+        {% else %}
+          <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="{{ group|escape }}"/>
+        {% endif %}
+
+        <h1>{{ group|escape }}</h1>
+
+        <div class="links">
+
+          <a href="{% url friday.view_group group_uid=group.uid %}">Group Home</a>
+          &bull; <a href="{% url friday.view_members group_uid=group.uid %}">Members</a>
+          &bull; <a href="{% url friday.view_hall_of_fame group_uid=group.uid %}">Hall of Fame</a>
+          &bull; <a href="{% url friday.view_all_activities group_uid=group.uid %}">Activities</a>
+          {% if group.google_group %}
+            &bull; <a href="http://groups.google.com/group/{{ group.google_group }}">Google Group</a>
+          {% endif %}
+          {% if group.website %}
+            &bull; <a href="{{ group.website }}">Website</a>
+          {% endif %}
+
+          {% if group_access %}
+            {% if group_access.can_join %}
+              &bull; <a href="{% url friday.join_group group_uid=group.uid %}">Join this group</a>
+            {% endif %}
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+

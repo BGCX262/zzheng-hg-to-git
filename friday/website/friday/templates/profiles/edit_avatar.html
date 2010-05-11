@@ -1,0 +1,74 @@
+{% extends "profiles/base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Choose an avatar image for {{ user|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if avatar_form %}
+
+    <div class="section">
+      <h1>Choose your avatar image ...</h1>
+    </div>
+
+    <div class="section">
+
+      <form id="avatar-form" class="xl-form" action="." method="POST">
+
+        <div class="field">
+          <div class="label">Where should we take your avatar image: *</div>
+          <div id="avatar-source" class="input required">{{ avatar_form.avatar_source|safe }}</div>
+          <div class="error-list">{{ avatar_form.avatar_source.errors|safe }}</div>
+        </div>
+
+        <div id="gravatar" class="avatar field hidden">
+          <div class="label">Your avatar image from <a href="http://www.gravatar.com/">gravatar.com</a>:</div>
+          <div class="input"><img src="{{ profile.email|gravatar }}" alt="gravatar"/></div>
+          <div class="help-text">If you do not have a gravatar image, a random avatar image will be used.</div>
+        </div>
+
+        <div id="image_url" class="avatar field hidden">
+          <div class="label">Your avatar image URL:</div>
+          <div class="input required">{{ avatar_form.avatar_url|safe }}</div>
+          <div class="help-text">Please make sure your avatar image on the web is publicly available.</div>
+          <div class="error-list">{{ avatar_form.avatar_url.errors|safe }}</div>
+        </div>
+
+        <div class="field">
+          <input class="button" type="submit" value="Update avatar image"/>
+          &nbsp; or,
+          <a href="{% url friday.view_profile username=user_.username %}">return to your profile</a>
+        </div>
+
+      </form><!--/#avatar-form-->
+
+      <script type="text/javascript">//<![CDATA[
+          $(function() {
+              var avatar_field_id = "#" + $("#avatar-form #avatar-source :input").val();
+              $("#avatar-form .avatar").hide();
+              $("#avatar-form " + avatar_field_id).show();
+              $("#avatar-form #avatar-source :input").change(function() {
+                  $("#avatar-form .avatar").hide();
+                  var avatar_field_id = "#" + $(this).val();
+                  $("#avatar-form " + avatar_field_id).show();
+              });
+          });
+      //]]></script>
+
+    </div>
+
+  {% endif %}{# profile_form #}
+
+{% endblock %}{# content #}

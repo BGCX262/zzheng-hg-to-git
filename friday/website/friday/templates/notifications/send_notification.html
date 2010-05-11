@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-04-29.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Send Notification {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Send a Notification ...</h1>
+  </div>
+
+  <div class="section">
+
+    <form id="notification-form" class="xl-form" action="." method="POST">
+
+      <div class="field">
+        <div class="label">Subject: *</div>
+        <div class="input required">{{ notification_form.subject|safe }}</div>
+        {% if notification_form.subject.errors %}
+          <div class="error-list">{{ notification_form.subject.errors|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <div class="label">Message: *</div>
+        <div class="input required">{{ notification_form.message|safe }}</div>
+        {% if notification_form.message.errors %}
+          <div class="error-list">{{ notification_form.message.errors|safe }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <div class="label">Recipients: *</div>
+        <div class="input required">{{ notification_form.recipients|safe }}</div>
+        {% if notification_form.recipients.errors %}
+          <div class="error-list">{{ notification_form.recipients.errors|safe }}</div>
+        {% endif %}
+        <div class="help-text">Please write one email address per line.</div>
+      </div>
+
+      <div class="field">
+        <div><input class="button" type="submit" value="Send"/></div>
+        <div class="help-text">
+          You are signed in as <a href="{% url friday.view_profile username=user_.username %}">{{ user_|escape }}</a>.
+          This notification will be sent in the name of you.
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+
+{% endblock %}
+
+
+

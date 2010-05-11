@@ -1,0 +1,91 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if group_form %}
+
+  <form id="group-form" class="xl-form" action="." method="POST">
+
+    <div class="field">
+
+      {% if not group_form.instance %}
+
+        <div class="label">Unique ID of the group: *</div>
+        <div class="input required">{{ group_form.uid|safe }}</div>
+        {% if group_form.uid.errors %}
+          <div class="error-list">{{ group_form.uid.errors|safe }}</div>
+        {% endif %}
+        <div class="help-text">
+          This will be part of the group's page URL. It cannot be changed later.
+        </div>
+
+      {% else %}
+
+        <div class="label">The group's unique ID (this cannot be changed):</div>
+        <div class="hidden">{{ group_form.uid|safe }}</div>
+        <div class="disabled-value">{{ group_form.instance.uid|escape }}</div>
+
+      {% endif %}
+
+    </div>
+
+    <div class="field">
+      <div class="label">Name your group: *</div>
+      <div class="input required">{{ group_form.name|safe }}</div>
+      {% if group_form.name.errors %}
+        <div class="error-list">{{ group_form.name.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Give your group a slogan:</div>
+      <div class="input">{{ group_form.slogan|safe }}</div>
+      {% if group_form.slogan.errors %}
+        <div class="error-list">{{ group_form.slogan.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Write a group description:</div>
+      <div class="input">{{ group_form.description|safe }}</div>
+      {% if group_form.description.errors %}
+        <div class="error-list">{{ group_form.description.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Group website:</div>
+      <div class="input">{{ group_form.website|safe }}</div>
+      {% if group_form.website.errors %}
+        <div class="error-list">{{ group_form.website.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Link with a <a href="http://groups.google.com/">Google Group</a>:</div>
+      <div class="input">{{ group_form.google_group|safe }}</div>
+      {% if group_form.google_group.errors %}
+        <div class="error-list">{{ group_form.google_group.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <input class="button" type="submit" value="{{ submit_value|escape|default:'Submit' }}"/>
+      &nbsp; or,
+      {% if group_form.instance %}
+        <a href="{% url friday.view_group group_uid=group_form.instance.uid %}">return to group homepage</a>
+      {% else %}
+        <a href="{% url friday.groups_home %}">return to groups homepage</a>
+      {% endif %}
+    </div>
+
+  </form>
+
+{% endif %}
+
+

@@ -1,0 +1,52 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Join the group {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if join_group_form %}
+
+    <div class="section">
+      <h1>Welcome to {{ group|escape }}</h1>
+    </div>
+
+    <div class="section">
+
+      <form id="join-group-form" class="xl-form" action="." method="POST">
+
+        <div class="field">
+          <div class="label">Tell the other members something about yourself:</div>
+          <div class="input">{{ join_group_form.request_message|safe }}</div>
+          {% if join_group_form.request_message.errors %}
+            <div class="error-list">{{ join_group_form.request_message.errors|safe }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <input class="button" type="submit" value="Join the group"/>
+          &nbsp; or,
+          <a href="{% url friday.view_group group_uid=group.uid %}">return to group homepage</a>
+        </div>
+
+      </form><!--/#join-group-form-->
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+
+

@@ -1,0 +1,42 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Activities {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  {% if group_access.can_contribute %}
+    <div class="section">
+      <h2><a href="{% url friday.create_activity group_uid=group.uid %}">Create an activity</a></h2>
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Activities ...</h1>
+  </div>
+
+  <div class="section">
+    {% include "activities/common/activities.html" %}
+  </div>
+
+{% endblock %}
+
+
+

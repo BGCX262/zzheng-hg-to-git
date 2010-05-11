@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-22.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Import Members {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Import Members ...</h1>
+  </div>
+
+  {% if prompt %}
+    <div class="section">
+      <div class="info-prompt">{{ prompt|escape }}</div>
+    </div>
+  {% endif %}
+
+  {% if import_members_form %}
+
+    <div class="section">
+
+      <form id="import-members-form" class="xl-form" action="." method="POST" enctype="multipart/form-data">
+
+        <div class="field">
+          <div class="label">Group unique ID: *</div>
+          <div class="input required">{{ import_members_form.group|safe }}</div>
+          {% if import_members_form.group.errors %}
+            <div class="error-list">{{ import_members_form.group.errors|safe }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <div class="label">Import from CSV File: *</div>
+          <div class="input required">{{ import_members_form.csv_file|safe }}</div>
+          {% if import_members_form.csv_file.errors %}
+            <div class="error-list">{{ import_members_form.csv_file.errors|safe }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <input class="button" type="submit" value="Import"/>
+        </div>
+
+      </form>
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+

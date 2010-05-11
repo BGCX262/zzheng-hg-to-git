@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Add a new restaurant {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if resto_form %}
+
+    <div class="section">
+      <h1>Add a new restaurant</h1>
+    </div>
+
+    <div class="section">
+      {% with "Add restaurant" as submit_value %}
+        {% include "restos/common/resto_form.html" %}
+      {% endwith %}
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+
+

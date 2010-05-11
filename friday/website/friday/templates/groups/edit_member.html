@@ -1,0 +1,64 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Edit member {{ member|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if member_form %}
+
+    <div class="section">
+      <h1>Edit group settings of {{ member|escape }} ...</h1>
+    </div>
+
+    <div class="form">
+
+      <form id="member-form" class="xl-form" action="." method="POST">
+
+        <div class="field">
+          <div class="label">The role of this member:</div>
+          <div class="radio required">{{ member_form.role|safe }}</div>
+          {% if member_form.role.errors %}
+            <div class="error-list">{{ member_form.role.errors|safe }}</div>
+          {% endif %}
+          <div class="help-text">The current role of {{ member|escape }} is "{{ member.role }}".</div>
+        </div>
+
+        <div class="field">
+          <div class="label">Or, remove this member:</div>
+          <div class="checkbox required">
+            {{ member_form.remove_member|safe }}
+            <span class="caution">Remove this user from the group.</span>
+          </div>
+          {% if member_form.remove_member.errors %}
+            <div class="error-list">{{ member_form.remove_member.errors|safe }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <input class="button" type="submit" value="Update"/>
+          &nbsp; or,
+          <a href="{% url friday.view_members group_uid=group.uid %}">return to group members</a>
+        </div>
+
+      </form><!--/#member-form-->
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+
+

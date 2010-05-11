@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-22.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} {{ action|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1><span class="prefix">&raquo;</span> Action: {{ action|escape }}</h1>
+    <p>
+      Succeeded: {{ succeeded|escape }}<br/>
+      Failed: {{ failed|escape }}<br/>
+      Done: {{ done|escape }}<br/>
+    </p>
+  </div>
+
+{% endblock %}{# content #}
+

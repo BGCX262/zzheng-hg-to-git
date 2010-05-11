@@ -1,0 +1,22 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if tag_cloud %}
+
+  <div class="tag-cloud">
+    {% for tag in tag_cloud.tags %}
+      <span class="tag nowrap" style="font-size: {{ tag.size }}%;">
+        <a href="{% url friday.view_restos_by_tag %}?tag_name={{ tag.name|urlencode }}">{{ tag|escape }}</a>
+      </span>
+    {% endfor %}
+  </div>
+
+{% endif %}
+
+

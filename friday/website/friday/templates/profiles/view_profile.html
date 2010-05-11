@@ -1,0 +1,31 @@
+{% extends "profiles/base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-10.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} {{ user|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    {% if not profile %}
+      <p class="aux">This user doest not have a profile yet.</p>
+    {% else %}
+      {% if profile.biography %}
+        {{ profile.biography|escape|linebreaks }}
+      {% else %}
+        <p class="aux">This user does not have a biography.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{% if ajax_prompt %}
+
+  <div id="ajax-{{ ajax_prompt.id }}" class="hidden">
+    <img src="{{ static_ }}/images/{{ ajax_prompt.severity }}.png" alt="{{ ajax_prompt.severity }}"/>
+    {{ ajax_prompt|escape }}
+  </div><!--/#ajax-{{ ajax_prompt.id }}-->
+  
+  <script type="text/javascript">//<![CDATA[
+	  $(function() {
+		  $("#ajax-{{ ajax_prompt.id }}").dialog({
+        bgiframe: true,
+        title: "AJAX {{ ajax_prompt.severity }}",
+        modal: true,
+        buttons: {
+          OK: function() {
+            $(this).dialog("close");
+          }
+        },
+        minHeight: 80,
+        minWidth: 540,
+        width: 540
+      });
+    });
+	//]]></script>
+
+{% endif %}{# ajax_prompt #}
+

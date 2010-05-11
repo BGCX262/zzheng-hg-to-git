@@ -1,0 +1,198 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if resto_form %}
+
+  <form id="resto-form" class="xl-form" action="." method="POST">
+
+    <div class="field">
+
+      {% if not resto_form.instance %}
+
+        <div class="label">Unique ID of the restaurant: *</div>
+        <div class="input required">{{ resto_form.uid|safe }}</div>
+        {% if resto_form.uid.errors %}
+          <div class="error-list">{{ resto_form.uid.errors|safe }}</div>
+        {% endif %}
+        <div class="help-text">
+          This will be part of the restaurant's page URL. It cannot be changed later.
+        </div>
+
+      {% else %}
+
+        <div class="label">The restaurant's unique ID (this cannot be changed):</div>
+        <div class="hidden">{{ resto_form.uid|safe }}</div>
+        <div class="disabled-value">{{ resto_form.instance.uid|escape }}</div>
+
+      {% endif %}
+
+    </div>
+
+    <div class="field">
+      <div class="label">The restaurant name: *</div>
+      <div class="input required">{{ resto_form.name|safe }}</div>
+      {% if resto_form.name.errors %}
+        <div class="error-list">{{ resto_form.name.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Address: *</div>
+      <div id="address" class="input required">{{ resto_form.address|safe }}</div>
+      {% if resto_form.address.errors %}
+        <div class="error-list">{{ resto_form.address.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">City: *</div>
+      <div id="city" class="input required">{{ resto_form.city|safe }}</div>
+      {% if resto_form.city.errors %}
+        <div class="error-list">{{ resto_form.city.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+
+      <div class="label">Geo Location:</div>
+      <div id="geo-pt" class="hidden">{{ resto_form.geo_pt|safe }}</div>
+      {% if resto_form.geo_pt.errors %}
+        <div class="error-list">{{ resto_form.geo_pt.errors|safe }}</div>
+      {% endif %}
+      <div id="geo-pt-message" class="disabled-value">
+        {% if resto.geo_pt %}
+          Latitude: {{ resto.geo_pt.lat }}, longitude: {{ resto.geo_pt.lon }}.
+        {% else %}
+          Geo position not specified.
+        {% endif %}
+      </div>
+
+      <div class="help-text">
+        <div>
+          <a href="javascript:void(0);" onclick="findInMap();">find the address in map</a>
+        </div>
+        <div id="map" class="hidden">
+          <div id="map-canvas" class="map"></div>
+          <div>
+            <a href="javascript:void(0);" onclick="clearMap();">clear map</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="field">
+      <div class="label">Post code:</div>
+      <div class="input">{{ resto_form.post_code|safe }}</div>
+      {% if resto_form.post_code.errors %}
+        <div class="error-list">{{ resto_form.post_code.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Route:</div>
+      <div class="input">{{ resto_form.route|safe }}</div>
+      {% if resto_form.route.errors %}
+        <div class="error-list">{{ resto_form.route.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Places:</div>
+      <div class="input">{{ resto_form.places|safe }}</div>
+      {% if resto_form.places.errors %}
+        <div class="error-list">{{ resto_form.places.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Telephone number(s):</div>
+      <div class="input">{{ resto_form.tel_1|safe }}</div>
+      <div class="input">{{ resto_form.tel_2|safe }}</div>
+      {% if resto_form.tel_1.errors or resto_form.tel_2.errors %}
+        <div class="error-list">
+          {{ resto_form.tel_1.errors|safe }}
+          {{ resto_form.tel_2.errors|safe }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Website:</div>
+      <div class="input">{{ resto_form.website|safe }}</div>
+      {% if resto_form.website.errors %}
+        <div class="error-list">{{ resto_form.website.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Description:</div>
+      <div class="input">{{ resto_form.description|safe }}</div>
+      {% if resto_form.description.errors %}
+        <div class="error-list">{{ resto_form.description.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <input class="button" type="submit" value="{{ submit_value|escape|default:'Submit' }}"/>
+      &nbsp; or,
+      {% if resto_form.instance %}
+        <a href="{% url friday.view_resto resto_uid=resto_form.instance.uid %}">
+          return to {{ resto|escape }}
+        </a>
+      {% else %}
+        <a href="{% url friday.view_all_restos %}">
+          view restaurants
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <script type="text/javascript">//<![CDATA[
+
+      function findInMap() {
+        var address = jQuery.trim($("#address :input").val());
+        var city = jQuery.trim($("#city :input").val());
+        if (address == "") {
+          $("#map").hide();
+          $("#geo-pt :input").val("");
+          $("#geo-pt-message").text("Geo position not specified. Please specify an address.");
+        } else {
+          $("#map").show();
+          friday.findInMap(
+            address + ", " + city,
+            "#map-canvas",
+            function(lat, lon) {
+              $("#geo-pt :input").val(lat + "," + lon);
+              $("#geo-pt-message").text("Latitude: " + lat + ", longitude: " + lon + ".");
+            },
+            function(address_not_found) {
+              $("#map").hide();
+              $("#geo-pt :input").val("");
+              $("#geo-pt-message").text("The address you specified cannot be found.");
+            }
+          );
+        }
+      }
+
+      function clearMap() {
+        $("#map").hide();
+        $("#geo-pt :input").val("");
+        $("#geo-pt-message").text("Geo position not specified.");
+      }
+
+    //]]></script>
+
+  </form><!--/#resto-form-->
+
+{% endif %}{# resto_form #}
+
+
+

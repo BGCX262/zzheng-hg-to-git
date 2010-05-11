@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} 404 - Page not found {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Oops! Page not found...</h1>
+  </div>
+
+  <div class="section">
+    <p>The URL <b>{{ bad_url }}</b> you requested does not exist.</p>
+  </div>
+
+{% endblock %}{# content #}
+

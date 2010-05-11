@@ -1,0 +1,36 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Edit group information {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if group_form %}
+
+    <div class="section">
+      <h1>Edit group information ...</h1>
+    </div>
+
+    <div class="section">
+      {% with "Update" as submit_value %}
+        {% include "groups/common/group_form.html" %}
+      {% endwith %}
+    </div>
+
+  {% endif %}
+
+{% endblock %}{# content #}
+
+
+

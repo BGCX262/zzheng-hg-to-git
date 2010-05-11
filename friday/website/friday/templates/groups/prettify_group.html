@@ -1,0 +1,106 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-19.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Prettify group page {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if prettify_group_form %}
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <script type="text/javascript">//<![CDATA[
+
+      /** Previews the prettified group banner by injecting user inputs to the banner HTML. */
+      function previewGroupBanner() {
+        // Collect user inputs.
+        var prettify_group_form = $("#prettify-group-form");
+        var background_url = jQuery.trim(
+          $("#background_url :input", prettify_group_form).val()
+        );
+        var is_exotic_banner = (background_url != "");
+        if (background_url == "") {
+          background_url = "{{ static_ }}/images/none.gif";
+        }
+        var logo_icon_url = jQuery.trim(
+          $("#logo_icon_url :input", prettify_group_form).val()
+        );
+        if (logo_icon_url == "") {
+          logo_icon_url = "http://l.yimg.com/g/images/buddyicon.jpg";  // TODO:
+        }
+        // Prettify the group banner.
+        var group_banner = $("#group-banner");
+        if (is_exotic_banner) {
+          group_banner.addClass("exotic").removeClass("simple");
+        } else {
+          group_banner.addClass("simple").removeClass("exotic");
+        }
+        $("img.background", group_banner).attr("src", background_url);
+        $("img.icon", group_banner).attr("src", logo_icon_url);
+      }
+
+    //]]></script>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <div class="section">
+      <h1>Prettify group page ...</h1>
+    </div>
+
+    <div class="section">
+
+      <form id="prettify-group-form" class="xl-form" action="." method="POST">
+
+        <div class="field">
+          <div class="label">Banner background image URL:</div>
+          <div id="background_url" class="input">{{ prettify_group_form.background_url|safe }}</div>
+          {% if prettify_group_form.background_url.errors %}
+            <div class="error-list">{{ prettify_group_form.background_url.errors|safe }}</div>
+          {% endif %}
+          <div class="help-text">
+            Preferred background image size is 990x160 pixels.<br/>
+            Currently using: {{ group.background_url|default:"none" }}
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">Group logo icon URL:</div>
+          <div id="logo_icon_url" class="input">{{ prettify_group_form.logo_icon_url|safe }}</div>
+          {% if prettify_group_form.logo_icon_url.errors %}
+            <div class="error-list">{{ prettify_group_form.logo_icon_url.errors|safe }}</div>
+          {% endif %}
+          <div class="help-text">
+            Group logo icon will be resized to 48x48 pixels.<br/>
+            Currently using: {{ group.logo_icon_url|default:"none" }}
+          </div>
+        </div>
+
+        <div class="field">
+          <input class="button" type="button" value="Preview" onclick="previewGroupBanner();"/>
+          &nbsp;
+          <input class="button" type="submit" value="Update"/>
+          &nbsp; or,
+          <a href="{% url friday.view_group group_uid=group.uid %}">return to group homepage</a>
+        </div>
+
+      </form><!--/#prettify-group-form-->
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}{# content #}
+
+
+

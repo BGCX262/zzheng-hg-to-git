@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block no_ie %}{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block topbar %}
+
+  <div class="topbar-logo">
+    <img src="{{ static_ }}/images/logo.gif" alt='{{ site_name_|escape|default:"logo" }}' height="48px"/>
+  </div>
+
+  <div class="topbar-text">
+    {% if user_ %}
+      <b>{{ user_|escape }}</b>
+      {% if is_webmaster_ %}
+        (webmaster)
+      {% endif %}
+      &bull; <a href="{{ logout_url_ }}">Logout</a>
+    {% else %}
+      <a href="{{ login_url_ }}">Login</a>
+    {% endif %}
+  </div>
+
+  <div class="clear"></div>
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block navbar %}{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block footer %}
+
+  {{ site_name_|escape }} &bull; Model Migration &bull; Version {{ website_version_|escape }}
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+

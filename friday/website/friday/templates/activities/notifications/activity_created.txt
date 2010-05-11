@@ -1,0 +1,27 @@
+{% load friday_extra %}
+
+{% autoescape off %}
+
+{{ activity.title }}
+
+* Date: {{ activity.date|date:"d N Y" }} ( {{ activity.date|prettify_datetime }} )
+* Location: {{ activity.address|default:""|escape }} {{ activity.city|escape }}
+* Added by {{ activity.submitter }} on {{ activity.submit_date|date:"d N Y" }}
+
+{{ activity.content }}
+
+{% if activity.related_link %}
+  Related link: {{ activity.related_link }}
+{% endif %}
+
+{% if http_host %}
+
+  For more information about this activity, please visit:
+  http://{{ http_host }}{% url friday.view_activity group_uid=activity.group.uid activity_id=activity.id %}
+
+{% endif %}
+
+----------
+<signature: todo>
+
+{% endautoescape %}

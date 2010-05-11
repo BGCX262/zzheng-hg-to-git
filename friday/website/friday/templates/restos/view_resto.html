@@ -1,0 +1,189 @@
+{% extends "restos/resto_base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-10.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} {{ resto|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  <!-- submitter and updater ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+
+    {% ifnotequal resto.submitter resto.updater %}
+
+      <div class="user-box">
+        <div class="user-avatar">
+          <a href="{% url friday.view_profile username=resto.submitter.username %}">
+            <img src="{% url friday.view_avatar username=resto.submitter.username %}" alt="{{ resto.submitter|escape }}"/>
+          </a>
+        </div>
+        <div class="user-info">
+          Added on {{ resto.submit_date|date:"d N Y" }}<br/>
+          by <a href="{% url friday.view_profile username=resto.submitter.username %}">{{ resto.submitter|escape }}</a>
+        </div>
+        <div class="clear"></div>
+      </div>
+
+    {% endifnotequal %}
+
+    <div class="user-box">
+      <div class="user-avatar">
+        <a href="{% url friday.view_profile username=resto.updater.username %}">
+          <img src="{% url friday.view_avatar username=resto.updater.username %}" alt="{{ resto.updater|escape }}"/>
+        </a>
+      </div>
+      <div class="user-info">
+        Updated on {{ resto.submit_date|date:"d N Y" }}<br/>
+        by <a href="{% url friday.view_profile username=resto.updater.username %}">{{ resto.updater|escape }}</a>
+      </div>
+      <div class="clear"></div>
+    </div>
+
+  </div>
+
+  <!-- administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  {% if resto_access.can_edit %}
+    <div class="section">
+      <h2>Administration:</h2>
+      <ul>
+        <li><a href="{% url friday.edit_resto resto_uid=resto.uid %}">Edit resto information</a></li>
+        <li><a href="{% url friday.edit_dishes resto_uid=resto.uid %}">Edit recommended dishes</a></li>
+      </ul>
+    </div>
+  {% endif %}
+
+  <!-- tags ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+
+    <h2>Tags:</h2>
+
+    <div id="load-resto-tags">
+      <div class="ajax-loader">
+        <img src="{{ static_ }}/images/ajax_loader.gif" alt="Loading"/>
+        Loading tags...
+      </div>
+      <div class="ajax-error hidden">
+        <img src="{{ static_ }}/images/error.png" alt="Error"/>
+        Failed to load tags.
+      </div>
+    </div>
+
+    <script type="text/javascript">//<![CDATA[
+      $(function() {
+        $("#load-resto-tags").load(
+          "{% url friday.view_resto_tags resto_uid=resto.uid %}",
+          function(response, textStatus) {
+            if (textStatus == "error") {
+              $("#load-resto-tags .ajax-loader").hide();
+              $("#load-resto-tags .ajax-error").show();
+            }
+          }
+        );
+      });
+    //]]></script>
+
+  </div>
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>{{ resto.name|escape }}</h1>
+    <h5>{{ resto.address|escape }}, {{ resto.city|escape }}  {{ resto.post_code|default:""|escape }}</h5>
+  </div>
+
+  {% if resto.description %}
+    <div class="section">
+      <h2>Description:</h2>
+      {{ resto.description|escape|linebreaks }}
+    </div>
+  {% endif %}
+
+  <!-- resto address ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+
+    <h2>Address and Route:</h2>
+
+    <p>
+      <!--img class="icon" src="{{ static_ }}/images/address.png" alt="Address"/-->
+      {{ resto.address|escape }}, {{ resto.city|escape }} {{ resto.post_code|default:""|escape }}
+    </p>
+
+    {% if resto.route %}
+      <p>
+        <!--img class="icon" src="{{ static_ }}/images/route.png" alt="Route"/-->
+        {{ resto.route|escape }}
+      </p>
+    {% endif %}
+
+    {% if resto.geo_pt %}
+      <div id="map-canvas" class="map"></div>
+      <script type="text/javascript">//<![CDATA[
+        $(function() {
+          friday.showMap({{ resto.geo_pt.lat }}, {{ resto.geo_pt.lon }}, "#map-canvas");
+        });
+      //]]></script>
+    {% endif %}
+
+  </div>
+
+  <!-- resto recommended dishes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  {% if resto.dishes %}
+    <div class="section">
+      <h2>Recommended Dishes:</h2>
+      {% for dish in resto.dishes %}
+        {% include "restos/common/dish.html" %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- resto tabs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+    <div id="resto-tabs">
+      <ul>
+        <li><a href="{% url friday.view_comments ref_type=resto.model_name ref_pk=resto.pk %}">Comments</a></li>
+      </ul>
+    </div>
+    <script type="text/javascript">//<![CDATA[
+      $(function() {
+        $("#resto-tabs").tabs({
+          ajaxOptions: {
+            error: function(xhr, status, index, anchor) {
+              if (index == 0) {
+                target = "comments";
+              } else {
+                target = "unknown objects";
+              }
+              $(anchor.hash).html("Failed to load " + target + " via AJAX: server error.");
+            }
+          }
+        });
+      });
+    //]]></script>
+  </div>
+
+{% endblock %}{# content #}
+
+
+

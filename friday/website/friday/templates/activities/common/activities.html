@@ -1,0 +1,53 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+<div class="ajax">
+
+  {% for activity in activities %}
+
+    <div class="post">
+
+      <div class="post-head">
+        <span class="{{ activity.is_past|yesno:'disabled,enabled' }}">
+          <a href="{% url friday.view_activity group_uid=activity.group.uid activity_id=activity.id %}">
+            {{ activity|escape }}
+          </a>
+          {% if activity.attenders %}
+            &nbsp;
+            <span class="aux">
+              <img class="icon" src="{{ static_ }}/images/group.png" alt="Attenders"/>
+              <b>{{ activity.attenders.count }}</b> attender(s)
+            </span>
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="post-body">
+        {{ activity.content|escape|linebreaks }}
+      </div>
+
+      <div class="post-foot">
+        <img class="icon" src="{{ static_ }}/images/date.png" alt="Date"/>
+        {{ activity.date|date:"l, d N Y" }}
+        &nbsp;
+        <img class="icon" src="{{ static_ }}/images/address.png" alt="Address"/>
+        {% if activity.address %}
+          {{ activity.address|escape }},
+        {% endif %}
+        {{ activity.city|escape }}
+      </div>
+
+    </div>
+
+  {% endfor %}
+
+</div>
+
+

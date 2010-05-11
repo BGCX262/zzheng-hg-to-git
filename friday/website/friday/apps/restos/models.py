@@ -1,0 +1,158 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+#
+# Created on 2010-02-18.
+# $Id$
+#
+
+import logging
+
+from google.appengine.ext import db
+
+from djangomockup import models
+from friday.auth import users
+from friday.common.dbutils import filter_key, ord_to_key
+from friday.apps.tagging.models import Taggable
+from friday.apps.ilike.models import Fan
+
+
+class Resto(models.Model, Taggable):
+
+    tags_attr = "tags"  # Required by Taggable mixin class.
+
+    _RESERVED_KEYS = ("all", "tag", "tags", "dish", "dishes", "create")
+
+    uid = db.StringProperty(required=True)
+    name = db.StringProperty(required=True)
+    description = db.TextProperty()
+
+    address = db.PostalAddressProperty(required=True)
+    city = db.StringProperty(required=True)
+    geo_pt = db.GeoPtProperty()
+    post_code = db.StringProperty()
+    route = db.StringProperty()
+
+    places = db.IntegerProperty()
+    tel_1 = db.PhoneNumberProperty()
+    tel_2 = db.PhoneNumberProperty()
+    website = db.LinkProperty()
+
+    tags = db.StringListProperty(default=[])
+
+    background_url = db.LinkProperty()
+    logo_icon_url = db.LinkProperty()
+
+    owner = db.ReferenceProperty(users.User, required=True, collection_name="owned_restos")
+    submitter = db.ReferenceProperty(users.User, required=True, collection_name="submitted_restos")
+    submit_date = db.DateTimeProperty(required=True, auto_now_add=True)
+    updater = db.ReferenceProperty(users.User, required=True, collection_name="updated_restos")
+    update_date = db.DateTimeProperty(required=True, auto_now=True)
+
+    schema_version = db.IntegerProperty(required=True, default=1)
+
+    @property
+    def model_name(self):
+        return self.__class__.__name__
+
+    @property
+    def tels(self):
+        tel_list = []
+        if self.tel_1:
+            tel_list.append(self.tel_1)
+        if self.tel_2:
+            tel_list.append(self.tel_2)
+        return tel_list
+
+    @property
+    def dishes(self):
+        return Dish.find_by_resto(resto=self)
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    def delete(self):
+        if self.tags:
+            self.remove_tags(",".join(self.tags))
+        return super(Resto, self).delete()
+
+    @classmethod
+    def _make_pk(cls, uid):
+        return filter_key(uid, reserved=cls._RESERVED_KEYS)
+
+    @classmethod
+    def get_unique(cls, uid):
+        pk = cls._make_pk(uid)
+        try:
+            instance = cls.objects.get(pk=pk)
+        except cls.DoesNotExist:
+            instance = None
+        return instance
+
+    @classmethod
+    def create(cls, uid, submitter, **kwargs):
+        pk = cls._make_pk(uid)
+        return cls(
+            key_name=pk,
+            uid=pk,
+            submitter=submitter,
+            updater=submitter,
+            owner=submitter,
+            **kwargs
+        )
+
+    @classmethod
+    def find_all(cls, **kwargs):
+        query = cls.objects.order_by(kwargs.get("order_by") or "-update_date")
+        if kwargs.get("limit"):
+            query = query[:kwargs["limit"]]
+        return query
+
+
+class Dish(models.Model):
+
+    resto = db.ReferenceProperty(Resto, required=True)
+    name = db.StringProperty(required=True)
+    description = db.TextProperty()
+    photo_url = db.LinkProperty()
+    is_spicy = db.BooleanProperty(required=True, default=False)
+    is_vegetarian = db.BooleanProperty(required=True, default=False)
+    price = db.StringProperty()
+
+    schema_version = db.IntegerProperty(required=True, default=1)
+
+    @property
+    def fans(self):
+        return Fan.find_fans(ref_type=self.__class__.__name__, ref_pk=self.id)
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    def like_or_unlike(self, user):
+        fan = Fan.get_unique(ref_type=self.__class__.__name__, ref_pk=self.id, user=user)
+        if not fan:
+            fan = Fan.create_fan(ref_type=self.__class__.__name__, ref_pk=self.id, user=user)
+            fan.save()
+        else:
+            fan.delete()
+
+    @classmethod
+    def create(cls, **kwargs):
+        return cls(**kwargs)
+
+    @classmethod
+    def get_unique(cls, id):
+        try:
+            instance = cls.objects.get(id=id)
+        except cls.DoesNotExist:
+            instance = None
+        return instance
+
+    @classmethod
+    def find_by_resto(cls, resto):
+        query = cls.objects.filter(resto=resto)
+        return query
+
+
+# EOF

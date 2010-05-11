@@ -1,0 +1,35 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Create a new activity {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if activity_form %}
+
+    <div class="section">
+      <h1>Create a new activity ...</h1>
+    </div>
+
+    <div class="section">
+      {% with "Create activity" as submit_value %}
+        {% include "activities/common/activity_form.html" %}
+      {% endwith %}
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+

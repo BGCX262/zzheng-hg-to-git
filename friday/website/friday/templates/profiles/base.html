@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-18.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+{#________________________________________________________________________________________________#}
+
+{% block banner %}
+
+  <div class="simple">
+
+    <div class="banner-text">
+      <img class="icon" src="{% url friday.view_avatar username=user.username %}" alt="{{ user|escape }}"/>
+      <h1>
+        {% if profile %}
+          {{ profile|escape }}
+        {% else %}
+          {{ user|escape }}
+        {% endif %}
+      </h1>
+      <div class="links">
+        <a href="{% url friday.view_profile username=user.username %}">Profile</a>
+        {% if profile and profile.website %}
+          &bull; <a href="{{ profile.website }}">Website</a>
+        {% endif %}
+        &bull; Email: {{ user.email|safe_email }}
+        &bull; Joined on {{ user.join_date|date:"d N Y" }}
+      </div>
+      <div class="clear"></div>
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  {% ifequal user_ user %}
+
+    <div class="section">
+
+      {% if not profile %}
+        <h2><a href="{% url friday.edit_profile username=user.username %}">Create your profile</a></h2>
+      {% else %}
+        <h2>Edit your profile:</h2>
+        <ul>
+          <li><a href="{% url friday.edit_profile username=user.username %}">Basic information</a></li>
+          <li><a href="{% url friday.edit_avatar username=user.username %}">Avatar image</a></li>
+        </ul>
+      {% endif %}
+
+    </div>
+
+  {% endifequal %}
+
+{% endblock %}
+

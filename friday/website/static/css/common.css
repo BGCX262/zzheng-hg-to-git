@@ -1,0 +1,238 @@
+/**
+ Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+
+ Created on 2008-12-03.
+ $Id$
+ */
+
+/*--------------------------------------------------------------------------------------------------
+ * common CSS classes
+ *------------------------------------------------------------------------------------------------*/
+
+.big {
+  font-size: 110%;
+}
+
+.aux {
+  color: #666666;
+}
+
+.na {
+  color: #666666;
+}
+
+.hidden {
+  display: none;
+}
+
+.right {
+  display: inline;
+  float: right;
+}
+
+.left {
+  display: inline;
+  float: left;
+}
+
+.clear {
+  clear: both;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+img.icon {
+  vertical-align: text-bottom;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * AJAX styles
+ *------------------------------------------------------------------------------------------------*/
+
+.ajax-loader, .ajax-error {
+  margin: 8px 0 8px 0;
+  padding: 8px;
+  color: #666666;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+.ajax-loader {
+  background-color: #E8EEFA;
+  border-color: #C3D9FF;
+}
+
+.ajax-error {
+  background-color: #FAFDCE;
+  border-color: #FACC00;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * Prompt
+ *------------------------------------------------------------------------------------------------*/
+
+.info-prompt, .error-prompt {
+  margin: 10px 0 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+.info-prompt {
+  background-color: #E8EEFA;
+  border: 1px solid #C3D9FF;
+}
+
+.error-prompt {
+  background-color: #FAFDCE;
+  border: 1px solid #FACC00;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * sections
+ *------------------------------------------------------------------------------------------------*/
+
+.section {
+  margin: 0;
+  padding: 0 0 20px 0;
+  line-height: 1.4em;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * posts
+ *------------------------------------------------------------------------------------------------*/
+
+.post {
+  margin: 0;
+  padding: 8px 0 8px 0;
+  border-bottom: 1px dotted #BBBBBB;
+}
+
+.post .post-head,
+.post .post-body,
+.post .post-foot {
+  margin: 0;
+  padding: 0 0 4px 0;
+}
+
+.post .post-head {
+  font-size: 110%;
+}
+
+.post .post-head p {
+  margin: 0;
+  padding: 0;
+}
+
+.post .post-body {
+  color: #666666;
+}
+
+.post .post-foot {
+  color: #666666;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * progress bar
+ *------------------------------------------------------------------------------------------------*/
+
+table.progress {
+  margin: 0 8px 0 0;
+  padding: 0;
+  border-spacing: 0;
+  border: 1px solid #BBBBBB;
+  empty-cells: show;
+  float: left;
+}
+
+table.progress td a, table.progress td span {
+  display: block;
+  height: 1.2em;
+  text-decoration: none;
+}
+
+table.progress td :hover {
+  /*background-color: red;*/
+}
+
+table.progress td {
+  margin: 0;
+  padding: 0;
+}
+
+table.progress td.on {
+  background-color: #C3D9FF;
+}
+
+table.progress td.off {
+  background-color: #FFFFFF;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * tags
+ *------------------------------------------------------------------------------------------------*/
+
+.tags {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.tags ul li {
+  text-indent: -16px;
+  list-style: none outside none;
+}
+
+.tag-cloud {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.tag-cloud .tag {
+  margin: 0;
+  padding: 0 4px 0 0;
+}
+
+a.remove-tag {
+  padding: 0 4px 0 4px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #888888;
+}
+
+a.remove-tag:hover {
+  text-decoration: none;
+  color: #FF0080;
+}
+
+.removed-tag {
+  color: #888888;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * jQuery UI widget
+ *------------------------------------------------------------------------------------------------*/
+
+.ui-widget {
+  font: normal normal 100% Arial,Helvetica,sans-serif;
+}
+
+
+/*--------------------------------------------------------------------------------------------------
+ * Google Maps canvas style
+ *------------------------------------------------------------------------------------------------*/
+
+.map {
+  margin: 8px 0 8px 0;
+  padding: 0;
+  width: 640px;
+  height: 400px;
+  border: 1px solid #BBBBBB;
+}
+
+

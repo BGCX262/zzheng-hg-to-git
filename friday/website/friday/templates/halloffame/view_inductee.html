@@ -1,0 +1,32 @@
+{% extends "halloffame/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-11.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} {{ inductee|escape }} :: Hall of Fame :: {{ group|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>{{ inductee.name|escape }}</h1>
+    <h5>Inducted on {{ inductee.inducted_date|date:"d N Y" }}</h5>
+  </div>
+
+  <div class="section">
+    <h2>Biography:</h2>
+    {{ inductee.biography|escape|linebreaks }}
+  </div>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Home {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block main %}
+
+  <div id="anonymous-home">
+    <div>
+      <a class="button login-url" href="{{ login_url_ }}">
+        Sign in with your Google/Gmail account
+      </a>
+    </div>
+  </div><!--/#anonymous-home-->
+
+{% endblock %}{# main #}
+
+
+

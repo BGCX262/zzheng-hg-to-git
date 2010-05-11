@@ -1,0 +1,72 @@
+{% extends "migration/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-12.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Model Migration {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Model Migration (to version {{ to_schema_version }})</h1>
+  </div>
+
+  <div class="section">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><span class="nowrap">Model</span></th>
+          <th><span class="nowrap">Status</span></th>
+          <th><span class="nowrap">Migrate</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for model_name, has_old in all_models.items %}
+          <tr>
+            <td><code class="nowrap">{{ model_name }}</code></td>
+            <td><span class="nowrap">{{ has_old|yesno:"deprecated,latest" }}</span></td>
+            <td>
+              <span id="migrate-{{ model_name }}" class="nowrap">
+                {% if is_webmaster_ and has_old %}
+                  <a href="javascript:void(0);" onclick="migrateModel('{{ model_name }}');">Migrate</a>
+                {% else %}
+                  ----
+                {% endif %}
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if is_webmaster_ %}
+    <script type="text/javascript">//<![CDATA[
+      function migrateModel(model_name) {
+        $.post(
+          "{% url friday.migrate_model %}",
+          {model_name: model_name},
+          function(data) {
+            $("#migrate-" + model_name).after(data).remove();
+            var more_to_migrate = $("#migrate-" + model_name);
+            if (more_to_migrate.length > 0) {
+              migrateModel(model_name);
+            }
+          }
+        );
+      }
+    //]]></script>
+  {% endif %}
+
+{% endblock %}
+
+

@@ -1,0 +1,35 @@
+{% extends "restos/resto_base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-26.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Edit: {{ resto|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if resto_form %}
+
+    <div class="section">
+      <h1>Edit Restaurant: {{ resto|escape }}</h1>
+    </div>
+
+    <div class="section">
+      {% with "Update restaurant" as submit_value %}
+        {% include "restos/common/resto_form.html" %}
+      {% endwith %}
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+

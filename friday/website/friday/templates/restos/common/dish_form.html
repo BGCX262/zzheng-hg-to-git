@@ -1,0 +1,77 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-10.
+  $Id$
+-->
+{% endcomment %}
+
+
+{% if dish_form %}
+
+  <form id="dish-form" class="xl-form" action="." method="POST">
+
+    <div class="field">
+      <div class="label">Name: *</div>
+      <div class="input required">{{ dish_form.name|safe }}</div>
+      {% if dish_form.name.errors %}
+        <div class="error-list">{{ dish_form.name.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Description:</div>
+      <div class="input">{{ dish_form.description|safe }}</div>
+      {% if dish_form.description.errors %}
+        <div class="error-list">{{ dish_form.description.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Photo URL:</div>
+      <div class="input">{{ dish_form.photo_url|safe }}</div>
+      {% if dish_form.photo_url.errors %}
+        <div class="error-list">{{ dish_form.photo_url.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Additional Information:</div>
+      <div class="checkbox">
+        <div>
+          {{ dish_form.is_spicy|safe }} This dish is spicy.
+        </div>
+        <div>
+          {{ dish_form.is_vegetarian|safe }} This dish is vegetarian.
+        </div>
+      </div>
+      {% if dish_form.is_spicy.errors or dish_form.is_vegetarian.errors %}
+        <div class="error-list">
+          {{ dish_form.is_spicy.errors|safe }}
+          {{ dish_form.is_vegetarian.errors|safe }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Price:</div>
+      <div class="input">{{ dish_form.price|safe }}</div>
+      {% if dish_form.price.errors %}
+        <div class="error-list">{{ dish_form.price.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <input class="button" type="submit" value="Recommend this dish"/>
+      &nbsp; or,
+      <a href="{% url friday.view_resto resto_uid=resto.uid %}">
+        return to {{ resto|escape }}
+      </a>
+    </div>
+
+  </form>
+
+{% endif %}
+
+
+

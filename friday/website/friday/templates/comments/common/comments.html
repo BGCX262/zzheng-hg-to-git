@@ -1,0 +1,84 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-15.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+
+<div id="comments" class="ajax-box">
+
+  {#______________________________________________________________________________________________#}
+
+  <div class="section">
+
+    {% if comments %}
+
+      {% for comment in comments %}
+        <div id="comment-{{ comment.id }}" class="post">
+          <div class="user-avatar right">
+            <a href="{% url friday.view_profile username=comment.author.username %}">
+              <img src="{% url friday.view_avatar username=comment.author.username %}" alt="{{ comment.author|escape }}"/>
+            </a>
+          </div>
+          <div class="post-head">
+            <a href="{% url friday.view_profile username=comment.author.username %}">
+              {{ comment.author|escape }}
+            </a>
+            says:
+          </div>
+          <div class="post-body">{{ comment.content|escape|linebreaks }}</div>
+          <div class="post-foot">
+            <img class="icon" src="{{ static_ }}/images/comment.png" alt="Comment"/>
+            Posted {{ comment.submit_date|prettify_datetime }}
+          </div>
+          <div class="clear"></div>
+        </div>
+      {% endfor %}
+
+    {% else %}
+
+      <div class="aux">No comments.</div>
+
+    {% endif %}
+
+  </div>
+
+  {#______________________________________________________________________________________________#}
+
+  {% if comment_form %}
+
+    <div class="section">
+
+      <h3>
+        <a href="javascript:void(0);" onclick="$('#create-comment-form').toggle();">
+          Add your comment
+        </a>
+      </h3>
+
+      <form id="create-comment-form" class="xl-form hidden"
+            action="{% url friday.view_comments ref_type=ref_type ref_pk=ref_pk %}"
+            method="POST"
+            onsubmit="return friday.submitAjaxForm('#comments', '#create-comment-form');">
+        <div class="field">
+          <div class="input required">{{ comment_form.content|safe }}</div>
+          <div class="error-list">{{ comment_form.content.errors|safe }}</div>
+        </div>
+        <div class="field">
+          <input class="button" type="submit" value="Post comment"/>
+        </div>
+      </form>
+
+    </div>
+
+  {% endif %}
+
+</div><!--/#comments-->
+
+
+
+
+

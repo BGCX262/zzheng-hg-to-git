@@ -1,0 +1,64 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-23.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Review member {{ member|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if review_member_form %}
+
+    <div class="section">
+      <h1>Review pending request from {{ member|escape }} ...</h1>
+    </div>
+
+    <div class="section">
+
+      <form id="review-member-form" class="xl-form" action="." method="POST">
+
+        <div class="field">
+          <div class="label">
+            Message from user
+            <a href="{% url friday.view_profile username=member.username %}">{{ member|escape }}</a>
+            :
+          </div>
+          {% if member.request_message %}
+            <div class="disabled-value">
+              {{ member.request_message|escape|linebreaks }}
+            </div>
+          {% else %}
+            <p class="aux">No message from this user.</p>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <div class="label">Your decision:</div>
+          <div class="radio">{{ review_member_form.review|safe }}</div>
+        </div>
+
+        <div class="field">
+          <input class="button" type="submit" value="Update"/>
+          &nbsp; or,
+          <a href="{% url friday.view_members group_uid=group.uid %}">return to group members</a>
+        </div>
+
+      </form><!--/#review-member-form-->
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+
+

@@ -1,0 +1,214 @@
+/**
+ Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+ Created on 2010-02-10.
+ $Id$
+ */
+
+
+/*--------------------------------------------------------------------------------------------------
+ * common styles applied to all kinds of forms
+ *------------------------------------------------------------------------------------------------*/
+
+.required input, .required textarea, .required select {
+  background-color: #FFFFDD;
+}
+
+.disabled-value {
+  color: #666666;
+  background-color: #DDDDDD;
+}
+
+.label, .input, .radio, .checkbox, .error-list, .help-text {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.error-list {
+  color: #FF0000;
+}
+
+.error-list ul {
+  margin: 0;
+  padding: 0;
+}
+
+.error-list li {
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+  list-style: none outside none;
+}
+
+.help-text {
+  color: #888888;
+}
+
+.input textarea,
+.input input,
+.input select,
+.disabled-value {
+  margin: 0;
+  padding: 4px;
+  font-size: 100%;
+  border: 1px solid #BBBBBB;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+.input textarea {
+  font-family: 'Courier New',courier,arial, sans-serif;
+}
+
+.input select option {
+  font-size: 100%;
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+.h1-input textarea, .h1-input input {
+  font-weight: bold;
+  font-size: 160%;
+}
+
+.radio input, .checkbox input {
+  padding: 0 0 0 10px;
+}
+
+.radio ul {
+  margin: 0;
+  padding: 0;
+}
+
+.radio li {
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+  list-style: none outside none;
+}
+
+input.button, a.button {
+  padding: 2px 4px 2px 4px;
+  font-weight: bold;
+  font-size: 100%;
+  text-decoration: none;
+  background-color: #2090D0;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+input.button:hover, a.button:hover {
+  text-decoration: none;
+  background-color: #2060B0;
+  color: #FFFFFF;
+  border: none;
+}
+
+
+/*--------------------------------------------------------------------------------------------------
+ * small-sized (S) form
+ *------------------------------------------------------------------------------------------------*/
+
+.xs-form {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.xs-form .field {
+  margin: 0 0 4px 0;
+  padding: 0;
+}
+
+.xs-form .input textarea,
+.xs-form .input input,
+.xs-form .input select,
+.xs-form .disabled-value {
+  width: 80px;
+}
+
+
+/*--------------------------------------------------------------------------------------------------
+ * small-sized (S) form
+ *------------------------------------------------------------------------------------------------*/
+
+.s-form {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.s-form .field {
+  margin: 0 0 4px 0;
+  padding: 0;
+}
+
+.s-form .field .label {
+  font-weight: normal;
+  font-size: 110%;
+}
+
+.s-form .input textarea,
+.s-form .input input,
+.s-form .input select,
+.s-form .disabled-value {
+  width: 200px;
+}
+
+
+/*--------------------------------------------------------------------------------------------------
+ * medium-sized (M) form
+ *------------------------------------------------------------------------------------------------*/
+
+.m-form {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.m-form .field {
+  margin: 0 0 4px 0;
+  padding: 0;
+}
+
+.m-form .field .label {
+  font-weight: normal;
+  font-size: 110%;
+}
+
+.m-form .input textarea,
+.m-form .input input,
+.m-form .input select,
+.m-form .disabled-value {
+  width: 400px;
+}
+
+
+/*--------------------------------------------------------------------------------------------------
+ * extra-large-sized (XL) form
+ *------------------------------------------------------------------------------------------------*/
+
+.xl-form {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.xl-form .field {
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+
+.xl-form .field .label {
+  font-weight: normal;
+  font-size: 130%;
+}
+
+.xl-form .input textarea,
+.xl-form .input input,
+.xl-form .input select,
+.xl-form .disabled-value {
+  width: 90%;
+}
+
+
+
+

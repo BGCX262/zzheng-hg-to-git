@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-04-29.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Browser - You are using {{ browser_|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  <div class="section">
+    <h2>Recommended Browsers:</h2>
+    <ul>
+      <li><a href="http://www.firefox.com/">Mozilla Firefox</a></li>
+      <li><a href="http://www.google.com/chrome/">Google Chrome</a></li>
+      <li><a href="http://www.apple.com/safari/">Safari</a></li>
+      <li><a href="http://www.opera.com/">Opera</a></li>
+    </ul>
+  </div>
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <div class="info-prompt">
+      {% if browser_.id %}
+        You are using <b>{{ browser_.name|escape }} {{ browser_.version|escape }}</b>
+        on a {{ browser_.platform|escape }} platform
+        to browse this site.
+      {% else %}
+        We are unable to detect which browser you are using...
+      {% endif %}
+    </div>
+  </div>
+
+  {% ifequal browser_.id "MSIE" %}
+
+    <div class="section">
+      <h1>Why you should change your browser...</h1>
+    </div>
+
+    <div>
+      <p>
+        I've detected that you are using IE (Microsoft Internet Explorer) to browse this site.
+        Because of IE's countless bugs and security problems, and lack of adherence to web
+        standards, it is highly recommended that you switch to another browser to get a (much)
+        better user experience.
+      </p>
+      <p>
+        There are plenty of web browsers in the world. You do not need to choose the best one,
+        but you'd better not use the worst.
+      </p>
+      <p>
+        The world wide web would be better if there were no IE, and so would the world be.
+      </p>
+      <p>
+        <a href="http://browsehappy.com/">
+          <img src="http://browsehappy.com/buttons/bh_185x75.gif" alt="Browse Happy"/>
+        </a>
+      </p>
+    </div>
+
+  {% endifequal %}
+
+{% endblock %}
+

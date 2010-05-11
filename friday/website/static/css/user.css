@@ -1,0 +1,73 @@
+/**
+ Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+ Created on 2010-02-19.
+ $Id$
+ */
+
+/*--------------------------------------------------------------------------------------------------
+ * user-avatar
+ *------------------------------------------------------------------------------------------------*/
+
+.user-avatar a, .user-avatar a:hover {
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.user-avatar a img {
+  margin: 0;
+  padding: 2px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #BBBBBB;
+}
+
+.user-avatar a:hover img {
+  border: 1px solid #888888;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * user-list
+ *------------------------------------------------------------------------------------------------*/
+
+.user-list {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.user-list .user {
+  margin: 0 auto;
+  padding: 0 10px 10px 0;
+  display: inline;
+  float: left;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.user-list .user .user-avatar, .user-list .user .user-info {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * user-box
+ *------------------------------------------------------------------------------------------------*/
+
+.user-box {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+.user-box .user-avatar {
+  margin: 0;
+  padding: 0 10px 10px 0;
+  display: inline;
+  float: left;
+}
+
+.user-box .user-info {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+
+

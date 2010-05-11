@@ -1,0 +1,177 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} {{ activity.title|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  <div class="section">
+
+    <div class="user-box">
+      <div class="user-avatar">
+        <a href="{% url friday.view_profile username=activity.submitter.username %}">
+          <img src="{% url friday.view_avatar username=activity.submitter.username %}" alt="{{ activity.submitter|escape }}"/>
+        </a>
+      </div>
+      <div class="user-info">
+        Added by 
+        <a href="{% url friday.view_profile username=activity.submitter.username %}">{{ activity.submitter|escape }}</a>
+        <br/>
+        on {{ activity.submit_date|date:"d N Y" }}
+      </div>
+      <div class="clear"></div>
+    </div>
+
+  </div>
+
+  {% if activity_access.can_edit or activity_access.can_delete %}
+
+    <div class="section">
+
+      <h2>Administrate:</h2>
+
+      <ul>
+        {% if activity_access.can_edit %}
+          <li>
+            <a href="{% url friday.edit_activity group_uid=activity.group.uid activity_id=activity.id %}">
+              Edit this activity
+            </a>
+          </li>
+        {% endif %}
+        {% if activity_access.can_delete %}
+          <li>
+            <a href="javascript:void(0);" onclick="deleteActivity();">
+              Delete this activity
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+
+      {% if activity_access.can_delete %}
+        <form id="delete-activity-form" class="hidden"
+              action="{% url friday.delete_activity group_uid=activity.group.uid activity_id=activity.id %}"
+              method="POST">
+          <input class="button" type="submit" value="Delete"/>
+        </form>
+        <script type="text/javascript">//<![CDATA[
+          function deleteActivity() {
+            $("#delete-activity-form").submit();
+          }
+        //]]></script>
+      {% endif %}
+
+    </div>
+
+  {% endif %}
+
+  <div class="section">
+    <h2>Additional Information:</h2>
+    <ul>
+      {% if activity.is_past %}
+        <li>This activity is past</li>
+      {% endif %}
+      <li>
+        Headcount: <b>{{ activity.headcount }}</b>
+        {% if activity.places %}
+          / {{ activity.places }} places
+        {% endif %}
+      </li>
+      {% if activity.related_link %}
+        <li><a href="{{ activity.related_link }}">Related link</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>{{ activity.title|escape }}</h1>
+    <h5>{{ activity.date|date:"l, d N Y" }} ( {{ activity.date|prettify_datetime }} )</h5>
+  </div>
+
+  <div class="section">
+    <h2>Description:</h2>
+    {{ activity.content|escape|linebreaks }}
+  </div>
+
+  <!-- activity information ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+
+    <h2>Location:</h2>
+
+    <p>
+      <img class="icon" src="{{ static_ }}/images/address.png" alt="Address"/>
+      {% if activity.address %}
+        {{ activity.address|escape }},
+      {% endif %}
+      {{ activity.city|escape }}
+    </p>
+
+    {% if activity.geo_pt %}
+      <div id="map-canvas" class="map"></div>
+      <script type="text/javascript">//<![CDATA[
+        $(function() {
+          friday.showMap({{ activity.geo_pt.lat }}, {{ activity.geo_pt.lon }}, "#map-canvas");
+        });
+      //]]></script>
+    {% endif %}
+
+  </div>
+
+  <!-- attenders ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div id="load-attenders"></div>
+  <script type="text/javascript">//<![CDATA[
+    $(function() {
+      $("#load-attenders").load("{% url friday.view_attenders group_uid=group.uid activity_id=activity.id %}");
+    });
+  //]]></script>
+
+  <!-- activity tabs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+    <div id="activity-tabs">
+      <ul>
+        <li><a href="{% url friday.view_comments ref_type=activity.model_name ref_pk=activity.id %}">Comments</a></li>
+      </ul>
+    </div>
+    <script type="text/javascript">//<![CDATA[
+      $(function() {
+        $("#activity-tabs").tabs({
+          ajaxOptions: {
+            error: function(xhr, status, index, anchor) {
+              if (index == 0) {
+                target = "comments";
+              } else {
+                target = "unknown objects";
+              }
+              $(anchor.hash).html("Failed to load " + target + " via AJAX: server error.");
+            }
+          }
+        });
+      });
+    //]]></script>
+  </div>
+
+{% endblock %}{# content #}
+
+
+

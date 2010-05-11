@@ -1,0 +1,41 @@
+{% extends "restos/resto_base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-10.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Edit Recommended Dishes :: {{ resto|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>{{ resto|escape }} / Recommended Dishes</h1>
+  </div>
+
+  {% if dish_form %}
+    <div class="section">
+      <h2>Recommend a dish:</h2>
+      {% include "restos/common/dish_form.html" %}
+    </div>
+  {% endif %}
+
+  {% if resto.dishes %}
+    <div class="section">
+      <h2>Recommended Dishes:</h2>
+      {% for dish in resto.dishes %}
+        {% include "restos/common/dish.html" %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+

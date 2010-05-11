@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-04-29.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Notification #{{ notification.id }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  <div class="section">
+
+    <div class="user-box">
+      <div class="user-avatar">
+        <a href="{% url friday.view_profile username=notification.author.username %}">
+          <img src="{% url friday.view_avatar username=notification.author.username %}" alt="{{ notification.author|escape }}"/>
+        </a>
+      </div>
+      <div class="user-info">
+        Sent by
+        <a href="{% url friday.view_profile username=notification.author.username %}">
+          {{ notification.author|escape }}
+        </a>
+        <br/>
+        {{ notification.send_date|prettify_datetime }}
+      </div>
+      <div class="clear"></div>
+    </div><!--/.user-box-->
+  </div>
+
+  <div class="section">
+    <h2>Category:</h2>
+    <p>
+      <a href="{% url friday.view_notifications category=notification.category %}">
+        {{ notification.category|escape }}
+      </a>
+    </p>
+  </div>
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>{{ notification.subject|escape }}</h1>
+  </div>
+
+  <div class="section">
+    <h2>Message:</h2>
+    <p class="code">{{ notification.message|escape|linebreaksbr }}</p>
+  </div>
+
+  <div class="section">
+    <h2>Recipients ({{ notification.recipients|length }}):</h2>
+    <ul>
+      {% for recipient in notification.recipients %}
+        <li><code>{{ recipient|safe_email|escape }}</code></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+{% endblock %}
+
+
+
