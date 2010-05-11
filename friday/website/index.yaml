@@ -9,3 +9,40 @@ indexes:
 # manually, move them above the marker line.  The index.yaml file is
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
+
+- kind: Activity
+  properties:
+  - name: group
+  - name: date
+    direction: desc
+
+- kind: Attender
+  properties:
+  - name: activity
+  - name: user
+
+- kind: Comment
+  properties:
+  - name: ref_pk
+  - name: ref_type
+  - name: submit_date
+    direction: desc
+
+- kind: Inductee
+  properties:
+  - name: group
+  - name: inducted_date
+    direction: desc
+
+- kind: Member
+  properties:
+  - name: group
+  - name: is_approved
+  - name: join_date
+    direction: desc
+
+- kind: Tag
+  properties:
+  - name: category
+  - name: count
+    direction: desc
