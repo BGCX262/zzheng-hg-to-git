@@ -27,6 +27,16 @@ urlpatterns = patterns("",
         view_inductee,
         name="friday.view_inductee"
     ),
+    url(
+        r"^(?P<inductee_uid>\w+)/change_photo/$",
+        change_inductee_photo,
+        name="friday.change_inductee_photo"
+    ),
+    url(
+        r"^(?P<inductee_uid>\w+)/photo/$",
+        view_inductee_photo,
+        name="friday.view_inductee_photo"
+    ),
 )
 
 

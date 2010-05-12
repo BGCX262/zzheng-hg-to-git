@@ -14,11 +14,59 @@
 
 {#________________________________________________________________________________________________#}
 
+{% block sidebar %}
+
+  <!-- photo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  {% if inductee.photo_type and inductee.photo_data %}
+    <div class="section">
+      <img class="s-photo"
+           src="{% url friday.view_inductee_photo group_uid=inductee.group.uid inductee_uid=inductee.uid %}"
+           alt="Photo of {{ inductee|escape }}"/>
+    </div>
+  {% endif %}
+
+  <div class="section">
+    <dl>
+      <dt>
+        <img src="{{ static_ }}/images/user.png" alt="User"/>
+        User profile:
+      </dt>
+      <dd>
+        <a href="{% url friday.view_profile username=inductee.user.username %}">{{ inductee.user|escape }}</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt>
+        <img src="{{ static_ }}/images/award.png" alt="Award"/>
+        Inducted date:
+      </dt>
+      <dd>{{ inductee.inducted_date|date:"d N Y" }}</dd>
+    </dl>
+  </div>
+
+  {% if is_webmaster_ %}
+    <div class="section">
+      <h2>Administrate:</h2>
+      <ul>
+        <li>
+          <a href="{% url friday.change_inductee_photo group_uid=inductee.group.uid inductee_uid=inductee.uid %}">
+            Change photo of inductee
+          </a>
+        </li>
+      </ul>
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
 {% block content %}
 
   <div class="section">
     <h1>{{ inductee.name|escape }}</h1>
-    <h5>Inducted on {{ inductee.inducted_date|date:"d N Y" }}</h5>
+    <h5>{{ inductee.summary|default:""|escape }}</h5>
   </div>
 
   <div class="section">

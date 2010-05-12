@@ -1,0 +1,71 @@
+{% extends "halloffame/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-12.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Change photo of {{ inductee|escape }} :: Hall of Fame :: {{ group|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Change the photo of {{ inductee|escape }}</h1>
+  </div>
+
+  <div class="section">
+
+    <form id="inductee-photo-form" class="xl-form" action="." method="POST" enctype="multipart/form-data">
+
+      <div class="field">
+        <div class="label">Upload a photo of {{ inductee|escape }}:</div>
+        <div class="input">{{ inductee_photo_form.photo|safe }}</div>
+        {% if inductee_photo_form.photo.errors %}
+          <div class="error-list">{{ inductee_photo_form.photo.errors|safe }}</div>
+        {% endif %}
+        <div class="help-text">
+          The preferred photo size is 300x300 pixels.
+        </div>
+      </div>
+
+      {% if inductee.photo_type and inductee.photo_data %}
+        <div class="field">
+          <div class="label">Or, delete the current photo:</div>
+          <div>
+            <img class="s-photo"
+                 src="{% url friday.view_inductee_photo group_uid=inductee.group.uid inductee_uid=inductee.uid %}"
+                 alt="Photo of {{ inductee|escape }}"/>
+          </div>
+          <div class="checkbox">
+            {{ inductee_photo_form.delete_photo|safe }}
+            Delete the current photo of {{ inductee|escape }}.
+          </div>
+          {% if inductee_photo_form.delete_photo.errors %}
+            <div class="error-list">{{ inductee_photo_form.delete_photo.errors|safe }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="field">
+        <input class="button" type="submit" value="Update"/>
+        &nbsp; or,
+        <a href="{% url friday.view_inductee group_uid=inductee.group.uid inductee_uid=inductee.uid %}">
+          return to inductee page
+        </a>
+      </div>
+
+    </form>
+
+  </div>
+
+{% endblock %}
+
+
+

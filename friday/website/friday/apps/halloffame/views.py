@@ -20,7 +20,7 @@ from friday.common.prompt import Prompt
 from friday.apps.groups.models import Group
 from friday.apps.groups.views import BaseGroupAction
 from friday.apps.halloffame.models import Inductee
-from friday.apps.halloffame.forms import InducteeForm
+from friday.apps.halloffame.forms import InducteeForm, InducteePhotoForm
 
 
 class ViewHallOfFame(BaseGroupAction):
@@ -71,13 +71,10 @@ class AddInductee(BaseGroupAction):
             return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
-class ViewInductee(BaseGroupAction):
-
-    PAGE_URL_NAME = "friday.view_inductee"
-    PAGE_TEMPLATE = "halloffame/view_inductee.html"
+class BaseInducteeAction(BaseGroupAction):
 
     def __init__(self, request, group_uid, inductee_uid):
-        super(ViewInductee, self).__init__(request, group_uid)
+        super(BaseInducteeAction, self).__init__(request, group_uid)
         self.inductee_uid = inductee_uid
 
     def get_inductee(self):
@@ -87,10 +84,68 @@ class ViewInductee(BaseGroupAction):
             raise EntityNotFoundError(Inductee, message)
         return inductee
 
+    def update_data(self, data):
+        data["inductee"] = self.get_inductee()
+        return super(BaseInducteeAction, self).update_data(data)
+
+
+class ViewInductee(BaseInducteeAction):
+
+    PAGE_URL_NAME = "friday.view_inductee"
+    PAGE_TEMPLATE = "halloffame/view_inductee.html"
+
     def get_page(self):
-        data = {"inductee": self.get_inductee()}
+        data = self.update_data({})
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
+class ChangeInducteePhoto(BaseInducteeAction):
+
+    PAGE_URL_NAME = "friday.change_inductee_photo"
+    PAGE_TEMPLATE = "halloffame/change_inductee_photo.html"
+
+    def _check_edit_access(self):
+        if not users.is_webmaster(self.current_user):
+            message = "Current user cannot change photo of inductee."
+            raise BadRequestError(self.request, message)
+
+    def get_page(self):
+        self._check_edit_access()
+        data = {"inductee_photo_form": InducteePhotoForm()}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+    def post_page(self):
+        self._check_edit_access()
+        inductee_photo_form = InducteePhotoForm(data=self.request.POST, files=self.request.FILES)
+        try:
+            inductee = inductee_photo_form.update(inductee=self.get_inductee())
+            message = "Photo of inductee %s has been created successfully." % inductee.uid
+            logging.info(message)
+            redirect_url = ViewInductee.get_page_url(
+                group_uid=self.group_uid,
+                inductee_uid=inductee.uid
+            )
+            return HttpResponseRedirect(redirect_url)
+        except Exception, exc:
+            message = "Failed to update photo of inductee in datastore: %s" % exc
+            logging.error(message)
+            logging.exception(exc)
+            data = {"inductee_photo_form": inductee_photo_form, "prompt": Prompt(error=message)}
+            data = self.update_data(data)
+            return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
+class ViewInducteePhoto(BaseInducteeAction):
+
+    PAGE_URL_NAME = "friday.view_inductee_photo"
+
+    def get_page(self):
+        inductee = self.get_inductee()
+        if not inductee.photo_type or not inductee.photo_data:
+            message = "Inductee %s does not have a photo." % inductee.uid
+            raise BadRequestError(self.request, message)
+        return HttpResponse(inductee.photo_data, mimetype=inductee.photo_type)
 
 
 #---------------------------------------------------------------------------------------------------
@@ -106,6 +161,14 @@ def add_inductee(request, group_uid):
 
 def view_inductee(request, group_uid, inductee_uid):
     return ViewInductee(request, group_uid, inductee_uid).process()
+
+
+def change_inductee_photo(request, group_uid, inductee_uid):
+    return ChangeInducteePhoto(request, group_uid, inductee_uid).process()
+
+
+def view_inductee_photo(request, group_uid, inductee_uid):
+    return ViewInducteePhoto(request, group_uid, inductee_uid).process()
 
 
 # EOF

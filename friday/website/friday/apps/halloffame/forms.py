@@ -19,7 +19,8 @@ class InducteeForm(forms.Form):
     uid = forms.CharField(max_length=32, required=True)
     name = forms.CharField(max_length=32, required=True)
     user = forms.CharField(max_length=64, required=True)
-    biography = forms.CharField(required=False, widget=forms.Textarea)
+    summary = forms.CharField(max_length=128, required=True)
+    biography = forms.CharField(required=True, widget=forms.Textarea)
 
     def __init__(self, data=None, instance=None):
         self._instance = instance
@@ -28,6 +29,7 @@ class InducteeForm(forms.Form):
                 "uid": instance.uid,
                 "name": instance.name,
                 "user": instance.user.email,
+                "summary": instance.summary,
                 "biography": instance.biography,
             }
         else:
@@ -70,6 +72,25 @@ class InducteeForm(forms.Form):
                 setattr(self._instance, name, value)
         self._instance.save()
         return self._instance
+
+
+class InducteePhotoForm(forms.Form):
+
+    photo = forms.FileField(required=False)
+    delete_photo = forms.BooleanField(required=False, initial=False)
+
+    def update(self, inductee):
+        if not self.is_valid():
+            raise InvalidFormError(self.errors)
+        if self.cleaned_data["delete_photo"]:
+            inductee.photo_type = None
+            inductee.photo_data = None
+        photo = self.cleaned_data["photo"]
+        if photo:
+            inductee.photo_type = photo.content_type
+            inductee.photo_data = photo.read()
+        inductee.save()
+        return inductee
 
 
 # EOF
