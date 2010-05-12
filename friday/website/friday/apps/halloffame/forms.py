@@ -17,7 +17,8 @@ from friday.apps.halloffame.models import Inductee
 class InducteeForm(forms.Form):
 
     uid = forms.CharField(max_length=32, required=True)
-    name = forms.CharField(max_length=32, required=True)
+    name = forms.CharField(max_length=64, required=True)
+    alias = forms.CharField(max_length=64, required=False)
     user = forms.CharField(max_length=64, required=True)
     summary = forms.CharField(max_length=128, required=True)
     biography = forms.CharField(required=True, widget=forms.Textarea)
@@ -28,6 +29,7 @@ class InducteeForm(forms.Form):
             initial = {
                 "uid": instance.uid,
                 "name": instance.name,
+                "alias": instance.alias,
                 "user": instance.user.email,
                 "summary": instance.summary,
                 "biography": instance.biography,

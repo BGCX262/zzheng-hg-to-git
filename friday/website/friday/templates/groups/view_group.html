@@ -83,7 +83,6 @@
       <div class="user-list">
 
         {% for member in group.pending_members %}
-
           <div class="user">
             <div class="user-avatar">
               <a href="{% url friday.view_profile username=member.username %}">
@@ -99,19 +98,19 @@
               {% endifequal %}
             </div>
           </div>
-
         {% endfor %}
 
-        <div class="clear">
-          {% if group_access.can_moderate %}
-            <p>
-              <a href="{% url friday.view_members group_uid=group.uid %}">
-                &raquo; Review open requests
-              </a>
-            </p>
-          {% endif %}
-        </div>
+        <div class="clear"></div>
+
       </div>
+
+      {% if group_access.can_moderate %}
+        <p>
+          <a href="{% url friday.view_members group_uid=group.uid %}">
+            &raquo; Review open requests
+          </a>
+        </p>
+      {% endif %}
 
     </div>
 
@@ -141,6 +140,8 @@
             {% endifequal %}
           </div>
         </div>
+      {% empty %}
+        <p class="na">No members found.</p>
       {% endfor %}
 
       <div class="clear"></div>

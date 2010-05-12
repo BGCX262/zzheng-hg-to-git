@@ -26,29 +26,17 @@
     </div>
   {% endif %}
 
-  <div class="section">
-    <dl>
-      <dt>
-        <img src="{{ static_ }}/images/user.png" alt="User"/>
-        User profile:
-      </dt>
-      <dd>
-        <a href="{% url friday.view_profile username=inductee.user.username %}">{{ inductee.user|escape }}</a>
-      </dd>
-    </dl>
-    <dl>
-      <dt>
-        <img src="{{ static_ }}/images/award.png" alt="Award"/>
-        Inducted date:
-      </dt>
-      <dd>{{ inductee.inducted_date|date:"d N Y" }}</dd>
-    </dl>
-  </div>
+  <!-- administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   {% if is_webmaster_ %}
     <div class="section">
       <h2>Administrate:</h2>
       <ul>
+        <li>
+          <a href="{% url friday.edit_inductee group_uid=inductee.group.uid inductee_uid=inductee.uid %}">
+            Edit inductee information
+          </a>
+        </li>
         <li>
           <a href="{% url friday.change_inductee_photo group_uid=inductee.group.uid inductee_uid=inductee.uid %}">
             Change photo of inductee
@@ -65,13 +53,25 @@
 {% block content %}
 
   <div class="section">
-    <h1>{{ inductee.name|escape }}</h1>
+    <h1>{{ inductee|escape }}</h1>
     <h5>{{ inductee.summary|default:""|escape }}</h5>
   </div>
 
   <div class="section">
     <h2>Biography:</h2>
     {{ inductee.biography|escape|linebreaks }}
+  </div>
+
+  <div class="section">
+    <div class="aux right">
+      <img class="icon" src="{{ static_ }}/images/award.png" alt="Award"/>
+      Inducted on {{ inductee.inducted_date|date:"d N Y" }}
+      &bull;
+      <a href="{% url friday.view_profile username=inductee.user.username %}">
+        Profile of {{ inductee.user|escape }}
+      </a>
+    </div>
+    <div class="clear"></div>
   </div>
 
 {% endblock %}

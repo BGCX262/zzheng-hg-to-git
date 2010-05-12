@@ -22,6 +22,7 @@ class Inductee(models.Model):
     group = db.ReferenceProperty(Group, required=True)
     uid = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
+    alias = db.StringProperty()
     user = db.ReferenceProperty(users.User)
     summary = db.StringProperty()
     biography = db.TextProperty(required=True)
@@ -32,7 +33,10 @@ class Inductee(models.Model):
     schema_version = db.IntegerProperty(required=True, default=1)
 
     def __unicode__(self):
-        return unicode(self.name)
+        if self.alias:
+            return u"%s aka. %s" % (self.name, self.alias)
+        else:
+            return unicode(self.name)
 
     @classmethod
     def _make_pk(cls, group, uid):

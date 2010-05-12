@@ -15,35 +15,33 @@
 
   <div class="section">
 
-    {% if comments %}
+    {% for comment in comments %}
 
-      {% for comment in comments %}
-        <div id="comment-{{ comment.id }}" class="post">
-          <div class="user-avatar right">
-            <a href="{% url friday.view_profile username=comment.author.username %}">
-              <img src="{% url friday.view_avatar username=comment.author.username %}" alt="{{ comment.author|escape }}"/>
-            </a>
-          </div>
-          <div class="post-head">
-            <a href="{% url friday.view_profile username=comment.author.username %}">
-              {{ comment.author|escape }}
-            </a>
-            says:
-          </div>
-          <div class="post-body">{{ comment.content|escape|linebreaks }}</div>
-          <div class="post-foot">
-            <img class="icon" src="{{ static_ }}/images/comment.png" alt="Comment"/>
-            Posted {{ comment.submit_date|prettify_datetime }}
-          </div>
-          <div class="clear"></div>
+      <div id="comment-{{ comment.id }}" class="post">
+        <div class="user-avatar right">
+          <a href="{% url friday.view_profile username=comment.author.username %}">
+            <img src="{% url friday.view_avatar username=comment.author.username %}" alt="{{ comment.author|escape }}"/>
+          </a>
         </div>
-      {% endfor %}
+        <div class="post-head">
+          <a href="{% url friday.view_profile username=comment.author.username %}">
+            {{ comment.author|escape }}
+          </a>
+          says:
+        </div>
+        <div class="post-body">{{ comment.content|escape|linebreaks }}</div>
+        <div class="post-foot">
+          <img class="icon" src="{{ static_ }}/images/comment.png" alt="Comment"/>
+          Posted {{ comment.submit_date|prettify_datetime }}
+        </div>
+        <div class="clear"></div>
+      </div>
 
-    {% else %}
+    {% empty %}
 
-      <div class="aux">No comments.</div>
+      <p class="na">No comments.</p>
 
-    {% endif %}
+    {% endfor %}
 
   </div>
 

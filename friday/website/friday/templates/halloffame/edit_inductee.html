@@ -1,0 +1,34 @@
+{% extends "halloffame/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-11.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Edit inductee {{ inductee|escape }} :: Hall of Fame :: {{ group|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if inductee_form %}
+
+    <div class="section">
+      <h1>Edit inductee: {{ inductee|escape }}</h1>
+    </div>
+
+    <div class="section">
+      {% include "halloffame/common/inductee_form.html" %}
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+
+

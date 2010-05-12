@@ -58,7 +58,7 @@ class AddInductee(BaseGroupAction):
             message = "Inductee %s has been created successfully." % inductee.uid
             logging.info(message)
             redirect_url = ViewInductee.get_page_url(
-                group_uid=self.group_uid,
+                group_uid=inductee.group.uid,
                 inductee_uid=inductee.uid
             )
             return HttpResponseRedirect(redirect_url)
@@ -97,6 +97,43 @@ class ViewInductee(BaseInducteeAction):
     def get_page(self):
         data = self.update_data({})
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
+class EditInductee(BaseInducteeAction):
+
+    PAGE_URL_NAME = "friday.edit_inductee"
+    PAGE_TEMPLATE = "halloffame/edit_inductee.html"
+
+    def _check_edit_access(self):
+        if not users.is_webmaster(self.current_user):
+            message = "Current user cannot edit inductee."
+            raise BadRequestError(self.request, message)
+
+    def get_page(self):
+        self._check_edit_access()
+        data = {"inductee_form": InducteeForm(instance=self.get_inductee())}
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+    def post_page(self):
+        self._check_edit_access()
+        inductee_form = InducteeForm(data=self.request.POST, instance=self.get_inductee())
+        try:
+            inductee = inductee_form.update()
+            message = "Inductee %s has been updated successfully." % inductee.uid
+            logging.info(message)
+            redirect_url = ViewInductee.get_page_url(
+                group_uid=inductee.group.uid,
+                inductee_uid=inductee.uid
+            )
+            return HttpResponseRedirect(redirect_url)
+        except Exception, exc:
+            message = "Failed to update inductee in datastore: %s" % exc
+            logging.error(message)
+            logging.exception(exc)
+            data = {"inductee_form": inductee_form, "prompt": Prompt(error=message)}
+            data = self.update_data(data)
+            return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
 class ChangeInducteePhoto(BaseInducteeAction):
@@ -161,6 +198,10 @@ def add_inductee(request, group_uid):
 
 def view_inductee(request, group_uid, inductee_uid):
     return ViewInductee(request, group_uid, inductee_uid).process()
+
+
+def edit_inductee(request, group_uid, inductee_uid):
+    return EditInductee(request, group_uid, inductee_uid).process()
 
 
 def change_inductee_photo(request, group_uid, inductee_uid):

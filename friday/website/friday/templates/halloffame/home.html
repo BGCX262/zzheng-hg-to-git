@@ -34,9 +34,34 @@
   </div>
 
   <div class="section">
+
     {% for inductee in inductees %}
-      <a href="{% url friday.view_inductee group_uid=inductee.group.uid inductee_uid=inductee.uid %}">{{ inductee|escape }}</a>
+
+      <div class="post">
+        <div class="user-avatar right">
+          <a href="{% url friday.view_profile username=inductee.user.username %}">
+            <img src="{% url friday.view_avatar username=inductee.user.username %}" alt="{{ inductee.user|escape }}"/>
+          </a>
+        </div>
+        <div class="post-head">
+          <a href="{% url friday.view_inductee group_uid=inductee.group.uid inductee_uid=inductee.uid %}">
+            {{ inductee|escape }}
+          </a>
+        </div>
+        <div class="post-body"><span class="big">{{ inductee.summary|escape }}</span></div>
+        <div class="post-foot">
+          <img class="icon" src="{{ static_ }}/images/award.png" alt="Award"/>
+          Inducted on {{ inductee.inducted_date|date:"d N Y" }}.
+        </div>
+        <div class="clear"></div>
+      </div>
+
+    {% empty %}
+
+      <p class="na">No inductees found.</p>
+
     {% endfor %}
+
   </div>
 
   <div class="section">
