@@ -34,10 +34,14 @@ class Resto(models.Model, Taggable):
     post_code = db.StringProperty()
     route = db.StringProperty()
 
-    places = db.IntegerProperty()
     tel_1 = db.PhoneNumberProperty()
     tel_2 = db.PhoneNumberProperty()
     website = db.LinkProperty()
+
+    hours_1 = db.StringProperty()
+    hours_2 = db.StringProperty()
+    hours_3 = db.StringProperty()
+    places = db.IntegerProperty()
 
     tags = db.StringListProperty(default=[])
 
@@ -64,6 +68,17 @@ class Resto(models.Model, Taggable):
         if self.tel_2:
             tel_list.append(self.tel_2)
         return tel_list
+
+    @property
+    def hours(self):
+        hours_list = []
+        if self.hours_1:
+            hours_list.append(self.hours_1)
+        if self.hours_2:
+            hours_list.append(self.hours_2)
+        if self.hours_3:
+            hours_list.append(self.hours_3)
+        return hours_list
 
     @property
     def dishes(self):

@@ -18,6 +18,112 @@
 
 {% block sidebar %}
 
+  <!-- information ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+
+    <h2>Information:</h2>
+
+    {% if resto.geo_pt %}
+      <div id="map-canvas" class="s-map"></div>
+      <p><a href="#TODO">&raquo; View larger map</a></p>
+      <script type="text/javascript">//<![CDATA[
+        $(function() {
+          friday.showMap({{ resto.geo_pt.lat }}, {{ resto.geo_pt.lon }}, "#map-canvas");
+        });
+      //]]></script>
+    {% endif %}
+
+    <dl>
+      <dt>
+        <img class="icon" src="{{ static_ }}/images/address.png" alt="Address"/>
+        Address:
+      </dt>
+      <dd>
+        {{ resto.address|escape }}<br/>
+        {{ resto.city|escape }} {{ resto.post_code|default:""|escape }}
+      </dd>
+    </dl>
+
+    {% if resto.route %}
+      <dl>
+        <dt>
+          <img class="icon" src="{{ static_ }}/images/route.png" alt="Route"/>
+          Route:
+        </dt>
+        <dd>{{ resto.route|escape }}</dd>
+      </dl>
+    {% endif %}
+
+    {% if resto.tels %}
+      <dl>
+        <dt>
+          <img class="icon" src="{{ static_ }}/images/tel.png" alt="Tel"/>
+          Tel:
+        </dt>
+        <dd>{{ resto.tels|join:" / "|escape }}</dd>
+      </dl>
+    {% endif %}
+
+    {% if resto.hours %}
+      <dl>
+        <dt>
+          <img class="icon" src="{{ static_ }}/images/time.png" alt="Hours"/>
+          Hours:
+        </dt>
+        <dd>
+          {% for hours in resto.hours %}
+            {{ hours|escape }}<br/>
+          {% endfor %}
+        </dd>
+      </dl>
+    {% endif %}
+
+    {% if resto.places %}
+      <dl>
+        <dt>
+          <img class="icon" src="{{ static_ }}/images/group.png" alt="Places"/>
+          Places:
+        </dt>
+        <dd>{{ resto.places }} seats</dd>
+      </dl>
+    {% endif %}
+
+  </div>
+
+  <!-- tags ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <div class="section">
+
+    <h2>Tags:</h2>
+
+    <div id="load-resto-tags">
+      <div class="ajax-loader">
+        <img src="{{ static_ }}/images/ajax_loader.gif" alt="Loading"/>
+        Loading tags...
+      </div>
+      <div class="ajax-error hidden">
+        <img src="{{ static_ }}/images/error.png" alt="Error"/>
+        Failed to load tags.
+      </div>
+    </div>
+
+    <script type="text/javascript">//<![CDATA[
+      $(function() {
+        $("#load-resto-tags").load(
+          "{% url friday.view_resto_tags resto_uid=resto.uid %}",
+          function(response, textStatus) {
+            if (textStatus == "error") {
+              $("#load-resto-tags .ajax-loader").hide();
+              $("#load-resto-tags .ajax-error").show();
+            }
+          }
+        );
+      });
+    //]]></script>
+
+  </div>
+
   <!-- submitter and updater ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   <div class="section">
@@ -66,39 +172,6 @@
     </div>
   {% endif %}
 
-  <!-- tags ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-  <div class="section">
-
-    <h2>Tags:</h2>
-
-    <div id="load-resto-tags">
-      <div class="ajax-loader">
-        <img src="{{ static_ }}/images/ajax_loader.gif" alt="Loading"/>
-        Loading tags...
-      </div>
-      <div class="ajax-error hidden">
-        <img src="{{ static_ }}/images/error.png" alt="Error"/>
-        Failed to load tags.
-      </div>
-    </div>
-
-    <script type="text/javascript">//<![CDATA[
-      $(function() {
-        $("#load-resto-tags").load(
-          "{% url friday.view_resto_tags resto_uid=resto.uid %}",
-          function(response, textStatus) {
-            if (textStatus == "error") {
-              $("#load-resto-tags .ajax-loader").hide();
-              $("#load-resto-tags .ajax-error").show();
-            }
-          }
-        );
-      });
-    //]]></script>
-
-  </div>
-
 {% endblock %}
 
 {#________________________________________________________________________________________________#}
@@ -116,35 +189,6 @@
       {{ resto.description|escape|linebreaks }}
     </div>
   {% endif %}
-
-  <!-- resto address ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-  <div class="section">
-
-    <h2>Address and Route:</h2>
-
-    <p>
-      <!--img class="icon" src="{{ static_ }}/images/address.png" alt="Address"/-->
-      {{ resto.address|escape }}, {{ resto.city|escape }} {{ resto.post_code|default:""|escape }}
-    </p>
-
-    {% if resto.route %}
-      <p>
-        <!--img class="icon" src="{{ static_ }}/images/route.png" alt="Route"/-->
-        {{ resto.route|escape }}
-      </p>
-    {% endif %}
-
-    {% if resto.geo_pt %}
-      <div id="map-canvas" class="map"></div>
-      <script type="text/javascript">//<![CDATA[
-        $(function() {
-          friday.showMap({{ resto.geo_pt.lat }}, {{ resto.geo_pt.lon }}, "#map-canvas");
-        });
-      //]]></script>
-    {% endif %}
-
-  </div>
 
   <!-- resto recommended dishes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 

@@ -39,6 +39,15 @@ def multiply(value, arg):
 
 
 @register.filter
+def summary(value, arg):
+    value = unicode(value)
+    if len(value) > arg:
+        return u"%s..." % value[:arg]
+    else:
+        return value
+
+
+@register.filter
 def prettify_datetime(value):
     """
     Prettifies a date or a datetime, returns a humain read-able string.

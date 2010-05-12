@@ -20,18 +20,22 @@ class RestoForm(forms.Form):
 
     uid = forms.CharField(required=True)
     name = forms.CharField(required=True)
+    description = forms.CharField(required=False, widget=forms.Textarea)
+
     address = forms.CharField(required=True)
     city = forms.CharField(required=True)
     geo_pt = GeoPtField(required=False)
     post_code = forms.CharField(required=False)
     route = forms.CharField(required=False)
 
-    places = forms.IntegerField(required=False)
     tel_1 = forms.CharField(required=False)
     tel_2 = forms.CharField(required=False)
     website = forms.URLField(required=False)
 
-    description = forms.CharField(required=False, widget=forms.Textarea)
+    hours_1 = forms.CharField(required=False)
+    hours_2 = forms.CharField(required=False)
+    hours_3 = forms.CharField(required=False)
+    places = forms.IntegerField(required=False)
 
     def __init__(self, data=None, instance=None):
         self._instance = instance
@@ -39,16 +43,19 @@ class RestoForm(forms.Form):
             initial = {
                 "uid": instance.uid,
                 "name": instance.name,
+                "description": instance.description,
                 "address": instance.address,
                 "city": instance.city,
                 "geo_pt": instance.geo_pt,
                 "post_code": instance.post_code,
                 "route": instance.route,
-                "places": instance.places,
-                "website": instance.website,
                 "tel_1": instance.tel_1,
                 "tel_2": instance.tel_2,
-                "description": instance.description,
+                "website": instance.website,
+                "hours_1": instance.hours_1,
+                "hours_2": instance.hours_2,
+                "hours_3": instance.hours_3,
+                "places": instance.places,
             }
         else:
             initial = None

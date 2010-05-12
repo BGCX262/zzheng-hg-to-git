@@ -6,3 +6,16 @@
 # Created on 2010-04-27.
 # $Id$
 #
+
+
+__version__ = "0.1"
+
+
+def get_version():
+    """
+    Returns the djangomockup version number.
+    """
+    return __version__
+
+
+# EOF

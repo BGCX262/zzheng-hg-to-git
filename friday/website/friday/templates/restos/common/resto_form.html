@@ -43,6 +43,14 @@
     </div>
 
     <div class="field">
+      <div class="label">Description:</div>
+      <div class="input">{{ resto_form.description|safe }}</div>
+      {% if resto_form.description.errors %}
+        <div class="error-list">{{ resto_form.description.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
       <div class="label">Address: *</div>
       <div id="address" class="input required">{{ resto_form.address|safe }}</div>
       {% if resto_form.address.errors %}
@@ -104,14 +112,6 @@
     </div>
 
     <div class="field">
-      <div class="label">Places:</div>
-      <div class="input">{{ resto_form.places|safe }}</div>
-      {% if resto_form.places.errors %}
-        <div class="error-list">{{ resto_form.places.errors|safe }}</div>
-      {% endif %}
-    </div>
-
-    <div class="field">
       <div class="label">Telephone number(s):</div>
       <div class="input">{{ resto_form.tel_1|safe }}</div>
       <div class="input">{{ resto_form.tel_2|safe }}</div>
@@ -132,10 +132,24 @@
     </div>
 
     <div class="field">
-      <div class="label">Description:</div>
-      <div class="input">{{ resto_form.description|safe }}</div>
-      {% if resto_form.description.errors %}
-        <div class="error-list">{{ resto_form.description.errors|safe }}</div>
+      <div class="label">Hours:</div>
+      <div class="input">{{ resto_form.hours_1|safe }}</div>
+      <div class="input">{{ resto_form.hours_2|safe }}</div>
+      <div class="input">{{ resto_form.hours_3|safe }}</div>
+      {% if resto_form.hours_1.errors or resto_form.hours_2.errors or resto_form.hours_3.errors %}
+        <div class="error-list">
+          {{ resto_form.hours_1.errors|safe }}
+          {{ resto_form.hours_2.errors|safe }}
+          {{ resto_form.hours_3.errors|safe }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <div class="label">Places:</div>
+      <div class="input">{{ resto_form.places|safe }}</div>
+      {% if resto_form.places.errors %}
+        <div class="error-list">{{ resto_form.places.errors|safe }}</div>
       {% endif %}
     </div>
 
