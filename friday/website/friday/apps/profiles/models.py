@@ -70,7 +70,12 @@ class Profile(models.Model):
     @classmethod
     def create(cls, user, **kwargs):
         pk = cls._make_pk(user)
-        return cls(key_name=pk, user=user, **kwargs)
+        name = kwargs.get("name")
+        if "name" in kwargs:
+            del kwargs["name"]
+        instance = cls(key_name=pk, user=user, **kwargs)
+        instance.name = name
+        return instance
 
     @classmethod
     def find_all(cls, **kwargs):
