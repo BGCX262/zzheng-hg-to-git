@@ -33,7 +33,10 @@ class RestosHome(Action):
     def get_page(self):
         newly_added = list(Resto.find(order_by="-update_date", limit=10))
         random.shuffle(newly_added)
-        data = {"newly_added": newly_added[:4]}
+        data = {
+            "categories": Resto.CATEGORIES,
+            "newly_added": newly_added[:4],
+        }
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
@@ -44,7 +47,36 @@ class ViewAllRestos(Action):
     PAGE_TEMPLATE = "restos/view_all_restos.html"
 
     def get_page(self):
-        data = {"restos": Resto.find(limit=10)}
+        data = {
+            "categories": Resto.CATEGORIES,
+            "restos": Resto.find(limit=20),
+        }
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
+class ViewRestosByCategory(Action):
+
+    PAGE_URL_NAME = "friday.view_restos_by_category"
+    PAGE_TEMPLATE = "restos/view_restos_by_category.html"
+
+    def __init__(self, request, category):
+        super(ViewRestosByCategory, self).__init__(request)
+        self.category = category
+
+    def get_page(self):
+        category_display = None
+        for category, display in Resto.CATEGORIES:
+            if category == self.category:
+                category_display = display
+                break
+        category_display = category_display or self.category
+        restos = Resto.find_by_category(category=self.category, limit=20)
+        data = {
+            "categories": Resto.CATEGORIES,
+            "category_display": category_display,
+            "restos": restos,
+        }
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
@@ -320,6 +352,10 @@ def restos_home(request):
 
 def view_all_restos(request):
     return ViewAllRestos(request).process()
+
+
+def view_restos_by_category(request, category):
+    return ViewRestosByCategory(request, category).process()
 
 
 def view_resto_tag_cloud(request):

@@ -98,9 +98,13 @@ class ImportMembersForm(DatabaseImportForm):
 class ImportRestosForm(DatabaseImportForm):
 
     submitter = users.get_user("heavyzheng")
+    categories = [category for category, display in Resto.CATEGORIES]
 
     def create_instance(self, csv_row):
         name = csv_row[0].strip()
+        category = csv_row[7].strip()
+        if category not in categories:
+            return None
         address = csv_row[1].strip()
         route = csv_row[2].strip()
         city = csv_row[3].strip()
@@ -109,6 +113,7 @@ class ImportRestosForm(DatabaseImportForm):
         tel_1 = csv_row[4].strip() or None
         resto = Resto.create(
             name=name,
+            category=category,
             address=address,
             route=route,
             city=city,

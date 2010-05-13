@@ -27,6 +27,7 @@
       </div>
 
       <div class="post-foot">
+
         <div>
           <img class="icon" src="{{ static_ }}/images/address.png" alt="Address"/>
           {{ resto.address|escape }},
@@ -37,7 +38,13 @@
             <img class="icon" src="{{ static_ }}/images/tel.png" alt="Tel"/>
             {{ resto.tels|join:" / "|escape }}
           {% endif %}
+          &nbsp;
+          <img class="icon" src="{{ static_ }}/images/category.png" alt="Category"/>
+          <a href="{% url friday.view_restos_by_category category=resto.category %}">
+            {{ resto.get_category_display|escape }}
+          </a>
         </div>
+
         {% if resto.tags %}
           <div>
             {% for tag in resto.tags %}
@@ -47,6 +54,7 @@
             {% endfor %}
           </div>
         {% endif %}
+
       </div>
 
     </div>

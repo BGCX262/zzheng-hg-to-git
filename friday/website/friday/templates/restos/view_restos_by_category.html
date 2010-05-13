@@ -3,14 +3,14 @@
 {% comment %}
 <!--
   Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
-  Created on 2010-04-28.
+  Created on 2010-05-13.
   $Id$
 -->
 {% endcomment %}
 
 {#________________________________________________________________________________________________#}
 
-{% block html_title %} All Restaurants {% endblock %}
+{% block html_title %} Restaurants in category {{ category_display|escape }} {% endblock %}
 
 {#________________________________________________________________________________________________#}
 
@@ -25,16 +25,6 @@
     </ul>
   </div>
 
-  <div class="section">
-    <h2>Tag Cloud:</h2>
-    <div id="load-resto-tag-cloud"></div>
-    <script type="text/javascript">//<![CDATA[
-      $(function() {
-        $("#load-resto-tag-cloud").load("{% url friday.view_resto_tag_cloud %}");
-      });
-    //]]></script>
-  </div>
-
 {% endblock %}
 
 {#________________________________________________________________________________________________#}
@@ -42,7 +32,7 @@
 {% block content %}
 
   <div class="section">
-    <h1>All Restaurants ...</h1>
+    <h1>Restaurants: {{ category_display|escape }} ...</h1>
   </div>
 
   <div class="section">

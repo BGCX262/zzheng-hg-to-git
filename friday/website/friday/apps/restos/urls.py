@@ -23,6 +23,11 @@ urlpatterns = patterns("",
         name="friday.view_all_restos"
     ),
     url(
+        r"^category/(?P<category>\w+)/$",
+        view_restos_by_category,
+        name="friday.view_restos_by_category"
+    ),
+    url(
         r"^tag_cloud/$",
         view_resto_tag_cloud,
         name="friday.view_resto_tag_cloud"

@@ -19,12 +19,35 @@ from friday.apps.tagging.models import Taggable
 from friday.apps.ilike.models import Fan
 
 
+_RESTO_CATEGORIES = (
+    ("chinese", "Chinese Food"),
+    ("japanese", "Japanese Food"),
+    ("korean", "Korean Food"),
+    ("southeast_asian", "Southeast Asian Food"),
+    ("french", "French Food"),
+    ("italian", "Italian Food"),
+    ("misc", "Misc."),
+)
+
+
+_DEFAULT_RESTO_CATEGORY = "misc"
+
+
 class Resto(models.Model, Taggable):
+
+    CATEGORIES = _RESTO_CATEGORIES
+    DEFAULT_CATEGORY = _DEFAULT_RESTO_CATEGORY
 
     tags_attr = "tags"  # Required by Taggable mixin class.
 
     name = db.StringProperty(required=True)
     description = db.TextProperty()
+
+    category = db.StringProperty(
+        required=True,
+        choices=[category for category, display in _RESTO_CATEGORIES],
+        default=_DEFAULT_RESTO_CATEGORY
+    )
 
     address = db.PostalAddressProperty(required=True)
     city = db.StringProperty(required=True)
@@ -85,6 +108,12 @@ class Resto(models.Model, Taggable):
     def __unicode__(self):
         return unicode(self.name)
 
+    def get_category_display(self):
+        for category, display in self.CATEGORIES:
+            if category == self.category:
+                return display
+        return self.category
+
     def delete(self):
         if self.tags:
             self.remove_tags(",".join(self.tags))
@@ -105,6 +134,13 @@ class Resto(models.Model, Taggable):
     @classmethod
     def find(cls, **kwargs):
         query = cls.objects.order_by(kwargs.get("order_by") or "name")
+        if kwargs.get("limit"):
+            query = query[:kwargs["limit"]]
+        return query
+
+    @classmethod
+    def find_by_category(cls, category, **kwargs):
+        query = cls.objects.filter(category=category).order_by(kwargs.get("order_by") or "name")
         if kwargs.get("limit"):
             query = query[:kwargs["limit"]]
         return query

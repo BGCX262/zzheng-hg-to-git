@@ -21,6 +21,8 @@ class RestoForm(forms.Form):
     name = forms.CharField(required=True)
     description = forms.CharField(required=False, widget=forms.Textarea)
 
+    category = forms.ChoiceField(choices=Resto.CATEGORIES, required=True)
+
     address = forms.CharField(required=True)
     city = forms.CharField(required=True)
     geo_pt = GeoPtField(required=False)

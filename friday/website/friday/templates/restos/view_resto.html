@@ -89,6 +89,18 @@
       </dl>
     {% endif %}
 
+    <dl>
+      <dt>
+        <img class="icon" src="{{ static_ }}/images/category.png" alt="Category"/>
+        Category:
+      </dt>
+      <dd>
+        <a href="{% url friday.view_restos_by_category category=resto.category %}">
+          {{ resto.get_category_display }}
+        </a>
+      </dd>
+    </dl>
+
   </div>
 
   <!-- tags ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

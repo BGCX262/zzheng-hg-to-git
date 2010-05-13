@@ -41,6 +41,11 @@ indexes:
   - name: join_date
     direction: desc
 
+- kind: Resto
+  properties:
+  - name: category
+  - name: name
+
 - kind: Tag
   properties:
   - name: category
