@@ -103,8 +103,8 @@ class Resto(models.Model, Taggable):
         return cls(submitter=submitter, updater=submitter, **kwargs)
 
     @classmethod
-    def find_all(cls, **kwargs):
-        query = cls.objects.order_by(kwargs.get("order_by") or "-update_date")
+    def find(cls, **kwargs):
+        query = cls.objects.order_by(kwargs.get("order_by") or "name")
         if kwargs.get("limit"):
             query = query[:kwargs["limit"]]
         return query

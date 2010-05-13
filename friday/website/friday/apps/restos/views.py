@@ -9,6 +9,7 @@
 
 import hashlib
 import logging
+import random
 import urllib
 
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -24,13 +25,26 @@ from friday.apps.restos.access import RestoAccess
 from friday.apps.restos.forms import RestoForm, RestoTagForm, DishForm
 
 
+class RestosHome(Action):
+
+    PAGE_URL_NAME = "friday.restos_home"
+    PAGE_TEMPLATE = "restos/home.html"
+
+    def get_page(self):
+        newly_added = list(Resto.find(order_by="-update_date", limit=10))
+        random.shuffle(newly_added)
+        data = {"newly_added": newly_added[:4]}
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
 class ViewAllRestos(Action):
 
     PAGE_URL_NAME = "friday.view_all_restos"
-    PAGE_TEMPLATE = "restos/view_restos.html"
+    PAGE_TEMPLATE = "restos/view_all_restos.html"
 
     def get_page(self):
-        data = {"restos": Resto.find_all(limit=10)}
+        data = {"restos": Resto.find(limit=10)}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
@@ -47,7 +61,7 @@ class ViewRestoTagCloud(Action):
 class ViewRestosByTag(Action):
 
     PAGE_URL_NAME = "friday.view_restos_by_tag"
-    PAGE_TEMPLATE = "restos/view_restos.html"
+    PAGE_TEMPLATE = "restos/view_restos_by_tag.html"
 
     def get_page(self):
         tag_name = self.request.GET.get("tag_name")
@@ -301,7 +315,7 @@ class EditDishes(BaseRestoAction):
 
 
 def restos_home(request):
-    return HttpResponseRedirect(ViewAllRestos.get_page_url())
+    return RestosHome(request).process()
 
 
 def view_all_restos(request):

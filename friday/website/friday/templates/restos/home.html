@@ -3,19 +3,14 @@
 {% comment %}
 <!--
   Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
-  Created on 2010-04-28.
+  Created on 2010-05-13.
   $Id$
 -->
 {% endcomment %}
 
 {#________________________________________________________________________________________________#}
 
-{% block html_title %}
-  Restaurants
-  {% if tag_name %}
-    tagged by {{ tag_name|escape }}
-  {% endif %}
-{% endblock %}
+{% block html_title %} Restaurants {% endblock %}
 
 {#________________________________________________________________________________________________#}
 
@@ -46,17 +41,14 @@
 {% block content %}
 
   <div class="section">
-    <h1>
-      Restaurants
-      {% if tag_name %}
-        tagged by "{{ tag_name|escape }}"
-      {% endif %}
-      ...
-    </h1>
+    <h1>Newly Added Restaurants ...</h1>
+    {% with newly_added as restos %}
+      {% include "restos/common/restos.html" %}
+    {% endwith %}
   </div>
 
   <div class="section">
-    {% include "restos/common/restos.html" %}
+    <p><a href="{% url friday.view_all_restos %}">&raquo; View all restaurants</a></p>
   </div>
 
 {% endblock %}
