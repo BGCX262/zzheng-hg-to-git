@@ -103,7 +103,7 @@ class ImportRestosForm(DatabaseImportForm):
     def create_instance(self, csv_row):
         name = csv_row[0].strip()
         category = csv_row[7].strip()
-        if category not in categories:
+        if category not in self.categories:
             return None
         address = csv_row[1].strip()
         route = csv_row[2].strip()
