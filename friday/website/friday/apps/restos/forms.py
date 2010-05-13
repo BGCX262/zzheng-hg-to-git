@@ -44,6 +44,7 @@ class RestoForm(forms.Form):
             initial = {
                 "name": instance.name,
                 "description": instance.description,
+                "category": instance.category,
                 "address": instance.address,
                 "city": instance.city,
                 "geo_pt": instance.geo_pt,

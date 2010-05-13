@@ -28,6 +28,14 @@
     </div>
 
     <div class="field">
+      <div class="label">Category: *</div>
+      <div class="input required">{{ resto_form.category|safe }}</div>
+      {% if resto_form.category.errors %}
+        <div class="error-list">{{ resto_form.category.errors|safe }}</div>
+      {% endif %}
+    </div>
+
+    <div class="field">
       <div class="label">Address: *</div>
       <div id="address" class="input required">{{ resto_form.address|safe }}</div>
       {% if resto_form.address.errors %}
