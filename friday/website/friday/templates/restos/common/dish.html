@@ -6,6 +6,7 @@
 -->
 {% endcomment %}
 
+{% load fan_tags %}
 
 {% if dish %}
 
@@ -38,13 +39,13 @@
       <img class="icon" src="{{ static_ }}/images/like.png" alt="Like"/>
       {{ dish.fans.count }} persons like this
       {% if user_ %}
-        {% for fan in dish.fans %}
-          {% ifequal user_ fan.user %}
-            (including you)
-          {% endifequal %}
-        {% endfor %}
-        &bull;
-        <a href="javascript:void(0);" onclick="likeOrUnlikeDish_{{ dish.id }}();">Like / Un-like</a>
+        {% withfan dish user_ as fan %}
+          {{ fan|yesno:"(including you)," }}
+          &bull;
+          <a href="javascript:void(0);" onclick="likeOrUnlikeDish_{{ dish.id }}();">
+            {{ fan|yesno:"Un-like,Like" }}
+          </a>
+        {% endwithfan %}
       {% endif %}
     </div>
 

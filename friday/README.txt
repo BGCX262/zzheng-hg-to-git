@@ -4,10 +4,37 @@ Friday - Vive le Vendredi Website
 To-do List
 ----------
 
+Common
+~~~~~~
+
+* When creating an instance with key name, check if the instance already exists.
+* Register related instances to be deleted, and delete them in background.
+
+User
+~~~~
+
+* Add is_superuser and is_admin to User model.
+
+Group
+~~~~~
+
 * Add confirmation page for quitting a group.
 * Remove GroupAccess.can_contribute() function.
 * Add transferring of group ownership.
-* Add default group logo (used in group_base.html and prettify_group.html).
+* Add default group icon (used in group_base.html and prettify_group.html).
+
+Resto
+~~~~~
+
+* Allow user to add a resto as favorite.
+* Allow editors to add photos of a resto.
+* Allow user to request for ownership of a resto.
+* Add default resto icon.
+
+Portal
+~~~~~~
+
+* Add user portal.
 
 
 

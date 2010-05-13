@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     "friday.apps.comments",
     "friday.apps.groups",
     "friday.apps.halloffame",
+    "friday.apps.ilike",
     "friday.apps.misc",
     "friday.apps.notifications",
     "friday.apps.profiles",

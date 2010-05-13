@@ -25,6 +25,7 @@ class Fan(models.Model):
     ref_pk = db.StringProperty(required=True)
     user = db.ReferenceProperty(users.User, required=True)
     rating = db.IntegerProperty(required=True)
+    rate_date = db.DateTimeProperty(auto_now_add=True)
 
     schema_version = db.IntegerProperty(required=True, default=1)
 
@@ -66,7 +67,7 @@ class Fan(models.Model):
 
     @classmethod
     def find(cls, ref_type, ref_pk, **kwargs):
-        query = cls.objects.filter(ref_type=ref_type, ref_pk=str(ref_pk)).order_by("user")
+        query = cls.objects.filter(ref_type=ref_type, ref_pk=str(ref_pk)).order_by("-rate_date")
         if kwargs.get("limit"):
             query = query[:kwargs["limit"]]
         return query
