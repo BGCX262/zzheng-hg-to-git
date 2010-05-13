@@ -75,7 +75,7 @@
     </div>
 
     <div class="field">
-      <input class="button" type="submit" value="{{ submit_value|escape|default:'Submit' }}"/>
+      <input class="button" type="submit" value="{{ group_form.instance|yesno:'Update,Create' }}"/>
       &nbsp; or,
       {% if group_form.instance %}
         <a href="{% url friday.view_group group_uid=group_form.instance.uid %}">return to group homepage</a>

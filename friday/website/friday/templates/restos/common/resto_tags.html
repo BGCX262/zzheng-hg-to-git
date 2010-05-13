@@ -30,7 +30,7 @@
       <script type="text/javascript">//<![CDATA[
         function removeRestoTag(tag_html_id, name) {
           $.post(
-            "{% url friday.remove_resto_tag resto_uid=resto.uid %}",
+            "{% url friday.remove_resto_tag resto_id=resto.id %}",
             {name: name},
             function(data) {
               $(tag_html_id).after(data).remove();
@@ -49,7 +49,7 @@
     </div>
 
     <form id="resto-tag-form" class="ajax-edit s-form hidden"
-          action="{% url friday.view_resto_tags resto_uid=resto.uid %}"
+          action="{% url friday.view_resto_tags resto_id=resto.id %}"
           method="POST"
           onsubmit="return friday.submitAjaxForm('#resto-tags', '#resto-tag-form');">
       <input type="hidden" name="action" value="add"/>

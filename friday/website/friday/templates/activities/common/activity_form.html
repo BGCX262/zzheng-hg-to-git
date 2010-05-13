@@ -101,7 +101,7 @@
       </div>
 
       <div class="field">
-        <input class="button" type="submit" value="{{ submit_value|escape|default:'Submit' }}"/>
+        <input class="button" type="submit" value="{{ activity_form.instance|yesno:'Update,Create' }}"/>
         &nbsp; or,
         {% if activity_form.instance %}
           <a href="{% url friday.view_activity group_uid=group.uid activity_id=activity_form.instance.id %}">

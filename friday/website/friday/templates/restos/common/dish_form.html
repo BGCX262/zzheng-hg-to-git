@@ -64,7 +64,7 @@
     <div class="field">
       <input class="button" type="submit" value="Recommend this dish"/>
       &nbsp; or,
-      <a href="{% url friday.view_resto resto_uid=resto.uid %}">
+      <a href="{% url friday.view_resto resto_id=resto.id %}">
         return to {{ resto|escape }}
       </a>
     </div>

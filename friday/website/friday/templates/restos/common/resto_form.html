@@ -12,29 +12,6 @@
   <form id="resto-form" class="xl-form" action="." method="POST">
 
     <div class="field">
-
-      {% if not resto_form.instance %}
-
-        <div class="label">Unique ID of the restaurant: *</div>
-        <div class="input required">{{ resto_form.uid|safe }}</div>
-        {% if resto_form.uid.errors %}
-          <div class="error-list">{{ resto_form.uid.errors|safe }}</div>
-        {% endif %}
-        <div class="help-text">
-          This will be part of the restaurant's page URL. It cannot be changed later.
-        </div>
-
-      {% else %}
-
-        <div class="label">The restaurant's unique ID (this cannot be changed):</div>
-        <div class="hidden">{{ resto_form.uid|safe }}</div>
-        <div class="disabled-value">{{ resto_form.instance.uid|escape }}</div>
-
-      {% endif %}
-
-    </div>
-
-    <div class="field">
       <div class="label">The restaurant name: *</div>
       <div class="input required">{{ resto_form.name|safe }}</div>
       {% if resto_form.name.errors %}
@@ -154,10 +131,10 @@
     </div>
 
     <div class="field">
-      <input class="button" type="submit" value="{{ submit_value|escape|default:'Submit' }}"/>
+      <input class="button" type="submit" value="{{ resto_form.instance|yesno:'Update,Create' }}"/>
       &nbsp; or,
       {% if resto_form.instance %}
-        <a href="{% url friday.view_resto resto_uid=resto_form.instance.uid %}">
+        <a href="{% url friday.view_resto resto_id=resto_form.instance.id %}">
           return to {{ resto|escape }}
         </a>
       {% else %}

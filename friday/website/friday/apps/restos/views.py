@@ -78,7 +78,7 @@ class CreateResto(Action):
         resto_form = RestoForm(data=self.request.POST)
         try:
             resto = resto_form.create(submitter=self.current_user)
-            redirect_url = ViewResto.get_page_url(resto_uid=resto.uid)
+            redirect_url = ViewResto.get_page_url(resto_id=resto.id)
             return HttpResponseRedirect(redirect_url)
         except Exception, exc:
             message = "Failed to create resto in datastore: %s" % exc
@@ -91,14 +91,14 @@ class CreateResto(Action):
 
 class BaseRestoAction(Action):
 
-    def __init__(self, request, resto_uid):
+    def __init__(self, request, resto_id):
         super(BaseRestoAction, self).__init__(request)
-        self.resto_uid = resto_uid
+        self.resto_id = int(resto_id)
 
     def get_resto(self):
-        resto = Resto.get_unique(uid=self.resto_uid)
+        resto = Resto.get_unique(id=self.resto_id)
         if not resto:
-            message = "searched by resto uid %s." % self.resto_uid
+            message = "searched by resto id %s." % self.resto_id
             raise EntityNotFoundError(Resto, message)
         return resto
 
@@ -176,7 +176,7 @@ class EditResto(BaseRestoAction):
 
     def _check_edit_access(self):
         if not self.get_resto_access().can_edit():
-            message = "Current user cannot edit resto %s." % self.get_resto().uid
+            message = "Current user cannot edit resto %s." % self.get_resto().id
             logging.error(message)
             raise BadRequestError(self.request, message)
 
@@ -192,9 +192,9 @@ class EditResto(BaseRestoAction):
         resto_form = RestoForm(data=self.request.POST, instance=self.get_resto())
         try:
             resto = resto_form.update(updater=self.current_user)
-            message = "Resto %s has been updated successfully." % resto.uid
+            message = "Resto %s has been updated successfully." % resto.id
             logging.info(message)
-            redirect_url = ViewResto.get_page_url(resto_uid=resto.uid)
+            redirect_url = ViewResto.get_page_url(resto_id=resto.id)
             return HttpResponseRedirect(redirect_url)
         except Exception, exc:
             message = "Failed to update resto in datastore: %s" % exc
@@ -210,8 +210,8 @@ class LikeOrUnlikeDish(BaseRestoAction):
     AJAX_URL_NAME = "friday.like_or_unlike_dish"
     AJAX_TEMPLATE = "restos/common/dish.html"
 
-    def __init__(self, request, resto_uid, dish_id):
-        super(LikeOrUnlikeDish, self).__init__(request, resto_uid)
+    def __init__(self, request, resto_id, dish_id):
+        super(LikeOrUnlikeDish, self).__init__(request, resto_id)
         self.dish_id = int(dish_id)
 
     def post_ajax(self):
@@ -233,7 +233,7 @@ class EditDishes(BaseRestoAction):
 
     def _check_edit_access(self):
         if not self.get_resto_access().can_edit():
-            message = "Current user cannot edit dishes of resto %s." % self.get_resto().uid
+            message = "Current user cannot edit dishes of resto %s." % self.get_resto().id
             logging.error(message)
             raise BadRequestError(self.request, message)
 
@@ -251,7 +251,7 @@ class EditDishes(BaseRestoAction):
             dish = dish_form.create(resto=self.get_resto())
             message = "Dish #%s has been created successfully." % dish.id
             logging.info(message)
-            redirect_url = self.request.path
+            redirect_url = ViewResto.get_page_url(resto_id=dish.resto.id)
             return HttpResponseRedirect(redirect_url)
         except Exception, exc:
             message = "Failed to create dish in datastore: %s" % exc
@@ -285,28 +285,28 @@ def create_resto(request):
     return CreateResto(request).process()
 
 
-def view_resto(request, resto_uid):
-    return ViewResto(request, resto_uid).process()
+def view_resto(request, resto_id):
+    return ViewResto(request, resto_id).process()
 
 
-def view_resto_tags(request, resto_uid):
-    return ViewRestoTags(request, resto_uid).process()
+def view_resto_tags(request, resto_id):
+    return ViewRestoTags(request, resto_id).process()
 
 
-def remove_resto_tag(request, resto_uid):
-    return RemoveRestoTag(request, resto_uid).process()
+def remove_resto_tag(request, resto_id):
+    return RemoveRestoTag(request, resto_id).process()
 
 
-def edit_resto(request, resto_uid):
-    return EditResto(request, resto_uid).process()
+def edit_resto(request, resto_id):
+    return EditResto(request, resto_id).process()
 
 
-def like_or_unlike_dish(request, resto_uid, dish_id):
-    return LikeOrUnlikeDish(request, resto_uid, dish_id).process()
+def like_or_unlike_dish(request, resto_id, dish_id):
+    return LikeOrUnlikeDish(request, resto_id, dish_id).process()
 
 
-def edit_dishes(request, resto_uid):
-    return EditDishes(request, resto_uid).process()
+def edit_dishes(request, resto_id):
+    return EditDishes(request, resto_id).process()
 
 
 # EOF

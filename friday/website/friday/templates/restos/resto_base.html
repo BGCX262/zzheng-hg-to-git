@@ -31,7 +31,7 @@
         {% endif %}
         <h1>{{ resto|escape }}</h1>
         <div class="links">
-          <a href="{% url friday.view_resto resto_uid=resto.uid %}">Resto Home</a>
+          <a href="{% url friday.view_resto resto_id=resto.id %}">Resto Home</a>
           {% if resto.website %}
             &bull; <a href="{{ resto.website }}">Website</a>
           {% endif %}

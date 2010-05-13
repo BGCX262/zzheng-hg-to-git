@@ -18,7 +18,6 @@ from friday.apps.restos.models import Resto, Dish
 
 class RestoForm(forms.Form):
 
-    uid = forms.CharField(required=True)
     name = forms.CharField(required=True)
     description = forms.CharField(required=False, widget=forms.Textarea)
 
@@ -41,7 +40,6 @@ class RestoForm(forms.Form):
         self._instance = instance
         if instance:
             initial = {
-                "uid": instance.uid,
                 "name": instance.name,
                 "description": instance.description,
                 "address": instance.address,
@@ -90,12 +88,8 @@ class RestoForm(forms.Form):
             raise ProgrammingError(message)
         if not self.is_valid():
             raise InvalidFormError(self.errors)
-        if self._instance.uid != self.cleaned_data["uid"]:
-            message = "Resto uid is read-only, and cannot be updated."
-            raise ProgrammingError(message)
         for name, value in self.cleaned_data.items():
-            if name != "uid":
-                setattr(self._instance, name, value)
+            setattr(self._instance, name, value)
         self._instance.updater = updater
         self._instance.save()
         return self._instance

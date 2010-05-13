@@ -111,7 +111,7 @@
     <script type="text/javascript">//<![CDATA[
       $(function() {
         $("#load-resto-tags").load(
-          "{% url friday.view_resto_tags resto_uid=resto.uid %}",
+          "{% url friday.view_resto_tags resto_id=resto.id %}",
           function(response, textStatus) {
             if (textStatus == "error") {
               $("#load-resto-tags .ajax-loader").hide();
@@ -166,8 +166,8 @@
     <div class="section">
       <h2>Administration:</h2>
       <ul>
-        <li><a href="{% url friday.edit_resto resto_uid=resto.uid %}">Edit resto information</a></li>
-        <li><a href="{% url friday.edit_dishes resto_uid=resto.uid %}">Edit recommended dishes</a></li>
+        <li><a href="{% url friday.edit_resto resto_id=resto.id %}">Edit resto information</a></li>
+        <li><a href="{% url friday.edit_dishes resto_id=resto.id %}">Edit recommended dishes</a></li>
       </ul>
     </div>
   {% endif %}

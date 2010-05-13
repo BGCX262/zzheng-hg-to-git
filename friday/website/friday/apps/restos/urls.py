@@ -38,32 +38,32 @@ urlpatterns = patterns("",
         name="friday.create_resto"
     ),
     url(
-        r"^(?P<resto_uid>\w+)/$",
+        r"^(?P<resto_id>\d+)/$",
         view_resto,
         name="friday.view_resto"
     ),
     url(
-        r"^(?P<resto_uid>\w+)/tags/$",
+        r"^(?P<resto_id>\d+)/tags/$",
         view_resto_tags,
         name="friday.view_resto_tags"
     ),
     url(
-        r"^(?P<resto_uid>\w+)/remove_tag/$",
+        r"^(?P<resto_id>\d+)/remove_tag/$",
         remove_resto_tag,
         name="friday.remove_resto_tag"
     ),
     url(
-        r"^(?P<resto_uid>\w+)/edit/$",
+        r"^(?P<resto_id>\d+)/edit/$",
         edit_resto,
         name="friday.edit_resto"
     ),
     url(
-        r"^(?P<resto_uid>\w+)/(?P<dish_id>\d+)/like_or_unlike/$",
+        r"^(?P<resto_id>\d+)/(?P<dish_id>\d+)/like_or_unlike/$",
         like_or_unlike_dish,
         name="friday.like_or_unlike_dish"
     ),
     url(
-        r"^(?P<resto_uid>\w+)/edit_dishes/$",
+        r"^(?P<resto_id>\d+)/edit_dishes/$",
         edit_dishes,
         name="friday.edit_dishes"
     ),

@@ -22,9 +22,6 @@ class Resto(models.Model, Taggable):
 
     tags_attr = "tags"  # Required by Taggable mixin class.
 
-    _RESERVED_KEYS = ("all", "tag", "tags", "dish", "dishes", "create")
-
-    uid = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
     description = db.TextProperty()
 
@@ -48,7 +45,7 @@ class Resto(models.Model, Taggable):
     background_url = db.LinkProperty()
     logo_icon_url = db.LinkProperty()
 
-    owner = db.ReferenceProperty(users.User, required=True, collection_name="owned_restos")
+    owner = db.ReferenceProperty(users.User, required=False, collection_name="owned_restos")
     submitter = db.ReferenceProperty(users.User, required=True, collection_name="submitted_restos")
     submit_date = db.DateTimeProperty(required=True, auto_now_add=True)
     updater = db.ReferenceProperty(users.User, required=True, collection_name="updated_restos")
@@ -93,29 +90,16 @@ class Resto(models.Model, Taggable):
         return super(Resto, self).delete()
 
     @classmethod
-    def _make_pk(cls, uid):
-        return filter_key(uid, reserved=cls._RESERVED_KEYS)
-
-    @classmethod
-    def get_unique(cls, uid):
-        pk = cls._make_pk(uid)
+    def get_unique(cls, id):
         try:
-            instance = cls.objects.get(pk=pk)
+            instance = cls.objects.get(id=id)
         except cls.DoesNotExist:
             instance = None
         return instance
 
     @classmethod
-    def create(cls, uid, submitter, **kwargs):
-        pk = cls._make_pk(uid)
-        return cls(
-            key_name=pk,
-            uid=pk,
-            submitter=submitter,
-            updater=submitter,
-            owner=submitter,
-            **kwargs
-        )
+    def create(cls, submitter, **kwargs):
+        return cls(submitter=submitter, updater=submitter, **kwargs)
 
     @classmethod
     def find_all(cls, **kwargs):
