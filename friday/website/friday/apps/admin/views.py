@@ -21,7 +21,7 @@ from friday.common.actions import WebmasterAction
 from friday.common.errors import BadRequestError, InvalidFormError
 from friday.common.prompt import Prompt
 from friday.apps.groups.models import Group, Member
-from friday.apps.admin.forms import ImportMembersForm
+from friday.apps.admin.forms import ImportMembersForm, ImportRestosForm
 
 
 class AdminHome(WebmasterAction):
@@ -91,6 +91,38 @@ class ImportMembers(WebmasterAction):
             return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
+class ImportRestos(WebmasterAction):
+
+    PAGE_URL_NAME = "friday.import_restos"
+    PAGE_TEMPLATE = "admin/import_restos.html"
+
+    def get_page(self):
+        data = {
+            "prompt": Prompt(request=self.request),
+            "import_restos_form": ImportRestosForm(),
+        }
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+    def post_page(self):
+        import_restos_form = ImportRestosForm(data=self.request.POST, files=self.request.FILES)
+        try:
+            imported, ignored, failed = issue = import_restos_form.import_restos()
+            message = "Imported %s restos, %s entries ignored, %s entries failed." \
+                    % (imported, ignored, failed)
+            logging.info(message)
+            prompt = Prompt(info=message)
+            redirect_url = "%s?%s" % (self.get_page_url(), prompt.urlencode())
+            return HttpResponseRedirect(redirect_url)
+        except Exception, exc:
+            message = "Failed to import members: %s" % exc
+            logging.error(message)
+            logging.exception(exc)
+            data = {"import_restos_form": import_restos_form}
+            data = self.update_data(data)
+            return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
 #---------------------------------------------------------------------------------------------------
 
 
@@ -104,6 +136,10 @@ def view_environ(request):
 
 def import_members(request):
     return ImportMembers(request).process()
+
+
+def import_restos(request):
+    return ImportRestos(request).process()
 
 
 # EOF

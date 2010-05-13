@@ -17,6 +17,7 @@ from django.conf import settings
 from friday.auth import users
 from friday.common.errors import ProgrammingError, InvalidFormError
 from friday.apps.groups.models import Group, Member
+from friday.apps.restos.models import Resto
 
 
 class DatabaseImportForm(forms.Form):
@@ -31,6 +32,7 @@ class DatabaseImportForm(forms.Form):
         imported, ignored, failed = 0, 0, 0
         for csv_row in csv_data:
             try:
+                csv_row = [unicode(cell, "utf-8") for cell in csv_row]
                 instance = self.create_instance(csv_row)
                 if instance is not None:
                     instance.save()
@@ -90,6 +92,32 @@ class ImportMembersForm(DatabaseImportForm):
         if not self._EMAIL_DOMAIN:
             message = "Failed to import members: email domain not defeind in settings."
             raise ProgrammingError(message)
+        return self.import_to_database()
+
+
+class ImportRestosForm(DatabaseImportForm):
+
+    submitter = users.get_user("heavyzheng")
+
+    def create_instance(self, csv_row):
+        name = csv_row[0].strip()
+        address = csv_row[1].strip()
+        route = csv_row[2].strip()
+        city = csv_row[3].strip()
+        if city == u"巴黎":
+            city = u"Paris"
+        tel_1 = csv_row[4].strip() or None
+        resto = Resto.create(
+            name=name,
+            address=address,
+            route=route,
+            city=city,
+            tel_1=tel_1,
+            submitter=self.submitter
+        )
+        return resto
+
+    def import_restos(self):
         return self.import_to_database()
 
 

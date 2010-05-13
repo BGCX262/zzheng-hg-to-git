@@ -30,7 +30,7 @@ class ViewAllRestos(Action):
     PAGE_TEMPLATE = "restos/view_restos.html"
 
     def get_page(self):
-        data = {"restos": Resto.find_all()}
+        data = {"restos": Resto.find_all(limit=10)}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
