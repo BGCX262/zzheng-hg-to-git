@@ -58,6 +58,11 @@ urlpatterns = patterns("",
         name="friday.edit_resto"
     ),
     url(
+        r"^(?P<resto_id>\d+)/delete/$",
+        delete_resto,
+        name="friday.delete_resto"
+    ),
+    url(
         r"^(?P<resto_id>\d+)/(?P<dish_id>\d+)/like_or_unlike/$",
         like_or_unlike_dish,
         name="friday.like_or_unlike_dish"

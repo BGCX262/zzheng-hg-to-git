@@ -205,6 +205,41 @@ class EditResto(BaseRestoAction):
             return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
+class DeleteResto(BaseRestoAction):
+
+    PAGE_URL_NAME = "friday.delete_resto"
+    PAGE_TEMPLATE = "restos/delete_resto.html"
+
+    def _check_delete_access(self):
+        if not self.get_resto_access().can_delete():
+            message = "Current user cannot delete resto %s." % self.get_resto().id
+            logging.error(message)
+            raise BadRequestError(self.request, message)
+
+    def get_page(self):
+        self._check_delete_access()
+        data = self.update_data({})
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+    def post_page(self):
+        self._check_delete_access()
+        try:
+            resto = self.get_resto()
+            resto_id = resto.id  # Resto instance has no 'id' attribute after deletion.
+            resto.delete()
+            message = "Resto %s has been deleted successfully." % resto_id
+            logging.info(message)
+            redirect_url = ViewAllRestos.get_page_url()
+            return HttpResponseRedirect(redirect_url)
+        except Exception, exc:
+            message = "Failed to delete resto in datastore: %s" % exc
+            logging.error(message)
+            logging.exception(exc)
+            data = {"prompt": Prompt(error=message)}
+            data = self.update_data(data)
+            return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
 class LikeOrUnlikeDish(BaseRestoAction):
 
     AJAX_URL_NAME = "friday.like_or_unlike_dish"
@@ -299,6 +334,10 @@ def remove_resto_tag(request, resto_id):
 
 def edit_resto(request, resto_id):
     return EditResto(request, resto_id).process()
+
+
+def delete_resto(request, resto_id):
+    return DeleteResto(request, resto_id).process()
 
 
 def like_or_unlike_dish(request, resto_id, dish_id):

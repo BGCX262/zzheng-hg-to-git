@@ -12,6 +12,7 @@ import logging
 from google.appengine.ext import db
 
 from djangomockup import models
+from djangomockup.models.signals import pre_delete
 from friday.auth import users
 from friday.common.dbutils import filter_key, ord_to_key
 from friday.apps.tagging.models import Taggable
@@ -152,6 +153,33 @@ class Dish(models.Model):
     def find_by_resto(cls, resto):
         query = cls.objects.filter(resto=resto)
         return query
+
+    @classmethod
+    def delete_related(cls, resto):
+        deleted = 0
+        query = cls.objects.filter(resto=resto)
+        for instance in query:
+            instance.delete()
+            deleted += 1
+        return deleted
+
+
+#---------------------------------------------------------------------------------------------------
+
+
+def delete_related_dishes(sender, **kwargs):
+    if sender == Resto:
+        try:
+            resto = kwargs["instance"]
+            deleted = Dish.delete_related(resto=resto)
+            if deleted > 0:
+                logging.info("%s related dishes have been deleted successfully." % deleted)
+        except Exception, exc:
+            logging.error("Failed to delete related dishes on resto: %s" % exc)
+            logging.exception(exc)
+
+
+pre_delete.connect(delete_related_dishes, sender=Resto)
 
 
 # EOF

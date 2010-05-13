@@ -20,11 +20,18 @@ class RestoAccess(object):
     def can_edit(self):
         if users.is_webmaster(self._user):
             return True
-        elif self._user:
+        elif self._user and self._resto.owner:
             return self._user == self._resto.owner
         else:
             return False
 
+    def can_delete(self):
+        if users.is_webmaster(self._user):
+            return True
+        elif self._user and self._resto.owner:
+            return self._user == self._resto.owner
+        else:
+            return False
 
 
 # EOF
