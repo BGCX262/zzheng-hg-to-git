@@ -87,6 +87,11 @@ urlpatterns = patterns("",
         delete_dish,
         name="friday.delete_dish"
     ),
+    url(
+        r"^dish/$",
+        search_dish,
+        name="friday.search_dish"
+    ),
 )
 
 

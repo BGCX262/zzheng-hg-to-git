@@ -195,6 +195,11 @@ class Dish(models.Model):
         return query
 
     @classmethod
+    def find_by_name(cls, name):
+        query = cls.objects.filter(name=name).order_by("-popularity")
+        return query
+
+    @classmethod
     def delete_related(cls, resto):
         deleted = 0
         query = cls.objects.filter(resto=resto)

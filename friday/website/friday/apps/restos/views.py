@@ -16,7 +16,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from friday.common.errors import BadRequestError, InvalidFormError
+from friday.common.errors import BadRequestError, InvalidFormError, EntityNotFoundError
 from friday.common.prompt import Prompt
 from friday.common.actions import Action
 from friday.apps.tagging.models import Tag
@@ -425,6 +425,18 @@ class DeleteDish(BaseDishAction):
             return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
+class SearchDish(Action):
+
+    PAGE_URL_NAME = "friday.search_dish"
+    PAGE_TEMPLATE = "restos/search_dish.html"
+
+    def get_page(self):
+        dish_name = self.request.GET.get("dish_name")
+        data = {"dish_name": dish_name, "dishes": Dish.find_by_name(dish_name)}
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
 #---------------------------------------------------------------------------------------------------
 
 
@@ -486,6 +498,10 @@ def edit_dish(request, resto_id, dish_id):
 
 def delete_dish(request, resto_id, dish_id):
     return DeleteDish(request, resto_id, dish_id).process()
+
+
+def search_dish(request):
+    return SearchDish(request).process()
 
 
 # EOF

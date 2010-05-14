@@ -30,6 +30,12 @@ indexes:
 
 - kind: Dish
   properties:
+  - name: name
+  - name: popularity
+    direction: desc
+
+- kind: Dish
+  properties:
   - name: resto
   - name: popularity
     direction: desc

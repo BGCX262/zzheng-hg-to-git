@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-14.
+  $Id$
+-->
+{% endcomment %}
+
+{% load fan_tags %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} {{ dish_name|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>{{ dish_name|escape }} ...</h1>
+  </div>
+
+  <div class="section">
+
+    {% for dish in dishes %}
+
+      <div class="post">
+
+        {% if dish.photo_url %}
+          <div class="right">
+            <img class="xs-photo" src="{{ dish.photo_url }}" alt="Photo"/>
+          </div>
+        {% endif %}
+
+        <div class="post-head">
+          <a href="{% url friday.view_resto resto_id=dish.resto.id %}">
+            {{ dish.name|escape }} / {{ dish.resto|escape }}
+          </a>
+          {% if dish.is_spicy %}
+            <img class="icon" src="{{ static_ }}/images/spicy.png" alt="Spicy"/>
+          {% endif %}
+          {% if dish.is_vegetarian %}
+            <img class="icon" src="{{ static_ }}/images/vegetarian.png" alt="Vegetarian"/>
+          {% endif %}
+          {% if dish.price %}
+            - {{ dish.price|escape }}
+          {% endif %}
+        </div>
+
+        {% if dish.description %}
+          <div class="post-body">{{ dish.description|escape|linebreaks }}</div>
+        {% endif %}
+
+        <div class="post-foot">
+          <img class="icon" src="{{ static_ }}/images/like.png" alt="Like"/>
+          {{ dish.fans.count }} persons like this
+          {% withfan dish user_ as fan %}
+            {{ fan|yesno:"(including you)," }}
+          {% endwithfan %}
+        </div>
+
+        <div class="clear"></div>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+{% endblock %}
+
