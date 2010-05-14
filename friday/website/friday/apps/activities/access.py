@@ -40,7 +40,7 @@ class ActivityAccess(object):
     def can_attend(self):
         if self._activity.is_past or self._activity.is_closed:
             return False
-        if not self._user:
+        if not self._user or not self._group_access.member:
             return False
         if self._activity.places and self._activity.headcount >= self._activity.places:
             return False

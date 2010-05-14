@@ -19,6 +19,7 @@ class User(models.Model):
     # key_name is user's email address.
     user = db.UserProperty(required=True)
     name = db.StringProperty()
+    is_staff = db.BooleanProperty(required=True, default=False)
     join_date = db.DateTimeProperty(required=True, auto_now_add=True)
 
     schema_version = db.IntegerProperty(required=True, default=1)
@@ -61,6 +62,7 @@ class AnonymousUser(object):
         super(AnonymousUser, self).__init__()
         self.username = None
         self.email = None
+        self.is_staff = False
 
     def __unicode__(self):
         return "Anonymous"

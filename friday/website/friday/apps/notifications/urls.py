@@ -37,6 +37,11 @@ urlpatterns = patterns("",
         view_notification,
         name="friday.view_notification"
     ),
+    url(
+        r"^delete/$",
+        delete_notifications,
+        name="friday.delete_notifications"
+    ),
 )
 
 

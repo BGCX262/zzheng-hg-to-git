@@ -137,9 +137,6 @@ MY_WEBMASTER_EMAILS = (
     "@".join(["heavyzheng", MY_EMAIL_DOMAIN]),
 )
 
-MY_NOTIFICATION_SUBJECT_PREFIX = ""
-MY_NOTIFICATION_AUTHOR = "@".join(["heavyzheng", MY_EMAIL_DOMAIN])
-
 MY_MIGRATION_NUM_PER_REQUEST = 2  # For model schema migration.
 
 

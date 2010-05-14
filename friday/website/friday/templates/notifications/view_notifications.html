@@ -30,59 +30,69 @@
 
   <div class="section">
 
-    <table class="table">
+    <form action="{% url friday.delete_notifications %}" method="POST">
 
-      <thead>
-        <tr>
-          <th><span class="nowrap">Subject</span></th>
-          <th><span class="nowrap">Author</span></th>
-          <th><span class="nowrap">Recipients</span></th>
-          <th><span class="nowrap">Send date</span></th>
-          <th><span class="nowrap">Category</span></th>
-        </tr>
-      </thead>
+      <table class="table">
 
-      <tbody>
-
-        {% for notification in notifications %}
-
+        <thead>
           <tr>
-            <td>
-              <div class="big nowrap">
-                <a href="{% url friday.view_notification notification_id=notification.id %}">
-                  {{ notification.subject|escape }}
-                </a>
-              </div>
-            </td>
-            <td>
-              <div class="nowrap">
-                <a href="{% url friday.view_profile username=notification.author.username %}">
-                  {{ notification.author|escape }}
-                </a>
-              </div>
-            </td>
-            <td><div class="nowrap">{{ notification.recipients|length }}</div></td>
-            <td><div class="nowrap">{{ notification.send_date|prettify_datetime }}</div></td>
-            <td>
-              <div class="nowrap">
-                <a href="{% url friday.view_notifications category=notification.category %}">
-                  {{ notification.category|escape }}
-                </a>
-              </div>
-            </td>
+            <th style="width: 1%;"></th>
+            <th><span class="nowrap">Subject</span></th>
+            <th><span class="nowrap">Author</span></th>
+            <th><span class="nowrap">Recipients</span></th>
+            <th><span class="nowrap">Send date</span></th>
+            <th><span class="nowrap">Category</span></th>
           </tr>
+        </thead>
 
-        {% endfor %}
+        <tbody>
 
-      </tbody>
+          {% for notification in notifications %}
 
-    </table>
+            <tr>
+              <td><input type="checkbox" name="notification_id" value="{{ notification.id }}"/></td>
+              <td>
+                <div class="big nowrap">
+                  <a href="{% url friday.view_notification notification_id=notification.id %}">
+                    {{ notification.subject|escape }}
+                  </a>
+                </div>
+              </td>
+              <td>
+                <div class="nowrap">
+                  <a href="{% url friday.view_profile username=notification.author.username %}">
+                    {{ notification.author|escape }}
+                  </a>
+                </div>
+              </td>
+              <td><div class="nowrap">{{ notification.recipients|length }}</div></td>
+              <td><div class="nowrap">{{ notification.send_date|prettify_datetime }}</div></td>
+              <td>
+                <div class="nowrap">
+                  <a href="{% url friday.view_notifications category=notification.category %}">
+                    {{ notification.category|escape }}
+                  </a>
+                </div>
+              </td>
+            </tr>
 
-    {% if category %}
-      <div class="table-info">
-        <a href="{% url friday.view_notifications %}">View all notifications</a>
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+      <div class="field">
+        <input class="button" type="submit" value="Delete selected notifications"/>
       </div>
-    {% endif %}
+
+      {% if category %}
+        <div class="table-info">
+          <a href="{% url friday.view_notifications %}">&raquo; View all notifications</a>
+        </div>
+      {% endif %}
+
+    </form>
 
   </div>
 

@@ -10,7 +10,6 @@
 import datetime
 import logging
 
-from django.conf import settings
 from google.appengine.ext import db
 
 from djangomockup import models
@@ -59,9 +58,8 @@ class Notification(models.Model):
     @classmethod
     def send(cls, **kwargs):
         notification = cls.create(**kwargs)
-        subject_prefix = getattr(settings, "MY_NOTIFICATION_SUBJECT_PREFIX", "")
         mail.send_mail(
-            subject=u"%s%s" % (subject_prefix, notification.subject),
+            subject=notification.subject,
             message=notification.message,
             from_email=notification.author.email,
             recipient_list=notification.recipients

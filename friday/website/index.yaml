@@ -53,6 +53,12 @@ indexes:
   - name: join_date
     direction: desc
 
+- kind: Notification
+  properties:
+  - name: category
+  - name: send_date
+    direction: desc
+
 - kind: Resto
   properties:
   - name: category
