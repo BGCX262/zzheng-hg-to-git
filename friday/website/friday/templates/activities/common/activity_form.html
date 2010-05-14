@@ -100,6 +100,18 @@
         {% endif %}
       </div>
 
+      {% if activity_form.instance %}
+        <div class="field">
+          <div class="label">This activity is {{ activity_form.instance.is_closed|yesno:"closed,open" }}:</div>
+          <div class="checkbox">{{ activity_form.is_closed|safe }} Close this activity.</div>
+          {% if activity_form.is_closed.errors %}
+            <div class="error-list">{{ activity_form.is_closed.errors|safe }}</div>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="hidden">{{ activity_form.is_closed|safe }}</div>
+      {% endif %}
+
       <div class="field">
         <input class="button" type="submit" value="{{ activity_form.instance|yesno:'Update,Create' }}"/>
         &nbsp; or,

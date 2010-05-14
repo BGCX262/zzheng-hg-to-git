@@ -207,8 +207,8 @@ class ViewAttenders(BaseActivityAction):
 
     def post_ajax(self):
         action = self.request.POST.get("action")
-        if action == "join":
-            self._join()
+        if action == "attend":
+            self._attend()
         elif action == "quit":
             self._quit()
         else:
@@ -217,9 +217,9 @@ class ViewAttenders(BaseActivityAction):
             raise BadRequestError(self.request, message)
         return {}
 
-    def _join(self):
-        if not self.get_activity_access().can_join():
-            message = "Current user cannot join the activity."
+    def _attend(self):
+        if not self.get_activity_access().can_attend():
+            message = "Current user cannot attend the activity."
             logging.error(message)
             raise BadRequestError(self.request, message)
         try:

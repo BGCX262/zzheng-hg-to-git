@@ -27,6 +27,7 @@ class ActivityForm(forms.Form):
     geo_pt = GeoPtField(required=False)
     places = forms.IntegerField(required=False)
     related_link = forms.URLField(required=False)
+    is_closed = forms.BooleanField(required=False)
 
     def __init__(self, data=None, instance=None):
         self._instance = instance
@@ -40,6 +41,7 @@ class ActivityForm(forms.Form):
                 "geo_pt": instance.geo_pt,
                 "places": instance.places,
                 "related_link": instance.related_link,
+                "is_closed": instance.is_closed,
             }
         else:
             initial = None

@@ -40,6 +40,9 @@
               {% ifequal attender.user user_ %}
                 <b>(you)</b>
               {% endifequal %}
+              {% if attender.with_friends %}
+                +{{ attender.with_friends }}
+              {% endif %}
             </div>
           </div>
 
@@ -51,21 +54,29 @@
 
     {% endif %}
 
+    {% if activity.is_closed %}
+      <p class="na">
+        <img class="icon" src="{{ static_ }}/images/lock.png" alt="Closed"/>
+        This activity is closed.
+      </p>
+    {% endif %}
+
   </div>
 
   {#______________________________________________________________________________________________#}
 
-  {% if user_ %}
+  {% if activity_access.can_attend or activity_access.can_quit %}
 
     <div class="section">
 
-      <form id="attend-activity-form" class="ajax-edit xs-form"
+      <form id="attend-quit-activity-form"
+            class="ajax-edit xs-form"
             action="{% url friday.view_attenders group_uid=group.uid activity_id=activity.id %}"
             method="POST"
-            onsubmit="return friday.submitAjaxForm('#attenders', '#attend-activity-form');">
+            onsubmit="return friday.submitAjaxForm('#attenders', '#attend-quit-activity-form');">
 
-        {% if activity_access.can_join %}
-          <input type="hidden" name="action" value="join"/>
+        {% if activity_access.can_attend %}
+          <input type="hidden" name="action" value="attend"/>
           <input class="button" type="submit" value="I'd like to attend"/>
           <span class="input">
             with <input type="text" name="with_friends"/> friends

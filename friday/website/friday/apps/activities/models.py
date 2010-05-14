@@ -29,7 +29,7 @@ class Activity(models.Model):
     geo_pt = db.GeoPtProperty()
     places = db.IntegerProperty()
     related_link = db.LinkProperty()
-    is_attendable = db.BooleanProperty(required=True, default=True)
+    is_closed = db.BooleanProperty(required=True, default=False)
     submitter = db.ReferenceProperty(users.User, required=True)
     submit_date = db.DateProperty(auto_now_add=True)
 

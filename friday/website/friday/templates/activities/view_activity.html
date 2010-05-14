@@ -50,12 +50,7 @@
         <img class="icon" src="{{ static_ }}/images/date.png" alt="Date"/>
         Date:
       </dt>
-      <dd>
-        {{ activity.date|date:"l, d N Y" }}
-        {% if activity.is_past %}
-          <img class="icon" src="{{ static_ }}/images/lock.png" alt="Past"/>
-        {% endif %}
-      </dd>
+      <dd>{{ activity.date|date:"l, d N Y" }}</dd>
     </dl>
 
     <dl>
@@ -107,6 +102,8 @@
 
   </div>
 
+  <!-- administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
   {% if activity_access.can_edit or activity_access.can_delete %}
     <div class="section">
       <h2>Administrate:</h2>
@@ -140,8 +137,8 @@
     <h5>
       {{ activity.date|date:"l, d N Y" }}
       ( {{ activity.date|prettify_datetime }} )
-      {% if activity.is_past %}
-        <img class="icon" src="{{ static_ }}/images/lock.png" alt="Past"/>
+      {% if activity.is_past or activity.is_closed %}
+        <img class="icon" src="{{ static_ }}/images/lock.png" alt="Past or Closed"/>
       {% endif %}
     </h5>
   </div>
