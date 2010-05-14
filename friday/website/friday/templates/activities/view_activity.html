@@ -108,11 +108,8 @@
   </div>
 
   {% if activity_access.can_edit or activity_access.can_delete %}
-
     <div class="section">
-
       <h2>Administrate:</h2>
-
       <ul>
         {% if activity_access.can_edit %}
           <li>
@@ -123,28 +120,13 @@
         {% endif %}
         {% if activity_access.can_delete %}
           <li>
-            <a href="javascript:void(0);" onclick="deleteActivity();">
+            <a href="{% url friday.delete_activity group_uid=activity.group.uid activity_id=activity.id %}">
               Delete this activity
             </a>
           </li>
         {% endif %}
       </ul>
-
-      {% if activity_access.can_delete %}
-        <form id="delete-activity-form" class="hidden"
-              action="{% url friday.delete_activity group_uid=activity.group.uid activity_id=activity.id %}"
-              method="POST">
-          <input class="button" type="submit" value="Delete"/>
-        </form>
-        <script type="text/javascript">//<![CDATA[
-          function deleteActivity() {
-            $("#delete-activity-form").submit();
-          }
-        //]]></script>
-      {% endif %}
-
     </div>
-
   {% endif %}
 
 {% endblock %}

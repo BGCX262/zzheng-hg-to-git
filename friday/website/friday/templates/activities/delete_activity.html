@@ -1,0 +1,47 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-14.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Delete {{ activity.title|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if activity_access.can_delete %}
+
+    <div class="section">
+      <h1>Delete {{ activity.title|escape }} ?</h1>
+    </div>
+
+    <div class="section">
+      <form class="xl-form" action="." method="POST">
+        <div class="field">
+          <div class="label">Are you sure you want to delete {{ activity.title|escape }} ?</div>
+          <div class="help-text">
+            <p>This operation cannot be reverted.</p>
+          </div>
+        </div>
+        <div class="field">
+          <input class="button" type="submit" value="Yes, delete it"/>
+          &nbsp; or,
+          <a href="{% url view_activity group_uid=activity.group.uid activity_id=activity.id %}">
+            return to {{ activity.title|escape }}
+          </a>
+        </div>
+      </form>
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+

@@ -1,0 +1,53 @@
+{% extends "restos/resto_base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-14.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Delete {{ resto|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  {% if resto_access.can_delete %}
+
+    <div class="section">
+      <h1>Delete {{ resto|escape }} ?</h1>
+    </div>
+
+    <div class="section">
+      <form class="xl-form" action="." method="POST">
+        <div class="field">
+          <div class="label">Are you sure you want to delete {{ resto|escape }} ?</div>
+          <div class="help-text">
+            <p>
+              Once the restaurant is deleted, all the related information (ratings, comments,
+              etc.) will also be deleted.
+            </p>
+            <p>
+              This operation cannot be reverted.
+            </p>
+          </div>
+        </div>
+        <div class="field">
+          <input class="button" type="submit" value="Yes, delete it"/>
+          &nbsp; or,
+          <a href="{% url friday.view_resto resto_id=resto.id %}">
+            return to {{ resto|escape }}
+          </a>
+        </div>
+      </form>
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+

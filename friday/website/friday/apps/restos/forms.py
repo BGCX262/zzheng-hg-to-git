@@ -119,15 +119,52 @@ class DishForm(forms.Form):
     is_vegetarian = forms.BooleanField(required=False)
     price = forms.CharField(required=False)
 
+    def __init__(self, data=None, instance=None):
+        self._instance = instance
+        if instance:
+            initial = {
+                "name": instance.name,
+                "description": instance.description,
+                "photo_url": instance.photo_url,
+                "is_spicy": instance.is_spicy,
+                "is_vegetarian": instance.is_vegetarian,
+                "price": instance.price,
+            }
+        else:
+            initial = None
+        super(DishForm, self).__init__(data=data, initial=initial)
+
+    @property
+    def instance(self):
+        return self._instance
+
     def clean_photo_url(self):
         return self.cleaned_data["photo_url"] or None
 
     def create(self, resto):
+        if self._instance is not None:
+            message = "Failed to create dish: this form is bound to an existing instance."
+            raise ProgrammingError(message)
         if not self.is_valid():
             raise InvalidFormError(self.errors)
         instance = Dish.create(resto=resto, **self.cleaned_data)
         instance.save()
         return instance
+
+    def update(self):
+        if self._instance is None:
+            message = "Failed to update dish: this form is not bound to an instance."
+            raise ProgrammingError(message)
+        if not self.is_valid():
+            raise InvalidFormError(self.errors)
+        if self._instance.name != self.cleaned_data["name"]:
+            message = "Dish name is read-only, and cannot be updated."
+            raise ProgrammingError(message)
+        for name, value in self.cleaned_data.items():
+            if name != "name":
+                setattr(self._instance, name, value)
+        self._instance.save()
+        return self._instance
 
 
 # EOF

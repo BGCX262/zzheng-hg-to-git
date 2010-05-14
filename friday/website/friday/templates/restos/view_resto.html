@@ -175,33 +175,18 @@
   <!-- administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   {% if resto_access.can_edit or resto_access.can_delete %}
-
     <div class="section">
       <h2>Administration:</h2>
       <ul>
         {% if resto_access.can_edit %}
           <li><a href="{% url friday.edit_resto resto_id=resto.id %}">Edit resto information</a></li>
-          <li><a href="{% url friday.edit_dishes resto_id=resto.id %}">Edit recommended dishes</a></li>
+          <li><a href="{% url friday.recommend_dish resto_id=resto.id %}">Recommend a dish</a></li>
         {% endif %}
         {% if resto_access.can_delete %}
-          <li><a href="javascript:void(0);" onclick="deleteResto();">Delete this resto</a></li>
+          <li><a href="{% url friday.delete_resto resto_id=resto.id %}">Delete this resto</a></li>
         {% endif %}
       </ul>
     </div>
-
-    {% if resto_access.can_delete %}
-      <form id="delete-resto-form" class="hidden"
-            action="{% url friday.delete_resto resto_id=resto.id %}"
-            method="POST">
-        <input class="button" type="submit" value="Delete"/>
-      </form>
-      <script type="text/javascript">//<![CDATA[
-        function deleteResto() {
-          $("#delete-resto-form").submit();
-        }
-      //]]></script>
-    {% endif %}
-
   {% endif %}
 
 {% endblock %}

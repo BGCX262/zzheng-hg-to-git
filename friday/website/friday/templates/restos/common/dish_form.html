@@ -12,10 +12,16 @@
   <form id="dish-form" class="xl-form" action="." method="POST">
 
     <div class="field">
-      <div class="label">Name: *</div>
-      <div class="input required">{{ dish_form.name|safe }}</div>
-      {% if dish_form.name.errors %}
-        <div class="error-list">{{ dish_form.name.errors|safe }}</div>
+      {% if dish_form.instance %}
+        <div class="label">Name:</div>
+        <div class="hidden">{{ dish_form.name|safe }}</div>
+        <div class="disabled-value">{{ dish_form.instance.name|escape }}</div>
+      {% else %}
+        <div class="label">Name: *</div>
+        <div class="input required">{{ dish_form.name|safe }}</div>
+        {% if dish_form.name.errors %}
+          <div class="error-list">{{ dish_form.name.errors|safe }}</div>
+        {% endif %}
       {% endif %}
     </div>
 
@@ -62,7 +68,7 @@
     </div>
 
     <div class="field">
-      <input class="button" type="submit" value="Recommend this dish"/>
+      <input class="button" type="submit" value="{{ dish_form.instance|yesno:'Update,Recommend' }}"/>
       &nbsp; or,
       <a href="{% url friday.view_resto resto_id=resto.id %}">
         return to {{ resto|escape }}

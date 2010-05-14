@@ -155,6 +155,7 @@ class Dish(models.Model):
     is_spicy = db.BooleanProperty(required=True, default=False)
     is_vegetarian = db.BooleanProperty(required=True, default=False)
     price = db.StringProperty()
+    popularity = db.IntegerProperty(required=True, default=0)
 
     schema_version = db.IntegerProperty(required=True, default=1)
 
@@ -170,8 +171,11 @@ class Dish(models.Model):
         if not fan:
             fan = Fan.create_fan(ref_type=self.__class__.__name__, ref_pk=self.id, user=user)
             fan.save()
+            self.popularity += 1
         else:
             fan.delete()
+            self.popularity = max(0, self.popularity - 1)
+        self.save()
 
     @classmethod
     def create(cls, **kwargs):
@@ -187,7 +191,7 @@ class Dish(models.Model):
 
     @classmethod
     def find_by_resto(cls, resto):
-        query = cls.objects.filter(resto=resto)
+        query = cls.objects.filter(resto=resto).order_by("-popularity")
         return query
 
     @classmethod

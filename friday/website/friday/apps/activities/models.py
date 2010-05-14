@@ -145,7 +145,8 @@ def delete_related_attenders(sender, **kwargs):
         try:
             activity = kwargs["instance"]
             deleted = Attender.delete_related(activity=activity)
-            logging.info("%s related attenders have been deleted successfully." % deleted)
+            if deleted > 0:
+                logging.info("%s related attenders have been deleted successfully." % deleted)
         except Exception, exc:
             logging.error("Failed to delete related attenders of activity: %s" % exc)
             logging.exception(exc)

@@ -28,6 +28,12 @@ indexes:
   - name: submit_date
     direction: desc
 
+- kind: Dish
+  properties:
+  - name: resto
+  - name: popularity
+    direction: desc
+
 - kind: Inductee
   properties:
   - name: group

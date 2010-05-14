@@ -286,51 +286,30 @@ class DeleteResto(BaseRestoAction):
             return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
-class LikeOrUnlikeDish(BaseRestoAction):
+class RecommendDish(BaseRestoAction):
 
-    AJAX_URL_NAME = "friday.like_or_unlike_dish"
-    AJAX_TEMPLATE = "restos/common/dish.html"
+    PAGE_URL_NAME = "friday.recommend_dish"
+    PAGE_TEMPLATE = "restos/recommend_dish.html"
 
-    def __init__(self, request, resto_id, dish_id):
-        super(LikeOrUnlikeDish, self).__init__(request, resto_id)
-        self.dish_id = int(dish_id)
-
-    def post_ajax(self):
-        if not self.current_user:
-            message = "Anonymous user cannot like/unlike a dish."
-            raise BadRequestError(self.request, message)
-        dish = Dish.get_unique(id=self.dish_id)
-        if not dish or dish.resto != self.get_resto():
-            message = "searched by dish id #%s." % self.dish_id
-            raise EntityNotFoundError(Dish, message)
-        dish.like_or_unlike(self.current_user)
-        return {"dish": dish}
-
-
-class EditDishes(BaseRestoAction):
-
-    PAGE_URL_NAME = "friday.edit_dishes"
-    PAGE_TEMPLATE = "restos/edit_dishes.html"
-
-    def _check_edit_access(self):
+    def _check_create_access(self):
         if not self.get_resto_access().can_edit():
-            message = "Current user cannot edit dishes of resto %s." % self.get_resto().id
+            message = "Current user cannot recommend dish of resto %s." % self.get_resto().id
             logging.error(message)
             raise BadRequestError(self.request, message)
 
     def get_page(self):
-        self._check_edit_access()
+        self._check_create_access()
         dish_form = DishForm()
         data = {"dish_form": dish_form}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
     def post_page(self):
-        self._check_edit_access()
+        self._check_create_access()
         dish_form = DishForm(data=self.request.POST)
         try:
             dish = dish_form.create(resto=self.get_resto())
-            message = "Dish #%s has been created successfully." % dish.id
+            message = "Dish %s has been created successfully." % dish.id
             logging.info(message)
             redirect_url = ViewResto.get_page_url(resto_id=dish.resto.id)
             return HttpResponseRedirect(redirect_url)
@@ -339,6 +318,109 @@ class EditDishes(BaseRestoAction):
             logging.error(message)
             logging.exception(exc)
             data = {"dish_form": dish_form, "prompt": Prompt(error=message)}
+            data = self.update_data(data)
+            return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
+class BaseDishAction(BaseRestoAction):
+
+    def __init__(self, request, resto_id, dish_id):
+        super(BaseDishAction, self).__init__(request, resto_id)
+        self.dish_id = int(dish_id)
+
+    def get_dish(self):
+        dish = Dish.get_unique(id=self.dish_id)
+        if not dish or dish.resto != self.get_resto():
+            message = "searched by dish id %s." % self.dish_id
+            raise EntityNotFoundError(Dish, message)
+        return dish
+
+    def update_data(self, data):
+        data["dish"] = self.get_dish()
+        return super(BaseDishAction, self).update_data(data)
+
+
+class LikeOrUnlikeDish(BaseDishAction):
+
+    AJAX_URL_NAME = "friday.like_or_unlike_dish"
+    AJAX_TEMPLATE = "restos/common/dish.html"
+
+    def post_ajax(self):
+        if not self.current_user:
+            message = "Anonymous user cannot like/unlike a dish."
+            raise BadRequestError(self.request, message)
+        dish = self.get_dish()
+        dish.like_or_unlike(self.current_user)
+        return {}
+
+
+class EditDish(BaseDishAction):
+
+    PAGE_URL_NAME = "friday.edit_dish"
+    PAGE_TEMPLATE = "restos/edit_dish.html"
+
+    def _check_edit_access(self):
+        if not self.get_resto_access().can_edit():
+            message = "Current user cannot edit dish of resto %s." % self.get_resto().id
+            logging.error(message)
+            raise BadRequestError(self.request, message)
+
+    def get_page(self):
+        self._check_edit_access()
+        dish_form = DishForm(instance=self.get_dish())
+        data = {"dish_form": dish_form}
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+    def post_page(self):
+        self._check_edit_access()
+        dish_form = DishForm(data=self.request.POST, instance=self.get_dish())
+        try:
+            dish = dish_form.update()
+            message = "Dish %s has been updated successfully." % dish.id
+            logging.info(message)
+            redirect_url = ViewResto.get_page_url(resto_id=dish.resto.id)
+            return HttpResponseRedirect(redirect_url)
+        except Exception, exc:
+            message = "Failed to update dish in datastore: %s" % exc
+            logging.error(message)
+            logging.exception(exc)
+            data = {"dish_form": dish_form, "prompt": Prompt(error=message)}
+            data = self.update_data(data)
+            return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
+class DeleteDish(BaseDishAction):
+
+    PAGE_URL_NAME = "friday.delete_dish"
+    PAGE_TEMPLATE = "restos/delete_dish.html"
+
+    def _check_delete_access(self):
+        if not self.get_resto_access().can_edit():
+            message = "Current user cannot delete dish %s." % self.get_dish().id
+            logging.error(message)
+            raise BadRequestError(self.request, message)
+
+    def get_page(self):
+        self._check_delete_access()
+        data = self.update_data({})
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+    def post_page(self):
+        self._check_delete_access()
+        try:
+            dish = self.get_dish()
+            dish_id = dish.id  # Dish instance has no 'id' attribute after deletion.
+            dish.delete()
+            message = "Dish %s has been deleted successfully." % dish_id
+            logging.info(message)
+            redirect_url = ViewResto.get_page_url(resto_id=self.get_resto().id)
+            return HttpResponseRedirect(redirect_url)
+        except Exception, exc:
+            message = "Failed to delete dish in datastore: %s" % exc
+            logging.error(message)
+            logging.exception(exc)
+            data = {"prompt": Prompt(error=message)}
             data = self.update_data(data)
             return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
@@ -390,12 +472,20 @@ def delete_resto(request, resto_id):
     return DeleteResto(request, resto_id).process()
 
 
+def recommend_dish(request, resto_id):
+    return RecommendDish(request, resto_id).process()
+
+
 def like_or_unlike_dish(request, resto_id, dish_id):
     return LikeOrUnlikeDish(request, resto_id, dish_id).process()
 
 
-def edit_dishes(request, resto_id):
-    return EditDishes(request, resto_id).process()
+def edit_dish(request, resto_id, dish_id):
+    return EditDish(request, resto_id, dish_id).process()
+
+
+def delete_dish(request, resto_id, dish_id):
+    return DeleteDish(request, resto_id, dish_id).process()
 
 
 # EOF

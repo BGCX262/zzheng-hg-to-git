@@ -12,9 +12,11 @@
   <form id="group-form" class="xl-form" action="." method="POST">
 
     <div class="field">
-
-      {% if not group_form.instance %}
-
+      {% if group_form.instance %}
+        <div class="label">The group's unique ID (this cannot be changed):</div>
+        <div class="hidden">{{ group_form.uid|safe }}</div>
+        <div class="disabled-value">{{ group_form.instance.uid|escape }}</div>
+      {% else %}
         <div class="label">Unique ID of the group: *</div>
         <div class="input required">{{ group_form.uid|safe }}</div>
         {% if group_form.uid.errors %}
@@ -23,15 +25,7 @@
         <div class="help-text">
           This will be part of the group's page URL. It cannot be changed later.
         </div>
-
-      {% else %}
-
-        <div class="label">The group's unique ID (this cannot be changed):</div>
-        <div class="hidden">{{ group_form.uid|safe }}</div>
-        <div class="disabled-value">{{ group_form.instance.uid|escape }}</div>
-
       {% endif %}
-
     </div>
 
     <div class="field">

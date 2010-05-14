@@ -49,6 +49,9 @@ class ActivityForm(forms.Form):
     def instance(self):
         return self._instance
 
+    def clean_address(self):
+        return self.cleaned_data["address"] or None
+
     def clean_related_link(self):
         return self.cleaned_data["related_link"] or None
 

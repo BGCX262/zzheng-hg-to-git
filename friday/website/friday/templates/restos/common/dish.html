@@ -36,6 +36,7 @@
     {% endif %}
 
     <div class="post-foot">
+
       <img class="icon" src="{{ static_ }}/images/like.png" alt="Like"/>
       {{ dish.fans.count }} persons like this
       {% if user_ %}
@@ -47,6 +48,12 @@
           </a>
         {% endwithfan %}
       {% endif %}
+
+      {% if resto_access.can_edit %}
+        &bull; <a href="{% url friday.edit_dish resto_id=dish.resto.id dish_id=dish.id %}">Edit</a>
+        &bull; <a href="{% url friday.delete_dish resto_id=dish.resto.id dish_id=dish.id %}">Delete</a>
+      {% endif %}
+
     </div>
 
     <div class="clear"></div>
