@@ -1,0 +1,201 @@
+/**
+ Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+ Created on 2008-12-03.
+ $Id$
+ */
+
+/*--------------------------------------------------------------------------------------------------
+ * HTML elements
+ *------------------------------------------------------------------------------------------------*/
+
+body {
+  margin: 40px auto;
+  padding: 0;
+  text-align: center;
+  font: normal normal 80% Arial,Helvetica,sans-serif;
+}
+
+a, a:link, a:visited {
+  text-decoration: none;
+  color: #2090D0;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #2090D0;
+}
+
+a img {
+  border-width: 0;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  padding: 8px 0 8px 0;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 160%;
+}
+
+h2 {
+  font-weight: normal;
+  font-size: 130%;
+  color: #666666;
+}
+
+h3 {
+  font-weight: normal;
+  font-size: 110%;
+}
+
+h5 {
+  margin: 0;
+  padding: 4px;
+  font-weight: normal;
+  font-size: 110%;
+  color: #666666;
+  text-align: right;
+  border-top: solid 1px #DDDDDD;
+}
+
+.clear {
+  clear: both;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * home-wrapper
+ *------------------------------------------------------------------------------------------------*/
+
+#home-wrapper {
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+  width: 990px;
+  min-width: 990px;
+  /*border: 1px solid #DDDDDD;*/
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * topbar-wrapper and footer-wrapper
+ *------------------------------------------------------------------------------------------------*/
+
+#topbar-wrapper {
+  margin: 0;
+  padding: 10px;
+  line-height: 1.4em;
+  color: #888888;
+  border-bottom: 1px solid #DDDDDD;
+}
+
+#footer-wrapper {
+  margin: 0;
+  padding: 10px;
+  line-height: 1.4em;
+  color: #888888;
+  font-size: 90%;
+  border-top: 1px solid #DDDDDD;
+}
+
+#footer-wrapper a {
+  color: #888888;
+}
+
+#footer-wrapper .footer-left {
+  float: left;
+  white-space: nowrap;
+}
+
+#footer-wrapper .footer-right {
+  float: right;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * main-wrapper
+ *------------------------------------------------------------------------------------------------*/
+
+#main-wrapper {
+  margin: 0;
+  padding: 10px 10px 20px 10px;
+  font-size: 110%;
+}
+
+#splash {
+  margin: 0;
+  padding: 10px 0 10px 0;
+  display: inline;
+  float: left;
+  width: 560px;
+  overflow: hidden;
+  color: #444444;
+}
+
+#splash .image {
+  margin: 0;
+  padding: 2px;
+  border: 1px solid #BBBBBB;
+  width: 540px;
+}
+
+#splash .alt {
+  margin: 0;
+  padding: 2px;
+  width: 540px;
+  text-align: right;
+  font-size: 90%;
+  color: #888888;
+}
+
+#splash .alt a {
+  color: #888888;
+}
+
+#text {
+  margin: 40px auto;
+  padding: 0;
+  text-align: center;
+  display: inline;
+  float: right;
+  width: 400px;
+}
+
+.big {
+  margin: 0;
+  padding: 0 0 10px 0;
+  color: #888888;
+  font: normal bold 240% Garamond,Arial,Helvetica,sans-serif;
+  white-space: nowrap;
+}
+
+.bigger {
+  margin: 0;
+  padding: 0 0 60px 0;
+  color: #888888;
+  font: normal bold 320% Garamond,Arial,Helvetica,sans-serif;
+  white-space: nowrap;
+}
+
+a.button {
+  padding: 8px 20px 8px 20px;
+  font-weight: bold;
+  font-size: 100%;
+  text-decoration: none;
+  background-color: #2090D0;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+a.button:hover {
+  text-decoration: none;
+  background-color: #2060B0;
+  color: #FFFFFF;
+  border: none;
+}
+
+

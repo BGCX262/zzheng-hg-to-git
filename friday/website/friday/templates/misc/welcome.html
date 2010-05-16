@@ -1,30 +1,109 @@
-{% extends "base.html" %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
 {% comment %}
 <!--
   Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
-
-  Created on 2010-02-08.
+  Created on 2010-05-14.
   $Id$
 -->
 {% endcomment %}
 
-{#________________________________________________________________________________________________#}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
-{% block html_title %} Home {% endblock %}
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{{ site_name_|escape }}</title>
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" media="screen,print" href="{{ static_ }}/css/welcome.css"/>
+  </head>
 
-{#________________________________________________________________________________________________#}
+  <body>
 
-{% block main %}
+    <div id="home-wrapper">
 
-  <div id="anonymous-home">
-    <div>
-      <a class="button login-url" href="{{ login_url_ }}">
-        Sign in with your Google/Gmail account
-      </a>
-    </div>
-  </div><!--/#anonymous-home-->
+      <!-- topbar-wrapper ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-{% endblock %}{# main #}
+      <div id="topbar-wrapper">
+        <div class="topbar-logo">
+          <a href="{% url friday.home %}">
+            <img src="{{ static_ }}/images/logo.gif" alt="{{ site_name_|escape|default:'logo' }}"/>
+          </a>
+        </div>
+        <div class="clear"></div>
+      </div><!--/#topbar-wrapper-->
+
+      <!-- main-wrapper ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+      <div id="main-wrapper">
+
+        <div id="splash">
+          <img class="image" src="{{ static_ }}/images/weekdays/{{ splash.image }}" alt="{{ splash.title|escape }}"/>
+          <div class="alt">
+            {{ splash.slogan|escape }}
+            /
+            {{ splash.title|escape }},
+            by <a href="{{ splash.artist_url }}">{{ splash.artist|escape }}</a>
+          </div>
+        </div>
+
+        <div id="text">
+          <div class="big">It's {{ splash.weekday_name }} today</div>
+          <div class="bigger">
+            {% if splash.countdown %}
+              {{ splash.countdown }} day{{ splash.countdown|pluralize }} to Friday!
+            {% endif %}
+            {% if splash.is_friday %}
+              Vive le Vendredi!
+            {% endif %}
+            {% if splash.is_weekend %}
+              Enjoy the weekend!
+            {% endif %}
+          </div>
+          <div>
+            <a class="button" href="{{ login_url_ }}">Sign in</a>
+            &nbsp; or, <a href="{% url friday.home %}">enter the website &raquo;</a>
+          </div>
+        </div>
+
+        <div class="clear"></div>
+
+      </div><!--/#main-wrapper-->
+
+      <!-- footer-wrapper ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+      <div id="footer-wrapper">
+
+        <div class="footer-left">
+          <a href="{% url friday.home %}">{{ site_name_|escape }}</a>
+          &bull;
+          <a href="{% url friday.about topic='versions' %}">Version {{ website_version_|escape }}</a>
+          <br/>
+          Built and maintained by <a href="http://www.zhengzhong.net/">ZHENG Zhong</a>
+        </div>
+
+        <div class="footer-right">
+          <a href="http://appengine.google.com/" rel="external">Google App Engine</a>
+          &bull;
+          <a href="http://www.python.org/" rel="external">Python {{ python_version_|escape }}</a>
+          &bull;
+          <a href="http://www.djangoproject.com/" rel="external">Django {{ django_version_|escape }}</a>
+          &bull;
+          <a href="http://jquery.com/" rel="external">jQuery</a>
+          <br/>
+          <a href="http://validator.w3.org/check?uri=referer" rel="external">Valid XHTML</a>
+          &bull;
+          <a href="http://jigsaw.w3.org/css-validator/check/referer" rel="external">Valid CSS</a>
+        </div>
+
+        <div class="clear"></div>
+
+      </div><!--/#footer-wrapper-->
+
+    </div><!--/#outer-wrapper-->
+
+  </body>
+
+</html>
 
 
 
