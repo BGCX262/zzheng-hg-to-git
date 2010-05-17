@@ -39,10 +39,9 @@
         <div id="splash">
           <img class="image" src="{{ static_ }}/images/weekdays/{{ splash.image }}" alt="{{ splash.title|escape }}"/>
           <div class="alt">
-            {{ splash.slogan|escape }}
-            /
-            {{ splash.title|escape }},
-            by <a href="{{ splash.artist_url }}">{{ splash.artist|escape }}</a>
+            {{ splash.weekday_name|escape }}
+            / {{ splash.title|escape }}
+            / <a href="{{ splash.artist_url }}">{{ splash.artist|escape }}</a>
           </div>
         </div>
 

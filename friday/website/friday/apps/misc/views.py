@@ -26,46 +26,39 @@ class Splash(object):
         self.isoweekday = int(isoweekday)
         if self.isoweekday == 1:
             self.weekday_name = "Monday"
-            self.slogan = "Monday"
+            self.image = "the_persistence_of_memory.jpg"
+            self.title = "The Persistence of Memory (1931)"
+            self.artist = "Salvador Dali"
+        elif self.isoweekday == 2:
+            self.weekday_name = "Tuesday"
             self.image = "the_scream.jpg"
             self.title = "The Scream (1893)"
             self.artist = "Edvard Munch"
-        elif self.isoweekday == 2:
-            self.weekday_name = "Tuesday"
-            self.slogan = "Tuesday"
-            self.image = "christ_in_the_desert.jpg"
-            self.title = "Christ in the Desert (1872)"
-            self.artist = "Ivan Kramskoi"
         elif self.isoweekday == 3:
             self.weekday_name = "Wednesday"
-            self.slogan = "Wednesday"
-            self.image = ""
-            self.title = ""
-            self.artist = ""
+            self.image = "barge_haulers_on_the_volga.jpg"
+            self.title = "Barge Haulers on the Volga (1870-1873)"
+            self.artist = "Ilya Repin"
         elif self.isoweekday == 4:
             self.weekday_name = "Thursday"
-            self.slogan = "Thursday"
             self.image = "the_raft_of_the_medusa.jpg"
             self.title = "The Raft of the Medusa (1819)"
             self.artist = "Théodore Géricault"
         elif self.isoweekday == 5:
             self.weekday_name = "Friday"
-            self.slogan = "Friday"
             self.image = "liberty_leading_the_people.jpg"
             self.title = "Liberty Leading the People (1830)"
             self.artist = "Eugène Delacroix"
         elif self.isoweekday == 6:
             self.weekday_name = "Saturday"
-            self.slogan = "Saturday"
             self.image = "le_moulin_de_la_galette.jpg"
             self.title = "Le moulin de la Galette (1876)"
             self.artist = "Pierre-Auguste Renoir"
         elif self.isoweekday == 7:
             self.weekday_name = "Sunday"
-            self.slogan = "Sunday"
-            self.image = ""
-            self.title = ""
-            self.artist = ""
+            self.image = "sunday_afternoon_on_the_island_of_la_grande_jatte.jpg"
+            self.title = "Sunday Afternoon on the Island of La Grande Jatte (1884-1886)"
+            self.artist = "Georges Seurat"
         else:
             message = "Invalid ISO weekday %s." % isoweekday
             raise ProgrammingError(message)
