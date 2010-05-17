@@ -61,7 +61,7 @@ class Inductee(models.Model):
         query = cls.objects.filter(group=group)
         query = query.order_by(kwargs.get("order_by") or "-inducted_date")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
 

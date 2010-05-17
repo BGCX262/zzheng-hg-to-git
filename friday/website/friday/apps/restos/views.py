@@ -97,7 +97,7 @@ class ViewRestosByTag(Action):
 
     def get_page(self):
         tag_name = self.request.GET.get("tag_name")
-        data = {"tag_name": tag_name, "restos": Resto.find_by_tag(tag_name)}
+        data = {"tag_name": tag_name, "restos": Resto.find_by_tag(name=tag_name)}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 

@@ -69,7 +69,7 @@ class Fan(models.Model):
     def find(cls, ref_type, ref_pk, **kwargs):
         query = cls.objects.filter(ref_type=ref_type, ref_pk=str(ref_pk)).order_by("-rate_date")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
     @classmethod

@@ -103,7 +103,7 @@ class Tag(models.Model):
             query = query.filter(category=category)
         query = query.order_by(kwargs.get("order_by") or "-count")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
     @classmethod
@@ -174,7 +174,7 @@ class Taggable(object):
         if "order_by" in kwargs:
             query = query.order_by(kwargs["order_by"])
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
 

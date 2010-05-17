@@ -135,14 +135,14 @@ class Resto(models.Model, Taggable):
     def find(cls, **kwargs):
         query = cls.objects.order_by(kwargs.get("order_by") or "name")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
     @classmethod
     def find_by_category(cls, category, **kwargs):
         query = cls.objects.filter(category=category).order_by(kwargs.get("order_by") or "name")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
 

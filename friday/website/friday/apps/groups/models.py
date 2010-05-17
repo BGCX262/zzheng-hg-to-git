@@ -83,7 +83,7 @@ class Group(models.Model):
     def find_all(cls, **kwargs):
         query = cls.objects.order_by(kwargs.get("order_by") or "-create_date")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
 

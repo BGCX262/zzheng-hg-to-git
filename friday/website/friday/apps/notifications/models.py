@@ -79,7 +79,7 @@ class Notification(models.Model):
             query = query.filter(recipients=db.Email(kwargs["recipient"]))
         query = query.order_by(kwargs.get("order_by") or "-send_date")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
 

@@ -10,6 +10,13 @@
 from google.appengine.ext import db
 
 
+class QueryAlreadyExecuted(Exception):
+    """
+    When user tries to filter the query while the query has already been executed.
+    """
+    pass
+
+
 class QuerySet(object):
     """
     Wrapper class around Google App Engine's Query object to simulate Django's QuerySet.
@@ -35,36 +42,71 @@ class QuerySet(object):
         self._cache = None
 
     def __nonzero__(self):
-        if self._cache is not None:
-            return bool(self._cache)
-        return self._query.count(1) > 0
+        self._fill_cache()
+        return bool(self._cache)
+
+    def __len__(self):
+        self._fill_cache()
+        return len(self._cache)
 
     def __iter__(self):
-        if self._cache is None:
-            self._cache = self._query.fetch(limit=self._limit)
+        self._fill_cache()
         return self._cache.__iter__()
 
     def __getitem__(self, k):
-        if not isinstance(k, slice):
-            raise TypeError("[] got an invalid argument '%s': only slice is supported" % k)
-        if k.start is not None or k.step is not None or k.stop is None:
-            raise TypeError("[] got an invalid slice argument '%s': only stop is supported" % k)
-        self._limit = int(k.stop)
+        if not isinstance(k, (slice, int, long)):
+            raise TypeError("list indices must be integers")
+        self._fill_cache()
+        return self._cache[k]
+
+    '''
+    def cursor(self):
+        """
+        Attention: this function is specific to Google App Engine.
+        """
+        self._fill_cache()
+        return self._query.cursor()
+
+    def with_cursor(self, cursor):
+        """
+        Attention: this function is specific to Google App Engine.
+        """
+        self._ensure_query_not_executed("with_cursor")
+        if cursor:
+            # We must convert the cursor to str, otherwise, we'll get a BadValueError:
+            # Invalid cursor XXX: character mapping must return integer, None or unicode.
+            self._query.with_cursor(str(cursor))
         return self
+    '''
 
     def filter(self, **kwargs):
+        self._ensure_query_not_executed("filter")
         for name, value in kwargs.items():
             property_operator = self._parse_field_lookup("filter", name)
             self._query.filter(property_operator, value)
         return self
 
     def order_by(self, *fields):
+        self._ensure_query_not_executed("order_by")
         for field in fields:
             self._query.order(field)
         return self
 
+    def set_limit(self, limit):
+        self._ensure_query_not_executed("set_limit")
+        self._limit = limit
+
     def count(self):
-        return self._query.count(self._limit)
+        self._fill_cache()
+        return len(self._cache)
+
+    def _fill_cache(self):
+        if self._cache is None:
+            self._cache = self._query.fetch(limit=self._limit)
+
+    def _ensure_query_not_executed(self, operation_to_apply):
+        if self._cache is not None:
+            raise QueryAlreadyExecuted("Failed to apply %s on query set." % operation_to_apply)
 
     def _parse_field_lookup(self, func, field_lookup):
         split_tuple = field_lookup.split("__")

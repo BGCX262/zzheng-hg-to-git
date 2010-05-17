@@ -75,7 +75,7 @@ class Activity(models.Model):
     def find_all(cls, group, **kwargs):
         query = cls.objects.filter(group=group).order_by("-date")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
     @classmethod
@@ -83,7 +83,7 @@ class Activity(models.Model):
         today = datetime.date.today()
         query = cls.objects.filter(group=group, date__gte=today).order_by("-date")
         if kwargs.get("limit"):
-            query = query[:kwargs["limit"]]
+            query.set_limit(kwargs["limit"])
         return query
 
 
