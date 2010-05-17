@@ -69,6 +69,8 @@ class Resto(models.Model, Taggable):
     background_url = db.LinkProperty()
     logo_icon_url = db.LinkProperty()
 
+    popularity = db.IntegerProperty(required=True, default=0)
+
     owner = db.ReferenceProperty(users.User, required=False, collection_name="owned_restos")
     submitter = db.ReferenceProperty(users.User, required=True, collection_name="submitted_restos")
     submit_date = db.DateTimeProperty(required=True, auto_now_add=True)
@@ -133,7 +135,7 @@ class Resto(models.Model, Taggable):
 
     @classmethod
     def find(cls, **kwargs):
-        query = cls.objects.order_by(kwargs.get("order_by") or "name")
+        query = cls.objects.order_by(kwargs.get("order_by") or "-popularity")
         if kwargs.get("cursor"):
             query.with_cursor(kwargs["cursor"])
         if kwargs.get("limit"):
@@ -142,12 +144,19 @@ class Resto(models.Model, Taggable):
 
     @classmethod
     def find_by_category(cls, category, **kwargs):
-        query = cls.objects.filter(category=category).order_by(kwargs.get("order_by") or "name")
+        query = cls.objects.filter(category=category)
+        query = query.order_by(kwargs.get("order_by") or "-popularity")
         if kwargs.get("cursor"):
             query.with_cursor(kwargs["cursor"])
         if kwargs.get("limit"):
             query.set_limit(kwargs["limit"])
         return query
+
+    @classmethod
+    def find_by_tag(cls, name, **kwargs):
+        if "order_by" not in kwargs:
+            kwargs["order_by"] = "-popularity"
+        return super(Resto, cls).find_by_tag(name=name, **kwargs)
 
 
 class Dish(models.Model):

@@ -62,7 +62,14 @@ indexes:
 - kind: Resto
   properties:
   - name: category
-  - name: name
+  - name: popularity
+    direction: desc
+
+- kind: Resto
+  properties:
+  - name: tags
+  - name: popularity
+    direction: desc
 
 - kind: Tag
   properties:
