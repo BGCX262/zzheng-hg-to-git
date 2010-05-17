@@ -105,11 +105,12 @@ class ImportRestosForm(DatabaseImportForm):
         category = csv_row[7].strip()
         if category not in self.categories:
             return None
+        city = csv_row[3].strip()
+        if city != u"巴黎":
+            return None
+        city = u"Paris"
         address = csv_row[1].strip()
         route = csv_row[2].strip()
-        city = csv_row[3].strip()
-        if city == u"巴黎":
-            city = u"Paris"
         tel_1 = csv_row[4].strip() or None
         resto = Resto.create(
             name=name,

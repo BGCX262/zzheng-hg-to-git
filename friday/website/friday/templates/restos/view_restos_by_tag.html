@@ -38,6 +38,11 @@
 
   <div class="section">
     {% include "restos/common/restos.html" %}
+    {% if restos.cursor %}
+      <div class="pagination">
+        <a class="pager" href="?tag_name={{ tag_name|urlencode }}&amp;cursor={{ restos.cursor|urlencode }}">Next &raquo;</a>
+      </div>
+    {% endif %}
   </div>
 
 {% endblock %}

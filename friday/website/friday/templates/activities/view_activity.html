@@ -40,7 +40,7 @@
         Location:
       </dt>
       <dd>
-        {{ activity.address|default:"N/A"|escape }}<br/>
+        {{ activity.address|default:"Address not specified"|escape }}<br/>
         {{ activity.city|escape }}
       </dd>
     </dl>
@@ -64,6 +64,27 @@
           {{ activity.places }} places
         {% else %}
           Unlimited places
+        {% endif %}
+      </dd>
+    </dl>
+
+    <dl>
+      <dt>
+        <img class="icon" src="{{ static_ }}/images/status.png" alt="Status"/>
+        Status:
+      </dt>
+      <dd>
+        {% if activity.is_past %}
+          <img class="icon" src="{{ static_ }}/images/lock.png" alt="Past"/>
+          This activity is past
+        {% else %}
+          {% if activity.is_closed %}
+            <img class="icon" src="{{ static_ }}/images/lock.png" alt="Closed"/>
+            This activity is closed
+          {% else %}
+            <img class="icon" src="{{ static_ }}/images/ok.png" alt="Open"/>
+            This activity is open
+          {% endif %}
         {% endif %}
       </dd>
     </dl>

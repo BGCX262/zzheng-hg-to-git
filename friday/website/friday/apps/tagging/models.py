@@ -102,6 +102,8 @@ class Tag(models.Model):
         if category:
             query = query.filter(category=category)
         query = query.order_by(kwargs.get("order_by") or "-count")
+        if kwargs.get("cursor"):
+            query.with_cursor(kwargs["cursor"])
         if kwargs.get("limit"):
             query.set_limit(kwargs["limit"])
         return query
@@ -173,6 +175,8 @@ class Taggable(object):
         query = cls.objects.filter(**filter_kwargs)
         if "order_by" in kwargs:
             query = query.order_by(kwargs["order_by"])
+        if kwargs.get("cursor"):
+            query.with_cursor(kwargs["cursor"])
         if kwargs.get("limit"):
             query.set_limit(kwargs["limit"])
         return query

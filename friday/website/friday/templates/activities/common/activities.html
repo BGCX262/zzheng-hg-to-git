@@ -26,6 +26,10 @@
               <b>{{ activity.attenders.count }}</b> attender(s)
             </span>
           {% endif %}
+          {% if activity.is_past or activity.is_closed %}
+            &nbsp;
+            <img class="icon" src="{{ static_ }}/images/lock.png" alt="Past or Closed"/>
+          {% endif %}
         </span>
       </div>
 

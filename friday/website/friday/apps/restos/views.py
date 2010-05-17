@@ -47,9 +47,10 @@ class ViewAllRestos(Action):
     PAGE_TEMPLATE = "restos/view_all_restos.html"
 
     def get_page(self):
+        cursor = self.request.GET.get("cursor") or None
         data = {
             "categories": Resto.CATEGORIES,
-            "restos": Resto.find(limit=20),
+            "restos": Resto.find(cursor=cursor, limit=20),
         }
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
@@ -71,7 +72,8 @@ class ViewRestosByCategory(Action):
                 category_display = display
                 break
         category_display = category_display or self.category
-        restos = Resto.find_by_category(category=self.category, limit=20)
+        cursor = self.request.GET.get("cursor") or None
+        restos = Resto.find_by_category(category=self.category, cursor=cursor, limit=20)
         data = {
             "categories": Resto.CATEGORIES,
             "category_display": category_display,
@@ -97,7 +99,9 @@ class ViewRestosByTag(Action):
 
     def get_page(self):
         tag_name = self.request.GET.get("tag_name")
-        data = {"tag_name": tag_name, "restos": Resto.find_by_tag(name=tag_name)}
+        cursor = self.request.GET.get("cursor") or None
+        restos = Resto.find_by_tag(name=tag_name, cursor=cursor, limit=20)
+        data = {"tag_name": tag_name, "restos": restos}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 

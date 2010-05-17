@@ -28,7 +28,9 @@ class ViewTags(Action):
         self.category = category
 
     def get_page(self):
-        data = {"category": self.category, "tags": Tag.find(category=self.category)}
+        cursor = self.request.GET.get("cursor") or None
+        tags = Tag.find(category=self.category, cursor=cursor, limit=20)
+        data = {"category": self.category, "tags": tags}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 

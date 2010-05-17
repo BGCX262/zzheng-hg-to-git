@@ -44,6 +44,9 @@
       {% endif %}
       ...
     </h1>
+    {% if category %}
+      <p><a href="{% url friday.view_tags %}">View all tags</a></p>
+    {% endif %}
   </div>
 
   <div class="section">
@@ -71,9 +74,9 @@
       </tbody>
     </table>
 
-    {% if category %}
-      <div class="table-info">
-        <a href="{% url friday.view_tags %}">View all tags</a>
+    {% if tags.cursor %}
+      <div class="pagination">
+        <a class="pager" href="?cursor={{ tags.cursor|urlencode }}">Next &raquo;</a>
       </div>
     {% endif %}
 

@@ -104,8 +104,11 @@ def welcome(request):
 
 
 def home(request):
-    data = {}
-    return render_to_response("misc/home.html", data, RequestContext(request))
+    # TODO: as we have only one group at this moment, we redirect to the group page.
+    redirect_url = reverse("friday.view_group", kwargs={"group_uid": "vivelevendredi"})
+    return HttpResponseRedirect(redirect_url)
+    #data = {}
+    #return render_to_response("misc/home.html", data, RequestContext(request))
 
 
 def about(request, topic=None):

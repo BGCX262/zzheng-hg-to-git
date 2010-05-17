@@ -59,12 +59,13 @@ class QuerySet(object):
         self._fill_cache()
         return self._cache[k]
 
-    '''
     def cursor(self):
         """
         Attention: this function is specific to Google App Engine.
         """
         self._fill_cache()
+        if len(self._cache) < self._limit:
+            return None
         return self._query.cursor()
 
     def with_cursor(self, cursor):
@@ -77,7 +78,6 @@ class QuerySet(object):
             # Invalid cursor XXX: character mapping must return integer, None or unicode.
             self._query.with_cursor(str(cursor))
         return self
-    '''
 
     def filter(self, **kwargs):
         self._ensure_query_not_executed("filter")
@@ -95,6 +95,7 @@ class QuerySet(object):
     def set_limit(self, limit):
         self._ensure_query_not_executed("set_limit")
         self._limit = limit
+        return self
 
     def count(self):
         self._fill_cache()
