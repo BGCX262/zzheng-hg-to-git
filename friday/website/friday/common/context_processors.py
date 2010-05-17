@@ -21,6 +21,7 @@ from friday.common.browsers import Browser
 
 _GOOGLE_AJAX_API_KEYS = {
     "www.zhengzhong.net": "ABQIAAAA6SC56e9JfGUas7BsUDqyuBQTYCh4nfnZskh9tX3CKbKESYY0QBQRDfWUx_P2DPVUCiFC7DmMx_qv6A",
+    "www.vivelevendredi.com": "ABQIAAAA6SC56e9JfGUas7BsUDqyuBRacFmEPTJzb4yjspz2bxZUGH0cJxRPO3jA05G-_oS_gOABChUa1kNrxQ",
     "vive-le-vendredi.appspot.com": "ABQIAAAA6SC56e9JfGUas7BsUDqyuBTWewClXGnxECXWTdo1Pd4Yqcf9URTwPTM4ilvh_nm6-VvgEF2IQ7A-fg",
 }
 
