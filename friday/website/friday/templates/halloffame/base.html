@@ -15,16 +15,17 @@
     <img class="background" src="http://farm4.static.flickr.com/3120/2856609186_e979b25360_b.jpg" alt="Hall of Fame"/>
     <div class="banner-opaque"></div>
     <div class="banner-text">
-      <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="Hall of Fame"/>
+      {% if group.logo_icon_url %}
+        <img class="icon" src="{{ group.logo_icon_url }}" alt="{{ group|escape }} Hall of Fame"/>
+      {% else %}
+        <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="{{ group|escape }} Hall of Fame"/>
+      {% endif %}
       <h1>
-        <a href="{% url friday.view_group group_uid=group.uid %}">{{ group|escape }}</a>
-        <a href="{% url friday.view_hall_of_fame group_uid=group.uid %}">Hall of Fame</a>
+        <a href="{% url friday.view_hall_of_fame group_uid=group.uid %}">Aux Grands Hommes le Group Reconnaissant</a>
       </h1>
-      <h2>
-        Aux Grands Hommes
-        <a href="{% url friday.view_group group_uid=group.uid %}">le Groupe</a>
-        Reconnaissant
-      </h2>
+      <div class="links">
+        <a href="{% url friday.view_group group_uid=group.uid %}">{{ group|escape }}</a>
+      </div>
     </div>
   </div>
 

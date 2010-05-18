@@ -31,7 +31,7 @@
           <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="{{ group|escape }}"/>
         {% endif %}
 
-        <h1>{{ group|escape }}</h1>
+        <h1><a href="{% url friday.view_group group_uid=group.uid %}">{{ group|escape }}</a></h1>
 
         <div class="links">
 

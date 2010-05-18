@@ -13,7 +13,7 @@ Common
 User
 ~~~~
 
-* Add is_superuser and is_admin to User model.
+* Force email address to be all lower case (is this necessary?).
 
 Group
 ~~~~~
