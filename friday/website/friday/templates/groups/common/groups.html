@@ -31,7 +31,7 @@
 
         <div class="post-foot">
           <img class="icon" src="{{ static_ }}/images/group.png" alt="Group"/>
-          <a href="{% url friday.view_members group_uid=group.uid %}">{{ group.members.count }} members</a>
+          <a href="{% url friday.view_members group_uid=group.uid %}">{{ group.population }} members</a>
           &bull;
           created {{ group.create_date|prettify_datetime }}
           by <a href="{% url friday.view_profile username=group.creator.username %}">{{ group.creator|escape }}</a>

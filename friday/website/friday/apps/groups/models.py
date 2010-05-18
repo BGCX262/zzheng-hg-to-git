@@ -41,12 +41,8 @@ class Group(models.Model):
         return unicode(self.name)
 
     @property
-    def members(self):
-        return Member.find_by_group(group=self)
-
-    @property
-    def pending_members(self):
-        return Member.find_by_group(group=self, is_approved=False)
+    def population(self):
+        return Member.find_by_group(group=self, is_approved=True).count()
 
     @classmethod
     def _make_pk(cls, uid):
@@ -137,8 +133,11 @@ class Member(models.Model):
     @classmethod
     def find_by_group(cls, group, is_approved=True, **kwargs):
         query = cls.objects.filter(group=group, is_approved=is_approved)
-        if kwargs.get("order_by"):
-            query = query.order_by(kwargs.get("order_by"))
+        query = query.order_by(kwargs.get("order_by") or "-join_date")
+        if kwargs.get("cursor"):
+            query.with_cursor(kwargs["cursor"])
+        if kwargs.get("limit"):
+            query.set_limit(kwargs["limit"])
         return query
 
     @classmethod

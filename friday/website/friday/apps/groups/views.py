@@ -97,7 +97,18 @@ class ViewGroup(BaseGroupAction):
     PAGE_TEMPLATE = "groups/view_group.html"
 
     def get_page(self):
-        data = {"members": Member.find_by_group(self.get_group())}
+        pending_members = Member.find_by_group(
+            group=self.get_group(),
+            is_approved=False,
+            order_by="-join_date"
+        )
+        new_members = Member.find_by_group(
+            group=self.get_group(),
+            is_approved=True,
+            order_by="-join_date",
+            limit=7
+        )
+        data = {"pending_members": pending_members, "new_members": new_members}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
@@ -215,8 +226,25 @@ class ViewMembers(BaseGroupAction):
     PAGE_TEMPLATE = "groups/view_members.html"
 
     def get_page(self):
-        order = self.request.GET.get("order", "-join_date")
-        data = {"members": Member.find_by_group(group=self.get_group(), order_by=order)}
+        order_by = self.request.GET.get("order_by") or "-join_date"
+        cursor = self.request.GET.get("cursor") or None
+        pending_members = Member.find_by_group(
+            group=self.get_group(),
+            is_approved=False,
+            order_by=order_by
+        )
+        approved_members = Member.find_by_group(
+            group=self.get_group(),
+            is_approved=True,
+            order_by=order_by,
+            cursor=cursor,
+            limit=20
+        )
+        data = {
+            "pending_members": pending_members,
+            "approved_members": approved_members,
+            "ordered_by": order_by,
+        }
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 

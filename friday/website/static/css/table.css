@@ -24,6 +24,10 @@
   border-bottom: 1px solid #BBBBBB;
 }
 
+.table tr.highlighted td {
+  background-color: #FFFFCC;
+}
+
 
 .zebra tbody tr.odd {
   background-color: #FFFFFF;

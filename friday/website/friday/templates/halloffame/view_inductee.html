@@ -65,7 +65,7 @@
   <div class="section">
     <div class="aux right">
       <img class="icon" src="{{ static_ }}/images/award.png" alt="Award"/>
-      Inducted on {{ inductee.inducted_date|date:"d N Y" }}
+      Inducted on {{ inductee.induct_date|date:"d N Y" }}
       &bull;
       <a href="{% url friday.view_profile username=inductee.user.username %}">
         Profile of {{ inductee.user|escape }}

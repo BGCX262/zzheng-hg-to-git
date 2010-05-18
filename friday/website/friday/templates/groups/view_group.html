@@ -93,15 +93,15 @@
 
   <!-- pending members ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-  {% if group.pending_members %}
+  {% if pending_members %}
 
     <div class="section">
 
-      <h2>{{ group.pending_members.count }} pending members:</h2>
+      <h2>Pending members:</h2>
 
       <div class="user-list">
 
-        {% for member in group.pending_members %}
+        {% for member in pending_members %}
           <div class="user">
             <div class="user-avatar">
               <a href="{% url friday.view_profile username=member.username %}">
@@ -139,11 +139,11 @@
 
   <div class="section">
 
-    <h2>{{ group.members.count }} members:</h2>
+    <h2>{{ group.population }} members:</h2>
 
     <div class="user-list">
 
-      {% for member in group.members|slice:":8" %}
+      {% for member in new_members %}
         <div class="user">
           <div class="user-avatar">
             <a href="{% url friday.view_profile username=member.username %}">

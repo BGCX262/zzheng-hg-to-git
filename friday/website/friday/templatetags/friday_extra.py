@@ -99,13 +99,9 @@ def prettify_datetime(value):
 
 @register.filter
 def safe_email(value):
-    if not isinstance(value, basestring):
+    if not isinstance(value, basestring) or len(value) <= 4:
         return value
-    else:
-        parts = value.split("@")
-        if len(parts) == 2:
-            parts[1] = parts[1].replace(".", " [D0T] ")
-        return " [at] ".join(parts)
+    return u"%s..." % value[:-4]
 
 
 @register.filter

@@ -43,7 +43,7 @@ indexes:
 - kind: Inductee
   properties:
   - name: group
-  - name: inducted_date
+  - name: induct_date
     direction: desc
 
 - kind: Member
@@ -52,6 +52,12 @@ indexes:
   - name: is_approved
   - name: join_date
     direction: desc
+
+- kind: Member
+  properties:
+  - name: group
+  - name: is_approved
+  - name: user
 
 - kind: Notification
   properties:

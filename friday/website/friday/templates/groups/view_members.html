@@ -29,8 +29,8 @@
       <thead>
         <tr>
           <th><span class="nowrap">Name</span></th>
-          <th><span class="nowrap"><a href="?order=user">Email address</a></span></th>
-          <th><span class="nowrap"><a href="?order=-join_date">Join date</a></span></th>
+          <th><span class="nowrap"><a href="?order_by=user">Email address</a></span></th>
+          <th><span class="nowrap"><a href="?order_by=-join_date">Join date</a></span></th>
           <th><span class="nowrap">Role</span></th>
           {% if group_access.can_moderate %}
             <th><span class="nowrap">Manage</span></th>
@@ -42,7 +42,7 @@
 
         <!-- pending members ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-        {% for member in group.pending_members %}
+        {% for member in pending_members %}
           <tr class="highlighted">
             <td>
               <span class="big noswap">
@@ -66,7 +66,7 @@
 
         <!-- approved members ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-        {% for member in members %}
+        {% for member in approved_members %}
           <tr>
             <td>
               <span class="big noswap">
@@ -95,6 +95,12 @@
       </tbody>
 
     </table>
+
+    {% if approved_members.cursor %}
+      <div class="pagination">
+        <a class="pager" href="?order_by={{ ordered_by }}&amp;cursor={{ approved_members.cursor|urlencode }}">Next &raquo;</a>
+      </div>
+    {% endif %}
 
   </div>
 

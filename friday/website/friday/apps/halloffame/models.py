@@ -28,7 +28,7 @@ class Inductee(models.Model):
     biography = db.TextProperty(required=True)
     photo_type = db.StringProperty()
     photo_data = db.BlobProperty()
-    inducted_date = db.DateProperty(required=True, auto_now_add=True)
+    induct_date = db.DateProperty(required=True, auto_now_add=True)
 
     schema_version = db.IntegerProperty(required=True, default=1)
 
@@ -59,7 +59,7 @@ class Inductee(models.Model):
     @classmethod
     def find_by_group(cls, group, **kwargs):
         query = cls.objects.filter(group=group)
-        query = query.order_by(kwargs.get("order_by") or "-inducted_date")
+        query = query.order_by(kwargs.get("order_by") or "-induct_date")
         if kwargs.get("limit"):
             query.set_limit(kwargs["limit"])
         return query
