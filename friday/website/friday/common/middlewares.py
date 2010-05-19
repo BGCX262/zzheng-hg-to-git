@@ -71,7 +71,9 @@ class RenderErrorMiddleware(object):
             logging.exception(exception)
         try:
             data = {"error": exception}
-            return render_to_response(self.ERROR_TEMPLATE, data, RequestContext(request))
+            response = render_to_response(self.ERROR_TEMPLATE, data, RequestContext(request))
+            response.status_code = 500  # server error.
+            return response
         except Exception, exc:
             logging.error("Failed to render error page: %s" % exc)
             logging.exception(exc)
