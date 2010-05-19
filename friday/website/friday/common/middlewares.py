@@ -10,6 +10,8 @@
 import logging
 
 from django.http import HttpRequest, HttpResponse, Http404
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 
 
 class DummyMiddleware(object):
@@ -59,12 +61,21 @@ class DummyMiddleware(object):
         return None
 
 
-class LogErrorMiddleware(object):
+class RenderErrorMiddleware(object):
+
+    ERROR_TEMPLATE = "error.html"
 
     def process_exception(self, request, exception):
         logging.error("Error occurred: %s - %s" % (type(exception), exception))
         if not isinstance(exception, Http404):
             logging.exception(exception)
-        return None
+        try:
+            data = {"error": exception}
+            return render_to_response(self.ERROR_TEMPLATE, data, RequestContext(request))
+        except Exception, exc:
+            logging.error("Failed to render error page: %s" % exc)
+            logging.exception(exc)
+            return None
 
 
+# EOF

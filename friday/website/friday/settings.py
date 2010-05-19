@@ -86,7 +86,7 @@ MIDDLEWARE_CLASSES = (
     #"django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.middleware.doc.XViewMiddleware",
 
-    "friday.common.middlewares.LogErrorMiddleware",
+    "friday.common.middlewares.RenderErrorMiddleware",
 )
 
 ROOT_URLCONF = "friday.urls"
