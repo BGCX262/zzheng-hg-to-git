@@ -28,7 +28,7 @@ handlers:
   upload: static/favicon.ico
 
 # Incoming email.
-- url: /_ah/mail/.+ 
+- url: /_ah/mail/.+
   script: handle_incoming_email.py 
 
 # All other incoming requests are handled by the main.py script.

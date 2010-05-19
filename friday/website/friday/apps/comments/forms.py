@@ -25,6 +25,13 @@ class CommentForm(forms.Form):
             initial = None
         super(CommentForm, self).__init__(data=data, initial=initial)
 
+    def clean_content(self):
+        content = self.cleaned_data["content"].strip()
+        if not content:
+            message = "Comment content cannot be empty."
+            raise forms.ValidationError(message)
+        return content
+
     def create(self, ref_type, ref_pk, author):
         if self._instance is not None:
             message = "Failed to create comment: this form is bound to an existing comment."

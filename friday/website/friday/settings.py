@@ -115,6 +115,7 @@ INSTALLED_APPS = (
     "friday.apps.ilike",
     "friday.apps.misc",
     "friday.apps.notifications",
+    "friday.apps.poststats",
     "friday.apps.profiles",
     "friday.apps.restos",
     "friday.apps.tagging",

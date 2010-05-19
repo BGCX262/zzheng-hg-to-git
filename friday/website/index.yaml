@@ -59,6 +59,12 @@ indexes:
   - name: is_approved
   - name: user
 
+- kind: MemberPostStat
+  properties:
+  - name: group_post_stat
+  - name: post_count
+    direction: desc
+
 - kind: Notification
   properties:
   - name: category
