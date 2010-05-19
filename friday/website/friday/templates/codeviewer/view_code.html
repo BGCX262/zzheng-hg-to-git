@@ -45,13 +45,13 @@
     </h1>
     {% if not entry.exists %}
       <p class="code">
-        <img src="{{ static_ }}/images/error.png" alt="Error"/>
+        <img class="icon" src="{{ static_ }}/images/error.png" alt="Error"/>
         This file does not exist.
       </p>
     {% endif %}
     {% if entry.is_file %}
       <p class="code">
-        <img src="{{ static_ }}/images/download.png" alt="Download"/>
+        <img class="icon" src="{{ static_ }}/images/download.png" alt="Download"/>
         <a href="?download=true">download this file</a>
       </p>
     {% endif %}
@@ -77,12 +77,12 @@
                 <span class="nowrap">
                   {% if child.is_dir or child.is_file %}
                     {% if child.is_dir %}
-                      <img src="{{ static_ }}/images/folder.png" alt="Directory"/>
+                      <img class="icon" src="{{ static_ }}/images/folder.png" alt="Directory"/>
                     {% else %}
-                      <img src="{{ static_ }}/images/file.png" alt="File"/>
+                      <img class="icon" src="{{ static_ }}/images/file.png" alt="File"/>
                     {% endif %}
                   {% else %}
-                    <img src="{{ static_ }}/images/error.png" alt="Unknown"/>
+                    <img class="icon" src="{{ static_ }}/images/error.png" alt="Unknown"/>
                   {% endif %}
                   <code>
                     <a href="{% url friday.view_code path=child.path %}">{{ child.name|escape }}</a>
