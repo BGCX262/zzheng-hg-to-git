@@ -40,19 +40,25 @@ def _grab_emails(*args):
 class IncomingEmailHandler(InboundMailHandler):
 
     def receive(self, mail_message):
-        poster = _grab_emails(getattr(mail_message, "sender", None))
-        if len(poster) != 1:
-            return
-        poster = poster[0]
-        to = getattr(mail_message, "to", None)
-        cc = getattr(mail_message, "cc", None)
-        recipients = _grab_emails(to, cc)
-        post_received.send(
-            sender=self.__class__,
-            subject=getattr(mail_message, "subject", None),
-            poster=poster,
-            recipients=recipients
-        )
+        try:
+            poster = _grab_emails(getattr(mail_message, "sender", None))
+            logging.info("Received email from: %s" % poster)
+            if len(poster) != 1:
+                logging.warning("Suspicious sender of incoming email: %s" % poster)
+                return
+            poster = poster[0]
+            to = getattr(mail_message, "to", None)
+            cc = getattr(mail_message, "cc", None)
+            recipients = _grab_emails(to, cc)
+            post_received.send(
+                sender=self.__class__,
+                subject=getattr(mail_message, "subject", None),
+                poster=poster,
+                recipients=recipients
+            )
+        except Exception, exc:
+            logging.error("Failed to handle incoming email: %s" % exc)
+            logging.exception(exc)
 
 
 def main():

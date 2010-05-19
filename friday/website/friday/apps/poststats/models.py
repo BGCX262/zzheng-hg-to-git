@@ -96,14 +96,15 @@ def count_post(sender, **kwargs):
         poster = users.get_user(kwargs["poster"])
         recipients = kwargs["recipients"]
         google_groups = [
-            recipient.split("@", 1)[0]
+            recipient.lower().split("@", 1)[0]
             for recipient in recipients
-            if recipient.endswith("@googlegroups.com")
+            if recipient.lower().endswith("@googlegroups.com")
         ]
         google_groups = set(google_groups)  # to remove duplicates.
         for google_group in google_groups:
             # TODO: currently we support only vivelevendredi Google Group.
             if google_group != "vivelevendredi":
+                logging.warning("Ignored emails to unsupported Google Group: %s" % google_group)
                 continue
             group_post_stat = GroupPostStat.get_or_create(google_group=google_group)
             group_post_stat.post_count += 1
@@ -114,6 +115,7 @@ def count_post(sender, **kwargs):
             )
             member_post_stat.post_count += 1
             member_post_stat.save()
+            logging.info("Counted 1 post from %s to group %s." % (poster.email, google_group))
     except Exception, exc:
         logging.error("Failed to count post: %s" % exc)
         logging.exception(exc)
