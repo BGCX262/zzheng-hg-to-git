@@ -110,7 +110,7 @@
   {% if entry.is_text_file %}
 
     <div class="section">
-      <pre class="prettyprint">{{ entry.content|escape|linebreaksbr }}</pre>
+      <pre class="prettyprint">{{ entry.content|escape }}</pre>
       <script type="text/javascript">//<![CDATA[
         $(function() {
           prettyPrint();
