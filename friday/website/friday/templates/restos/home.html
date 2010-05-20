@@ -37,7 +37,7 @@
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-  {% if is_webmaster_ %}
+  {% if user_ and user_.is_staff %}
     <div class="section">
       <h2><a href="{% url friday.create_resto %}">Add a restaurant</a></h2>
     </div>
@@ -51,6 +51,9 @@
 
   <div class="section">
     <h1>Newly Added Restaurants ...</h1>
+  </div>
+
+  <div class="section">
     {% with newly_added as restos %}
       {% include "restos/common/restos.html" %}
     {% endwith %}
