@@ -40,6 +40,12 @@ indexes:
   - name: popularity
     direction: desc
 
+- kind: GroupPostStat
+  properties:
+  - name: google_group
+  - name: start_date
+    direction: desc
+
 - kind: Inductee
   properties:
   - name: group

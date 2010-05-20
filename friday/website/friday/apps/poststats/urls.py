@@ -13,14 +13,14 @@ from friday.apps.poststats.views import *
 
 urlpatterns = patterns("",
     url(
-        r"^group_post_stat/$",
-        view_group_post_stat,
-        name="friday.view_group_post_stat"
+        r"^stats/$",
+        view_group_post_stats,
+        name="friday.view_group_post_stats"
     ),
     url(
-        r"^group_post_stat/(?P<year>\d{4})/(?P<month>\d{1,2})/$",
-        view_group_post_stat,
-        name="friday.view_group_post_stat"
+        r"^top_posters/$",
+        view_top_posters,
+        name="friday.view_top_posters"
     ),
 )
 

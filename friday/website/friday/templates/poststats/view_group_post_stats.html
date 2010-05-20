@@ -1,0 +1,97 @@
+{% extends "groups/base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-02-08.
+  $Id$
+-->
+{% endcomment %}
+
+{% load friday_extra %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Post Statistics :: {{ group|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block main %}
+
+  <div class="section">
+    <h1>{{ group|escape }} / Post Statistics</h1>
+  </div>
+
+  <div class="section">
+
+    <h2>Top Posters:</h2>
+
+    {% if stats %}
+
+      <table class="table">
+
+        <thead>
+          <tr>
+            <th style="width: 10%;"><span class="nowrap">Month</span></td>
+            <th style="width: 30%;"><span class="nowrap">Champion</span></td>
+            <th style="width: 30%;"><span class="nowrap">Second Place</span></td>
+            <th style="width: 30%;"><span class="nowrap">Third Place</span></td>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for stat in stats %}
+            <tr>
+              <td>
+                <div class="nowrap">{{ stat.start_date|date:"N Y" }}</div>
+              </td>
+              {% for top_poster in stat.top_posters %}
+                <td>
+                  <div class="nowrap">
+                    <div class="user-box">
+                      <div class="user-avatar">
+                        <a href="{% url friday.view_profile username=top_poster.poster.username %}">
+                          <img src="{% url friday.view_avatar username=top_poster.poster.username %}" alt="{{ top_poster|escape }}"/>
+                        </a>
+                      </div>
+                      <div class="user-info">
+                        <img class="icon" src="{{ static_ }}/images/award.png" alt="Top poster"/>
+                        <a href="{% url friday.view_profile username=top_poster.poster.username %}">
+                          {{ top_poster|escape }}
+                        </a>
+                        <br/>
+                        Posted <b>{{ top_poster.post_count }}</b> messages
+                      </div>
+                      <div class="clear"></div>
+                    </div>
+                  </div>
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+
+      {% if stats.cursor %}
+        <div class="pagination">
+          <a class="pager" href="?cursor={{ stats.cursor|urlencode }}">&laquo; Previous</a>
+        </div>
+      {% endif %}
+
+    {% else %}
+
+      <p class="na">No top posters found.</p>
+
+    {% endif %}
+
+  </div>
+
+{% endblock %}
+

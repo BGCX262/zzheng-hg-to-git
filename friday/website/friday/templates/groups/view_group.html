@@ -21,21 +21,38 @@
   <!-- top posters of this month ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   {% if group.google_group %}
-    <div>
-      <div id="load-group-post-stat"></div>
+
+    <div class="section">
+
+      <h2>Top Posters in {% now "N Y" %}:</h2>
+
+      <div id="load-top-posters">
+        <div class="ajax-loader">
+          <img class="icon" src="{{ static_ }}/images/ajax_loader.gif" alt="Loading"/>
+          Loading top posters...
+        </div>
+        <div class="ajax-error hidden">
+          <img class="icon" src="{{ static_ }}/images/error.png" alt="Error"/>
+          Failed to load top posters.
+        </div>
+      </div>
+
       <script type="text/javascript">//<![CDATA[
         $(function() {
-          $("#load-group-post-stat").load(
-            "{% url friday.view_group_post_stat group_uid=group.uid %}",
+          $("#load-top-posters").load(
+            "{% url friday.view_top_posters group_uid=group.uid %}",
             function(response, textStatus) {
               if (textStatus == "error") {
-                $("#load-group-post-stat").remove();
+                $("#load-top-posters .ajax-loader").hide();
+                $("#load-top-posters .ajax-error").show();
               }
             }
           );
         });
       //]]></script>
+
     </div>
+
   {% endif %}
 
   <!-- navigation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

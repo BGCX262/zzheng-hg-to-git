@@ -53,6 +53,15 @@ class GroupPostStat(models.Model):
             instance = None
         return instance
 
+    @classmethod
+    def find_by_google_group(cls, google_group, **kwargs):
+        query = cls.objects.filter(google_group=google_group).order_by("-start_date")
+        if kwargs.get("cursor"):
+            query.with_cursor(kwargs["cursor"])
+        if kwargs.get("limit"):
+            query.set_limit(kwargs["limit"])
+        return query
+
 
 class MemberPostStat(models.Model):
 

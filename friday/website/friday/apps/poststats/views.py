@@ -17,32 +17,45 @@ from friday.apps.groups.views import BaseGroupAction
 from friday.apps.poststats.models import GroupPostStat, MemberPostStat
 
 
-class ViewGroupPostStat(BaseGroupAction):
+class ViewGroupPostStats(BaseGroupAction):
 
-    AJAX_URL_NAME = "friday.view_group_post_stat"
-    AJAX_TEMPLATE = "poststats/common/group_post_stat.html"
+    PAGE_URL_NAME = "friday.view_group_post_stats"
+    PAGE_TEMPLATE = "poststats/view_group_post_stats.html"
 
-    def __init__(self, request, group_uid, year=None, month=None):
-        super(ViewGroupPostStat, self).__init__(request, group_uid)
-        if year and month:
-            self.date = datetime.date(year, month, 1)
+    def get_page(self):
+        google_group = self.get_group().google_group
+        if google_group:
+            stats = GroupPostStat.find_by_google_group(google_group=google_group, limit=3)
         else:
-            self.date = datetime.date.today()
+            stats = None
+        data = {"stats": stats}
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+
+class ViewTopPosters(BaseGroupAction):
+
+    AJAX_URL_NAME = "friday.view_top_posters"
+    AJAX_TEMPLATE = "poststats/common/top_posters.html"
 
     def get_ajax(self):
         google_group = self.get_group().google_group
         if google_group:
-            group_post_stat = GroupPostStat.get_unique(google_group=google_group, date=self.date)
+            stat = GroupPostStat.get_unique(google_group=google_group, date=datetime.date.today())
         else:
-            group_post_stat = None
-        return {"group_post_stat": group_post_stat}
+            stat = None
+        return {"stat": stat}
 
 
 #---------------------------------------------------------------------------------------------------
 
 
-def view_group_post_stat(request, group_uid, year=None, month=None):
-    return ViewGroupPostStat(request, group_uid, year, month).process()
+def view_group_post_stats(request, group_uid):
+    return ViewGroupPostStats(request, group_uid).process()
+
+
+def view_top_posters(request, group_uid):
+    return ViewTopPosters(request, group_uid).process()
 
 
 # EOF
