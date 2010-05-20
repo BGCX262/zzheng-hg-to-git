@@ -23,12 +23,17 @@ urlpatterns = patterns("",
         name="friday.view_environ"
     ),
     url(
-        r"^import/members/$",
+        r"^update_datastore/$",
+        update_datastore,
+        name="friday.update_datastore"
+    ),
+    url(
+        r"^import_members/$",
         import_members,
         name="friday.import_members"
     ),
     url(
-        r"^import/restos/$",
+        r"^import_restos/$",
         import_restos,
         name="friday.import_restos"
     ),

@@ -9,20 +9,32 @@
 
 {#________________________________________________________________________________________________#}
 
-{% block html_title %} {{ action|escape }} {% endblock %}
+{% block html_title %} Update Datastore {% endblock %}
 
 {#________________________________________________________________________________________________#}
 
-{% block content %}
+{% block main %}
 
   <div class="section">
-    <h1><span class="prefix">&raquo;</span> Action: {{ action|escape }}</h1>
-    <p>
-      Succeeded: {{ succeeded|escape }}<br/>
-      Failed: {{ failed|escape }}<br/>
-      Done: {{ done|escape }}<br/>
-    </p>
+    <h1>Update Datastore ...</h1>
   </div>
 
-{% endblock %}{# content #}
+  {% if message %}
+    <div class="section">
+      <div class="info-prompt">
+        <img class="icon" src="{{ static_ }}/images/info.png" alt="Info"/>
+        {{ message|escape }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="section">
+    <form class="xl-form" action="." method="POST">
+      <div class="field">
+        <input class="button" type="submit" value="Launch the update!"/>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}
 
