@@ -25,7 +25,7 @@ from google.appengine.ext.webapp import WSGIApplication
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler 
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from friday.apps.poststats.signals import post_received
+from friday.apps.poststats.models import count_post
 
 
 def _grab_emails(*args):
@@ -40,25 +40,16 @@ def _grab_emails(*args):
 class IncomingEmailHandler(InboundMailHandler):
 
     def receive(self, mail_message):
-        try:
-            poster = _grab_emails(getattr(mail_message, "sender", None))
-            logging.info("Received email from: %s" % poster)
-            if len(poster) != 1:
-                logging.warning("Suspicious sender of incoming email: %s" % poster)
-                return
-            poster = poster[0]
-            to = getattr(mail_message, "to", None)
-            cc = getattr(mail_message, "cc", None)
-            recipients = _grab_emails(to, cc)
-            post_received.send(
-                sender=self.__class__,
-                subject=getattr(mail_message, "subject", None),
-                poster=poster,
-                recipients=recipients
-            )
-        except Exception, exc:
-            logging.error("Failed to handle incoming email: %s" % exc)
-            logging.exception(exc)
+        subject = getattr(mail_message, "subject", None)
+        poster = _grab_emails(getattr(mail_message, "sender", None))
+        if len(poster) != 1:
+            logging.error("Fail to handle incoming email: suspicious sender %s" % poster)
+            return
+        poster = poster[0]
+        to = getattr(mail_message, "to", None)
+        cc = getattr(mail_message, "cc", None)
+        recipients = _grab_emails(to, cc)
+        count_post(subject=subject, poster=poster, recipients=recipients)
 
 
 def main():

@@ -15,7 +15,6 @@ from google.appengine.ext import db
 from djangomockup import models
 from friday.auth import users
 from friday.common.dbutils import filter_key, ord_to_key
-from friday.apps.poststats.signals import post_received
 
 
 class GroupPostStat(models.Model):
@@ -91,10 +90,9 @@ class MemberPostStat(models.Model):
 #---------------------------------------------------------------------------------------------------
 
 
-def count_post(sender, **kwargs):
+def count_post(subject, poster, recipients):
     try:
-        poster = users.get_user(kwargs["poster"])
-        recipients = kwargs["recipients"]
+        poster = users.get_user(poster)
         google_groups = [
             recipient.lower().split("@", 1)[0]
             for recipient in recipients
@@ -104,7 +102,7 @@ def count_post(sender, **kwargs):
         for google_group in google_groups:
             # TODO: currently we support only vivelevendredi Google Group.
             if google_group != "vivelevendredi":
-                logging.warning("Ignored emails to unsupported Google Group: %s" % google_group)
+                logging.warning("Ignored emails to unsupported Google Group %s" % google_group)
                 continue
             group_post_stat = GroupPostStat.get_or_create(google_group=google_group)
             group_post_stat.post_count += 1
@@ -115,13 +113,9 @@ def count_post(sender, **kwargs):
             )
             member_post_stat.post_count += 1
             member_post_stat.save()
-            logging.info("Counted 1 post from %s to group %s." % (poster.email, google_group))
     except Exception, exc:
         logging.error("Failed to count post: %s" % exc)
         logging.exception(exc)
-
-
-post_received.connect(count_post)
 
 
 # EOF
