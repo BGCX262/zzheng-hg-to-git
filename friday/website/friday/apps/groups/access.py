@@ -28,26 +28,23 @@ class GroupAccess(object):
     def can_administrate(self):
         if users.is_webmaster(self._user):
             return True
-        elif self._user and self._user == self._group.owner:
+        if self._user and self._user == self._group.owner:
             return True
-        elif self._member and self._member.is_approved:
+        if self._member and self._member.is_approved:
             return self._member.role == Member.ADMINISTRATOR
-        else:
-            return False
+        return False
 
     def can_moderate(self):
         if self.can_administrate():
             return True
-        elif self._member and self._member.is_approved:
+        if self._member and self._member.is_approved:
             return self._member.role == Member.MODERATOR
-        else:
-            return False
+        return False
 
     def can_contribute(self):
         if self.can_moderate():
             return True
-        else:
-            return self._member and self._member.is_approved
+        return self._member and self._member.is_approved
 
     def can_join(self):
         return self._user and self._member is None
