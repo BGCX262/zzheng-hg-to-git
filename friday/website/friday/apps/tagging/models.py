@@ -73,7 +73,8 @@ class Tag(models.Model):
 
     @classmethod
     def _make_pk(cls, category, name):
-        return "%s/%s" % (filter_key(category), ord_to_key(name))
+        # Note: we do not filter category, which is a class name.
+        return "%s/%s" % (category, ord_to_key(name))
 
     @classmethod
     def get_unique(cls, category, name):
@@ -90,9 +91,8 @@ class Tag(models.Model):
         if instance is None:
             pk = cls._make_pk(category, name)
             instance = cls(key_name=pk, category=category, name=name)
-            return instance, True
-        else:
-            return instance, False
+            instance.save()
+        return instance
 
     @classmethod
     def find(cls, category=None, **kwargs):
@@ -121,12 +121,8 @@ class Taggable(object):
     - self.save(): saves the instance to database.
     """
 
-    tag_category = None
     tags_attr = None
     force_lower_case = True
-
-    def __get_tag_category(self):
-        return self.__class__.tag_category or self.__class__.__name__
 
     def add_tags(self, names):
         existing_tags = getattr(self, self.__class__.tags_attr, [])
@@ -135,9 +131,7 @@ class Taggable(object):
         name_list = names.replace(",", " ").replace(";", " ").split()
         for name in name_list:
             # Get or create the tag by name.
-            tag, created = Tag.get_or_create(self.__get_tag_category(), name)
-            if created:
-                tag.save()
+            tag = Tag.get_or_create(category=self.__class__.__name__, name=name)
             # Process the tag name on the instance.
             if name not in existing_tags:
                 # Increase the tag counter and save.
@@ -159,7 +153,7 @@ class Taggable(object):
                 while name in existing_tags:
                     existing_tags.remove(name)
                 # Decrease the tag counter and save (or delete), as necessary.
-                tag = Tag.get_unique(category=self.__get_tag_category(), name=name)
+                tag = Tag.get_unique(category=self.__class__.__name__, name=name)
                 if tag:
                     tag.count -= 1
                     if tag.count > 0:

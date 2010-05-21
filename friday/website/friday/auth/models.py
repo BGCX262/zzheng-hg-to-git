@@ -16,7 +16,7 @@ from djangomockup import models
 
 class User(models.Model):
 
-    # key_name is user's email address.
+    # key_name is user's email address in lower case.
     user = db.UserProperty(required=True)
     name = db.StringProperty()
     is_staff = db.BooleanProperty(required=True, default=False)
@@ -45,13 +45,17 @@ class User(models.Model):
         return True
 
     @classmethod
+    def _make_pk(cls, google_user):
+        return google_user.email().lower()
+
+    @classmethod
     def get_or_create(cls, google_user):
-        email = google_user.email()
+        pk = cls._make_pk(google_user)
         try:
-            user = cls.objects.get(pk=email)
+            user = cls.objects.get(pk=pk)
         except cls.DoesNotExist:
-            logging.info("Creating new user for '%s'." % email)
-            user = cls(key_name=email, user=google_user)
+            logging.info("Creating new user %s." % pk)
+            user = cls(key_name=pk, user=google_user)
             user.save()
         return user
 

@@ -21,21 +21,22 @@ def _is_valid_key(s):
         return True
     elif s.lower() >= "a" and s.lower() <= "z":
         return True
-    elif s == "-" or s == ".":
+    elif s == "-" or s == "." or s == "@" or s == "_":
         return True
     else:
         return False
 
 
-def filter_key(name, min_length=None, reserved=None):
+def filter_key(name, min_length=None, reserved=None, force_lower=True):
     reserved = reserved or []
     pk = filter(_is_valid_key, str(name))
+    if force_lower:
+        pk = pk.lower()
     if min_length and len(pk) < min_length:
-        raise ValueError("Primary key '%s' is too short." % pk)
-    elif pk in reserved:
-        raise ValueError("Primary key '%s' is reserved." % pk)
-    else:
-        return pk
+        raise ValueError("'%s' is too short." % pk)
+    if pk in reserved:
+        raise ValueError("'%s' is reserved." % pk)
+    return pk
 
 
 def ord_to_key(name, separator=None):

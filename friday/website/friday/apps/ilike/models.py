@@ -31,7 +31,10 @@ class Fan(models.Model):
 
     @classmethod
     def _make_pk(cls, ref_type, ref_pk, user):
-        return "%s/%s/%s" % (ref_type, ref_pk, user.email)
+        # Note: we do not filter ref_type and ref_pk.
+        # - ref_type is a class name so upper-cased letters are allowed.
+        # - ref_pk is already a valid key.
+        return "%s/%s/%s" % (ref_type, ref_pk, user.email.lower())
 
     @classmethod
     def create(cls, ref_type, ref_pk, user, rating):

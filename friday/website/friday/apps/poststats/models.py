@@ -85,7 +85,7 @@ class MemberPostStat(models.Model):
 
     @classmethod
     def _make_pk(cls, group_post_stat, poster):
-        return "%s/%s" % (group_post_stat.pk, poster.email)
+        return "%s/%s" % (group_post_stat.pk, poster.email.lower())
 
     @classmethod
     def get_or_create(cls, group_post_stat, poster):

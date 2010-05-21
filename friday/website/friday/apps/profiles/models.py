@@ -56,7 +56,7 @@ class Profile(models.Model):
 
     @classmethod
     def _make_pk(cls, user):
-        return user.email
+        return user.email.lower()
 
     @classmethod
     def get_unique(cls, user):

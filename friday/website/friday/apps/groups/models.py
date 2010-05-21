@@ -112,7 +112,7 @@ class Member(models.Model):
 
     @classmethod
     def _make_pk(cls, group, user):
-        return "%s/%s" % (group.uid, user.email)
+        return "%s/%s" % (group.uid, user.email.lower())
 
     @classmethod
     def create(cls, group, user, **kwargs):

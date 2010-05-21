@@ -104,7 +104,7 @@ class Attender(models.Model):
 
     @classmethod
     def _make_pk(cls, activity, user):
-        return "%s/%s" % (activity.id, user.email)
+        return "%s/%s" % (activity.id, user.email.lower())
 
     @classmethod
     def create(cls, activity, user, **kwargs):

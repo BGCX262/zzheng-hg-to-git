@@ -39,11 +39,16 @@ class Inductee(models.Model):
             return unicode(self.name)
 
     @classmethod
+    def _make_uid(cls, uid):
+        return filter_key(uid)
+
+    @classmethod
     def _make_pk(cls, group, uid):
-        return "%s/%s" % (group.uid, uid)
+        return "%s/%s" % (group.uid, cls._make_uid(uid))
 
     @classmethod
     def create(cls, group, uid, **kwargs):
+        uid = cls._make_uid(uid)
         pk = cls._make_pk(group, uid)
         return cls(key_name=pk, group=group, uid=uid, **kwargs)
 
