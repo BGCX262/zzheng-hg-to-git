@@ -49,15 +49,22 @@ class User(models.Model):
         return google_user.email().lower()
 
     @classmethod
-    def get_or_create(cls, google_user):
+    def get_unique(cls, google_user):
         pk = cls._make_pk(google_user)
         try:
-            user = cls.objects.get(pk=pk)
+            instance = cls.objects.get(pk=pk)
         except cls.DoesNotExist:
-            logging.info("Creating new user %s." % pk)
-            user = cls(key_name=pk, user=google_user)
-            user.save()
-        return user
+            instance = None
+        return instance
+
+    @classmethod
+    def get_or_create(cls, google_user):
+        instance = cls.get_unique(google_user=google_user)
+        if instance is None:
+            pk = cls._make_pk(google_user)
+            instance = cls(key_name=pk, user=google_user)
+            instance.save()
+        return instance
 
 
 class AnonymousUser(object):

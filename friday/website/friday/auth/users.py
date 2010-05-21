@@ -42,7 +42,7 @@ def create_logout_url(dest_url):
     return users.create_logout_url(dest_url)
 
 
-def get_user(username):
+def get_user(username, create=True):
     username = username.strip()
     if "@" in username:
         email = username
@@ -50,7 +50,10 @@ def get_user(username):
         email_domain = getattr(settings, "MY_EMAIL_DOMAIN")
         email = "%s@%s" % (username, email_domain)
     google_user = users.User(email)
-    return User.get_or_create(google_user)
+    if create:
+        return User.get_or_create(google_user)
+    else:
+        return User.get_unique(google_user)
 
 
 def is_webmaster(user):
