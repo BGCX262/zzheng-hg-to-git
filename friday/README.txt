@@ -13,6 +13,7 @@ Profiles
 ~~~~~~~~
 
 * Allow user to upload avatar image.
+* Do not create a user in view_profile if the user does not exist.
 
 Group
 ~~~~~
