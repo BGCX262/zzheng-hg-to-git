@@ -27,21 +27,25 @@ class BaseProfileAction(Action):
 
     def __init__(self, request, username):
         super(BaseProfileAction, self).__init__(request)
-        self._user = users.get_user(username)
+        self._username = username
+        self._user = users.get_user(username, create=False)
 
     def get_user(self):
+        if not self._user:
+            message = "searched by username %s." % self._username
+            raise EntityNotFoundError(users.User, message)
         return self._user
 
     def get_profile(self, required=True):
-        profile = Profile.get_unique(user=self._user)
+        profile = Profile.get_unique(user=self.get_user())
         if not profile and required:
-            message = "searched by user %s." % self._user.username
+            message = "searched by user %s." % self.get_user().username
             raise EntityNotFoundError(Profile, message)
         return profile
 
     def update_data(self, data):
+        data["user"] = self.get_user()
         data["profile"] = self.get_profile(required=False)
-        data["user"] = self._user
         return super(BaseProfileAction, self).update_data(data)
 
 
