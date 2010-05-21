@@ -31,6 +31,11 @@ handlers:
 - url: /_ah/mail/.+
   script: handle_incoming_email.py 
 
+# Cron jobs.
+- url: /cron/.*
+  script: main.py
+  login: admin
+
 # All other incoming requests are handled by the main.py script.
 - url: /.*
   script: main.py

@@ -1,0 +1,16 @@
+#
+# Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+#
+# Created on 2010-05-21.
+# $Id$
+#
+
+cron:
+
+- description: Send top posters to Google Groups
+  url: /cron/send_top_posters/
+  schedule: 1st day of month 06:00
+  timezone: Europe/Paris
+
+
+# EOF

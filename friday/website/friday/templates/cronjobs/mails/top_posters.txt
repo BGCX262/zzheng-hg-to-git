@@ -1,0 +1,21 @@
+{{ group.name }}, Load of the Water / {{ group_post_stat.start_date|date:"N Y" }}
+
+{{ group.name }} {{ group_post_stat.start_date.year }}年{{ group_post_stat.start_date.month }}月水王排行榜：
+
+{% for top_poster in top_posters %}
+  {{ forloop.counter }} - {{ top_poster.poster }} 灌水 {{ top_poster.post_count }} 篇
+{% endfor %}
+
+以上同学为发扬我组传统做出了可喜的成绩，在我组起了模范带头作用，特此提出表扬！
+希望其它同学向这些先进分子学习，灌水不辍，为取得更好的成绩而努力！
+
+{% if http_host %}
+  http://{{ http_host }}{% url friday.view_group_post_stats group_uid=group.uid %}
+{% endif %}
+
+附：本月 {{ group.name }} 总水量 {{ group_post_stat.post_count }} 篇
+
+----
+Java DOGlas
+{{ group.name }} 灌水统计局 发言人
+

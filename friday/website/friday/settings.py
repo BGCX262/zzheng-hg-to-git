@@ -93,6 +93,8 @@ ROOT_URLCONF = "friday.urls"
 
 #ROOT_URLCONF = "friday.apps.migration.urls"  # for migrating models
 
+DEFAULT_FROM_EMAIL = "@".join(["java.doglas", "gmail.com"])
+
 # For serving static files.
 STATIC_DOC_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "static"))
 
@@ -109,6 +111,7 @@ INSTALLED_APPS = (
     "friday.apps.activities",
     "friday.apps.admin",
     "friday.apps.codeviewer",
+    "friday.apps.cronjobs",
     "friday.apps.comments",
     "friday.apps.groups",
     "friday.apps.halloffame",

@@ -23,8 +23,11 @@ class GroupPostStat(models.Model):
     start_date = db.DateProperty(required=True)
     post_count = db.IntegerProperty(required=True, default=0)
 
-    def top_posters(self, limit=None):
-        limit = limit or 3
+    @property
+    def top_posters(self):
+        return self.get_top_posters(limit=3)
+
+    def get_top_posters(self, limit):
         query = MemberPostStat.objects.filter(group_post_stat=self).order_by("-post_count")
         query.set_limit(limit)
         return query
@@ -45,7 +48,15 @@ class GroupPostStat(models.Model):
         return instance
 
     @classmethod
-    def get_unique(cls, google_group, date):
+    def get_unique(cls, google_group, date, month_delta=None):
+        if month_delta:
+            month_count = date.year * 12 + date.month + month_delta
+            year = month_count // 12
+            month = month_count % 12
+            if month == 0:
+                year -= 1
+                month = 12
+            date = datetime.date(year, month, 1)
         pk = cls._make_pk(google_group, date)
         try:
             instance = cls.objects.get(pk=pk)

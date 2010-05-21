@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-21.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Cron Job: {{ job_title|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block main %}
+
+  <div class="section">
+    <h1>Cron Job: {{ job_title|escape }}</h1>
+  </div>
+
+  {% if prompt %}
+    <div class="section">
+      <div class="{{ prompt.severity }}-prompt">
+        <img class="icon" src="{{ static_ }}/images/{{ prompt.severity }}.png" alt="{{ prompt.severity }}"/>
+        {{ prompt|escape }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if job_description %}
+    <div class="section">
+      <h2>Job Description:</h2>
+      {{ job_description|escape|linebreaks }}
+    </div>
+  {% endif %}
+
+  <div class="section">
+    <form class="xl-form" action="." method="GET">
+      <input type="hidden" name="cron_" value="true"/>
+      <div class="field">
+        <input class="button" type="submit" value="Launch this job manually"/>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}
+
