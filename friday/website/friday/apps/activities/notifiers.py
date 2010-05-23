@@ -17,11 +17,8 @@ from friday.apps.notifications.signals import something_happened
 from friday.apps.activities.models import Activity
 
 
-_CATEGORY = Activity.__name__
-
-
 def _render_message(template_name, data):
-    template_file = "activities/notifications/%s.txt" % template_name
+    template_file = "activities/mails/%s.txt" % template_name
     return render_to_string(template_file, data)
 
 
@@ -42,7 +39,7 @@ def activity_created(activity):
         }
         message = _render_message(_TEMPLATE_NAME, data)
         something_happened.send(
-            sender=_CATEGORY,
+            sender=Activity.__name__,
             subject=None,
             message=message,
             author=author,

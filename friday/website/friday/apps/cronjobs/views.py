@@ -17,11 +17,12 @@ from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
 from django.core.exceptions import ImproperlyConfigured
 
-from djangomockup import mail
+from friday.auth import users
 from friday.common.actions import Action
 from friday.common.prompt import Prompt
 from friday.apps.groups.models import Group
 from friday.apps.poststats.models import GroupPostStat
+from friday.apps.notifications.signals import something_happened
 
 
 class BaseCronAction(Action):
@@ -112,7 +113,7 @@ class SendTopPosters(BaseCronAction):
         )
         if not group_post_stat:
             return 0
-        top_posters = group_post_stat.get_top_posters(10)
+        top_posters = group_post_stat.get_top_posters(5)
         if not top_posters:
             return 0
         data = {
@@ -122,13 +123,14 @@ class SendTopPosters(BaseCronAction):
             "http_host": getattr(settings, "MY_HTTP_HOST", None),
         }
         message = render_to_string("cronjobs/mails/top_posters.txt", data)
-        subject = message.splitlines()[0]
-        google_group_email = "%s@googlegroups.com" % group.google_group
-        mail.send_mail(
-            subject=subject,
+        author = users.get_user(self._FROM_EMAIL)
+        recipient = "%s@googlegroups.com" % group.google_group
+        something_happened.send(
+            sender=Group.__name__,
+            subject=None,
             message=message,
-            from_email=self._FROM_EMAIL,
-            recipient_list=[google_group_email]
+            author=author,
+            recipients=[recipient]
         )
         return 1
 

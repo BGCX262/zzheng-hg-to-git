@@ -18,6 +18,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 
+from friday.auth import users
 from friday.common.actions import WebmasterAction
 from friday.common.errors import BadRequestError, InvalidFormError
 from friday.common.prompt import Prompt
@@ -70,23 +71,7 @@ class UpdateDatastore(WebmasterAction):
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
     def post_page(self):
-        from friday.apps.comments.models import Comment
-        all_comments = Comment.objects.all()
-        succeeded, failed, ignored = 0, 0, 0
-        for comment in all_comments:
-            try:
-                stripped_content = comment.content
-                if len(stripped_content) != len(comment.content):
-                    comment.content = stripped_content
-                    comment.save()
-                    succeeded += 1
-                else:
-                    ignored += 1
-            except Exception, exc:
-                logging.error("Failed to upgrade comments: %s" % exc)
-                logging.exception(exc)
-                failed += 1
-        message = "Upgraded %s comments (%s failed, %s ignored)" % (succeeded, failed, ignored)
+        message = "Nothing to update."
         logging.info(message)
         redirect_url = "%s?%s" % (self.request.path, urllib.urlencode({"message": message}))
         return HttpResponseRedirect(redirect_url)
