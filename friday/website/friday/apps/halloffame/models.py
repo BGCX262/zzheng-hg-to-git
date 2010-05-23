@@ -14,6 +14,7 @@ from google.appengine.ext import db
 from djangomockup import models
 
 from friday.auth import users
+from friday.common.dbutils import filter_key
 from friday.apps.groups.models import Group
 
 
