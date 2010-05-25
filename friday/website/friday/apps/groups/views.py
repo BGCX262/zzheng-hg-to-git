@@ -43,7 +43,7 @@ class CreateGroup(Action):
         if not users.is_webmaster(self.current_user):
             message = "Only webmaster can create new groups."
             logging.error(message)
-            raise BadRequestError(request, message)
+            raise BadRequestError(self.request, message)
 
     def get_page(self):
         self._check_create_access()

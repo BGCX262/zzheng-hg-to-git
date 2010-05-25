@@ -71,28 +71,44 @@ class UpdateDatastore(WebmasterAction):
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
     def post_page(self):
+
         from friday.apps.groups.models import Group
         from friday.apps.poststats.models import GroupStat, PosterStat
+
         monthly_stats = (
             (datetime.date(2010, 1, 1), 342),
             (datetime.date(2010, 2, 1), 822),
             (datetime.date(2010, 3, 1), 315),
             (datetime.date(2010, 4, 1), 575),
-            (datetime.date(2010, 5, 1), 655),
         )
         group = Group.get_unique(uid="vivelevendredi")
         if group is None:
             message = "Fail to find group vivelevendredi."
             logging.error(message)
-        else:
-            imported = 0
-            for date, post_count in monthly_stats:
-                group_stat = GroupStat.get_or_create(group=group, date=date)
-                group_stat.post_count = post_count
-                group_stat.save()
-                imported += 1
-            message = "%s group stats imported." % imported
-            logging.info(message)
+            raise BadRequestError(self.request, message)
+        for date, post_count in monthly_stats:
+            group_stat = GroupStat.get_or_create(group=group, date=date)
+            group_stat.post_count = post_count
+            group_stat.save()
+
+        group_stat = GroupStat.get_or_create(group=group, date=datetime.date(2010, 5, 1))
+        group_stat.post_count = 726
+        group_stat.save()
+
+        poster_stat = PosterStat.get_or_create(group_stat=group_stat, poster=users.get_user("xianlin.cao"))
+        poster_stat.post_count = 129
+        poster_stat.save()
+
+        poster_stat = PosterStat.get_or_create(group_stat=group_stat, poster=users.get_user("chentianfan"))
+        poster_stat.post_count = 87
+        poster_stat.save()
+
+        poster_stat = PosterStat.get_or_create(group_stat=group_stat, poster=users.get_user("dtownboy"))
+        poster_stat.post_count = 65
+        poster_stat.save()
+
+        message = "Done."
+        logging.info(message)
         redirect_url = "%s?%s" % (self.request.path, urllib.urlencode({"message": message}))
         return HttpResponseRedirect(redirect_url)
 
