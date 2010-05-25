@@ -7,6 +7,7 @@
 # $Id$
 #
 
+import datetime
 import logging
 import os
 import sys
@@ -22,7 +23,6 @@ from friday.auth import users
 from friday.common.actions import WebmasterAction
 from friday.common.errors import BadRequestError, InvalidFormError
 from friday.common.prompt import Prompt
-from friday.apps.groups.models import Group, Member
 from friday.apps.admin.forms import ImportMembersForm, ImportRestosForm
 
 
@@ -71,8 +71,28 @@ class UpdateDatastore(WebmasterAction):
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
     def post_page(self):
-        message = "Nothing to update."
-        logging.info(message)
+        from friday.apps.groups.models import Group
+        from friday.apps.poststats.models import GroupStat, PosterStat
+        monthly_stats = (
+            (datetime.date(2010, 1, 1), 342),
+            (datetime.date(2010, 2, 1), 822),
+            (datetime.date(2010, 3, 1), 315),
+            (datetime.date(2010, 4, 1), 575),
+            (datetime.date(2010, 5, 1), 655),
+        )
+        group = Group.get_unique(uid="vivelevendredi")
+        if group is None:
+            message = "Fail to find group vivelevendredi."
+            logging.error(message)
+        else:
+            imported = 0
+            for date, post_count in monthly_stats:
+                group_stat = GroupStat.get_or_create(group=group, date=date)
+                group_stat.post_count = post_count
+                group_stat.save()
+                imported += 1
+            message = "%s group stats imported." % imported
+            logging.info(message)
         redirect_url = "%s?%s" % (self.request.path, urllib.urlencode({"message": message}))
         return HttpResponseRedirect(redirect_url)
 

@@ -43,7 +43,6 @@ Activity
 Post Stats
 ~~~~~~~~~~
 
-* Rename GroupPostStat to GroupStat, MemberPostStat to PosterStat.
 * Merge stats of a user with different email addresses (hard-coded).
 * Restrict inbound email URL for poststats address.
 * Add page to display group trends.

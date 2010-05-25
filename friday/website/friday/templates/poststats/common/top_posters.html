@@ -7,11 +7,11 @@
 {% endcomment %}
 
 
-{% if stat %}
+{% if group_stat %}
 
   <div>
 
-    {% for top_poster in stat.top_posters %}
+    {% for top_poster in group_stat.top_posters %}
       <div class="user-box">
         <div class="user-avatar">
           <a href="{% url friday.view_profile username=top_poster.poster.username %}">
@@ -31,12 +31,16 @@
     {% endfor %}
 
     <p>
-      Total <b>{{ stat.post_count }}</b> posts in {{ stat.start_date|date:"N Y" }}
+      Total <b>{{ group_stat.post_count }}</b> posts in {{ group_stat.start_date|date:"N Y" }}
       &bull;
-      <a href="{% url friday.view_group_post_stats group_uid=group.uid %}">Details &raquo;</a>
+      <a href="{% url friday.view_group_stat group_uid=group_stat.group.uid %}">Details &raquo;</a>
     </p>
 
   </div>
+
+{% else %}
+
+  <p class="na">Group statistic not available.</p>
 
 {% endif %}
 

@@ -21,7 +21,7 @@ from friday.auth import users
 from friday.common.actions import Action
 from friday.common.prompt import Prompt
 from friday.apps.groups.models import Group
-from friday.apps.poststats.models import GroupPostStat
+from friday.apps.poststats.models import GroupStat
 from friday.apps.notifications.signals import something_happened
 
 
@@ -106,18 +106,10 @@ class SendTopPosters(BaseCronAction):
         return message
 
     def _send_top_posters(self, group):
-        stat = GroupPostStat.get_unique(
-            google_group=group.google_group,
-            date=datetime.date.today(),
-            month_delta=-1
-        )
-        if not stat or not stat.top_posters:
+        group_stat = GroupStat.get_unique(group=group, date=datetime.date.today(), month_delta=-1)
+        if not group_stat or not group_stat.top_posters:
             return 0
-        data = {
-            "group": group,
-            "stat": stat,
-            "http_host": getattr(settings, "MY_HTTP_HOST", None),
-        }
+        data = {"group_stat": group_stat, "http_host": getattr(settings, "MY_HTTP_HOST", None)}
         message = render_to_string("cronjobs/mails/top_posters.txt", data)
         author = users.get_user(self._FROM_EMAIL)
         recipient = "%s@googlegroups.com" % group.google_group

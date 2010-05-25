@@ -14,41 +14,26 @@ from google.appengine.ext import db
 
 from djangomockup import models
 from friday.auth import users
-from friday.common.dbutils import filter_key, ord_to_key
+from friday.common.dbutils import filter_key
+from friday.apps.groups.models import Group
 
 
-class GroupPostStat(models.Model):
+class GroupStat(models.Model):
 
-    google_group = db.StringProperty(required=True)
+    group = db.ReferenceProperty(Group, required=True)
     start_date = db.DateProperty(required=True)
     post_count = db.IntegerProperty(required=True, default=0)
 
     @property
     def top_posters(self):
-        return self.get_top_posters(limit=3)
-
-    def get_top_posters(self, limit):
-        query = MemberPostStat.objects.filter(group_post_stat=self).order_by("-post_count")
-        query.set_limit(limit)
-        return query
+        return PosterStat.find_by_group_stat(group_stat=self, limit=3)
 
     @classmethod
-    def _make_pk(cls, google_group, date):
-        return "%s/%s/%s" % (filter_key(google_group), date.year, date.month)
+    def _make_pk(cls, group, date):
+        return "%s/%s/%s" % (group.uid, date.year, date.month)
 
     @classmethod
-    def get_or_create(cls, google_group):
-        today = datetime.date.today()
-        pk = cls._make_pk(google_group, today)
-        try:
-            instance = cls.objects.get(pk=pk)
-        except cls.DoesNotExist:
-            instance = cls(key_name=pk, google_group=google_group, start_date=today)
-            instance.save()
-        return instance
-
-    @classmethod
-    def get_unique(cls, google_group, date, month_delta=None):
+    def get_unique(cls, group, date, month_delta=None):
         if month_delta:
             month_count = date.year * 12 + date.month + month_delta
             year = month_count // 12
@@ -57,7 +42,7 @@ class GroupPostStat(models.Model):
                 year -= 1
                 month = 12
             date = datetime.date(year, month, 1)
-        pk = cls._make_pk(google_group, date)
+        pk = cls._make_pk(group, date)
         try:
             instance = cls.objects.get(pk=pk)
         except cls.DoesNotExist:
@@ -65,18 +50,18 @@ class GroupPostStat(models.Model):
         return instance
 
     @classmethod
-    def find_by_google_group(cls, google_group, **kwargs):
-        query = cls.objects.filter(google_group=google_group).order_by("-start_date")
-        if kwargs.get("cursor"):
-            query.with_cursor(kwargs["cursor"])
-        if kwargs.get("limit"):
-            query.set_limit(kwargs["limit"])
-        return query
+    def get_or_create(cls, group, date):
+        instance = cls.get_unique(group=group, date=date)
+        if instance is None:
+            pk = cls._make_pk(group, date)
+            instance = cls(key_name=pk, group=group, start_date=date)
+            instance.save()
+        return instance
 
 
-class MemberPostStat(models.Model):
+class PosterStat(models.Model):
 
-    group_post_stat = db.ReferenceProperty(GroupPostStat, required=True)
+    group_stat = db.ReferenceProperty(GroupStat, required=True)
     poster = db.ReferenceProperty(users.User, required=True)
     post_count = db.IntegerProperty(required=True, default=0)
 
@@ -84,55 +69,62 @@ class MemberPostStat(models.Model):
         return unicode(self.poster)
 
     @classmethod
-    def _make_pk(cls, group_post_stat, poster):
-        return "%s/%s" % (group_post_stat.pk, poster.email.lower())
+    def _make_pk(cls, group_stat, poster):
+        return "%s/%s" % (group_stat.pk, poster.email.lower())
 
     @classmethod
-    def get_or_create(cls, group_post_stat, poster):
-        pk = cls._make_pk(group_post_stat, poster)
-        try:
-            instance = cls.objects.get(pk=pk)
-        except cls.DoesNotExist:
-            instance = cls(key_name=pk, group_post_stat=group_post_stat, poster=poster)
-            instance.save()
-        return instance
-
-    @classmethod
-    def get_unique(cls, group_post_stat, poster):
-        pk = cls._make_pk(group_post_stat, poster)
+    def get_unique(cls, group_stat, poster):
+        pk = cls._make_pk(group_stat, poster)
         try:
             instance = cls.objects.get(pk=pk)
         except cls.DoesNotExist:
             instance = None
         return instance
 
+    @classmethod
+    def get_or_create(cls, group_stat, poster):
+        instance = cls.get_unique(group_stat=group_stat, poster=poster)
+        if instance is None:
+            pk = cls._make_pk(group_stat, poster)
+            instance = cls(key_name=pk, group_stat=group_stat, poster=poster)
+            instance.save()
+        return instance
+
+    @classmethod
+    def find_by_group_stat(cls, group_stat, **kwargs):
+        query = cls.objects.filter(group_stat=group_stat).order_by("-post_count")
+        if kwargs.get("limit"):
+            query.set_limit(kwargs["limit"])
+        return query
+
 
 #---------------------------------------------------------------------------------------------------
 
 
 def count_post(subject, poster, recipients):
+    # TODO: currently we support only vivelevendredi Google Group.
+    RECIPIENT_TO_GROUP_UID = {
+        "vivelevendredi@googlegroups.com": "vivelevendredi",
+    }
     try:
         poster = users.get_user(poster)
-        google_groups = [
-            recipient.lower().split("@", 1)[0]
+        recipients = [
+            recipient.lower()
             for recipient in recipients
-            if recipient.lower().endswith("@googlegroups.com")
+            if recipient.lower() in RECIPIENT_TO_GROUP_UID
         ]
-        google_groups = set(google_groups)  # to remove duplicates.
-        for google_group in google_groups:
-            # TODO: currently we support only vivelevendredi Google Group.
-            if google_group != "vivelevendredi":
-                logging.warning("Ignored emails to unsupported Google Group %s" % google_group)
+        recipients = set(recipients)  # to remove duplicates.
+        for recipient in recipients:
+            group = Group.get_unique(uid=RECIPIENT_TO_GROUP_UID[recipient])
+            if group is None:
+                logging.warning("Ignored recipient %s: group cannot be found." % recipient)
                 continue
-            group_post_stat = GroupPostStat.get_or_create(google_group=google_group)
-            group_post_stat.post_count += 1
-            group_post_stat.save()
-            member_post_stat = MemberPostStat.get_or_create(
-                group_post_stat=group_post_stat,
-                poster=poster
-            )
-            member_post_stat.post_count += 1
-            member_post_stat.save()
+            group_stat = GroupStat.get_or_create(group=group, date=datetime.date.today())
+            group_stat.post_count += 1
+            group_stat.save()
+            poster_stat = PosterStat.get_or_create(group_stat=group_stat, poster=poster)
+            poster_stat.post_count += 1
+            poster_stat.save()
     except Exception, exc:
         logging.error("Failed to count post: %s" % exc)
         logging.exception(exc)

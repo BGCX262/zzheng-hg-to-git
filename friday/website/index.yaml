@@ -46,12 +46,6 @@ indexes:
   - name: popularity
     direction: desc
 
-- kind: GroupPostStat
-  properties:
-  - name: google_group
-  - name: start_date
-    direction: desc
-
 - kind: Inductee
   properties:
   - name: group
@@ -71,16 +65,16 @@ indexes:
   - name: is_approved
   - name: user
 
-- kind: MemberPostStat
-  properties:
-  - name: group_post_stat
-  - name: post_count
-    direction: desc
-
 - kind: Notification
   properties:
   - name: category
   - name: send_date
+    direction: desc
+
+- kind: PosterStat
+  properties:
+  - name: group_stat
+  - name: post_count
     direction: desc
 
 - kind: Resto
