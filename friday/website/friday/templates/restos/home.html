@@ -8,6 +8,8 @@
 -->
 {% endcomment %}
 
+{% load friday_extra %}
+
 {#________________________________________________________________________________________________#}
 
 {% block html_title %} Restaurants {% endblock %}
@@ -50,17 +52,51 @@
 {% block content %}
 
   <div class="section">
-    <h1>Newly Added Restaurants ...</h1>
-  </div>
 
-  <div class="section">
-    {% with newly_added as restos %}
+    <h1>Newly Added Restaurants ...</h1>
+
+    {% with newly_added_restos as restos %}
       {% include "restos/common/restos.html" %}
     {% endwith %}
+
+    <p><a href="{% url friday.view_all_restos %}">View all restaurants &raquo;</a></p>
+
   </div>
 
   <div class="section">
-    <p><a href="{% url friday.view_all_restos %}">&raquo; View all restaurants</a></p>
+
+    <h1>Recent Comments ...</h1>
+
+    {% for resto, comment in newly_commented_restos %}
+
+      <div id="comment-{{ comment.id }}" class="post">
+        <div class="user-avatar right">
+          <a href="{% url friday.view_profile username=comment.author.username %}">
+            <img src="{% url friday.view_avatar username=comment.author.username %}" alt="{{ comment.author|escape }}"/>
+          </a>
+        </div>
+        <div class="post-head">
+          <a href="{% url friday.view_profile username=comment.author.username %}">
+            {{ comment.author|escape }}
+          </a>
+          commented on
+          <a href="{% url friday.view_resto resto_id=resto.id %}">{{ resto|escape }}</a>
+          :
+        </div>
+        <div class="post-body">{{ comment.content|escape|linebreaks }}</div>
+        <div class="post-foot">
+          <img class="icon" src="{{ static_ }}/images/comment.png" alt="Comment"/>
+          Posted {{ comment.submit_date|prettify_datetime }}
+        </div>
+        <div class="clear"></div>
+      </div>
+
+    {% empty %}
+
+      <p class="na">No recent comments.</p>
+
+    {% endfor %}
+
   </div>
 
 {% endblock %}

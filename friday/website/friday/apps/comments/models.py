@@ -45,6 +45,13 @@ class Comment(models.Model):
         return query
 
     @classmethod
+    def find_recent(cls, ref_type, **kwargs):
+        query = cls.objects.filter(ref_type=ref_type).order_by("-submit_date")
+        if kwargs.get("limit"):
+            query.set_limit(kwargs["limit"])
+        return query
+
+    @classmethod
     def delete_related(cls, ref_type, ref_pk):
         deleted = 0
         query = cls.objects.filter(ref_type=ref_type, ref_pk=str(ref_pk))

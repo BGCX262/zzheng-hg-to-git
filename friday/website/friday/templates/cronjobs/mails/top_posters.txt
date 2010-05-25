@@ -1,10 +1,10 @@
-{{ group.name|safe }}, Load of the Water / {{ group_post_stat.start_date|date:"N Y" }}
+{{ group.name|safe }}, Load of the Water / {{ stat.start_date|date:"N Y" }}
 
 {% autoescape off %}
 
-{{ group.name }} {{ group_post_stat.start_date.year }}年{{ group_post_stat.start_date.month }}月水王排行榜：
+{{ group.name }} {{ stat.start_date.year }}年{{ stat.start_date.month }}月水王排行榜：
 
-{% for top_poster in top_posters %}
+{% for top_poster in stat.top_posters %}
   {{ forloop.counter }} - {{ top_poster.poster }} 灌水 {{ top_poster.post_count }} 篇
 {% endfor %}
 
@@ -15,7 +15,7 @@
 http://{{ http_host }}{% url friday.view_group_post_stats group_uid=group.uid %}
 {% endif %}
 
-附：本月 {{ group.name }} 总水量 {{ group_post_stat.post_count }} 篇
+附：本月 {{ group.name }} 总水量 {{ stat.post_count }} 篇
 
 ----
 Java Doglas

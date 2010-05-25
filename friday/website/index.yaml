@@ -28,6 +28,12 @@ indexes:
   - name: submit_date
     direction: desc
 
+- kind: Comment
+  properties:
+  - name: ref_type
+  - name: submit_date
+    direction: desc
+
 - kind: Dish
   properties:
   - name: name

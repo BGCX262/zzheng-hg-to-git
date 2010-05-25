@@ -106,20 +106,16 @@ class SendTopPosters(BaseCronAction):
         return message
 
     def _send_top_posters(self, group):
-        group_post_stat = GroupPostStat.get_unique(
+        stat = GroupPostStat.get_unique(
             google_group=group.google_group,
             date=datetime.date.today(),
             month_delta=-1
         )
-        if not group_post_stat:
-            return 0
-        top_posters = group_post_stat.get_top_posters(5)
-        if not top_posters:
+        if not stat or not stat.top_posters:
             return 0
         data = {
             "group": group,
-            "group_post_stat": group_post_stat,
-            "top_posters": top_posters,
+            "stat": stat,
             "http_host": getattr(settings, "MY_HTTP_HOST", None),
         }
         message = render_to_string("cronjobs/mails/top_posters.txt", data)

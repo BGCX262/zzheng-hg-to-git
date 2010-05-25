@@ -4,16 +4,15 @@ Friday - Vive le Vendredi Website
 To-do List
 ----------
 
-Auth
-~~~~
-
-* Force email address to be all lower case (is this necessary?).
-
 Profiles
 ~~~~~~~~
 
 * Allow user to upload avatar image.
-* Do not create a user in view_profile if the user does not exist.
+
+Comments
+~~~~~~~~
+
+* Allow staff to delete a comment.
 
 Group
 ~~~~~
@@ -21,8 +20,10 @@ Group
 * Remove GroupAccess.can_contribute() function.
 * Add confirmation page for quitting a group.
 * Add transferring of group ownership.
+* Add group feed (e.g. flickr group photo pool).
 * Add default group icon (used in group_base.html and prettify_group.html).
 * Allow group administrator to upload group banner image and group icon.
+* Allow group administrator to add member directly by email.
 
 Hall of Fame
 ~~~~~~~~~~~~
@@ -36,13 +37,16 @@ Activity
 
 * Allow user to add photos of an activity.
 * Add eligibility to activity (for group members only or for everyone).
+* Add confirmation page for deleting an activity.
+* Display recent activities, including past activities.
 
 Post Stats
 ~~~~~~~~~~
 
+* Rename GroupPostStat to GroupStat, MemberPostStat to PosterStat.
+* Merge stats of a user with different email addresses (hard-coded).
 * Restrict inbound email URL for poststats address.
 * Add page to display group trends.
-* Add cron job to send top-3 posters on the 1st of every month.
 
 Resto
 ~~~~~
@@ -52,6 +56,7 @@ Resto
 * Allow user to request for ownership of a resto.
 * Allow staff to add photos of a resto.
 * Add default resto icon.
+* Add confirmation page for deleting a resto.
 
 Portal
 ~~~~~~
@@ -62,6 +67,7 @@ Misc.
 ~~~~~
 
 * Prettify topbar.
+* Add smart_url template tag for rendering URLs.
 * Add polls app.
 * When creating an instance with key name, check if the instance already exists.
 * Register related instances to be deleted, and delete them in background.

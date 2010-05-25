@@ -19,6 +19,7 @@ from django.shortcuts import render_to_response
 from friday.common.errors import BadRequestError, InvalidFormError, EntityNotFoundError
 from friday.common.prompt import Prompt
 from friday.common.actions import Action
+from friday.apps.comments.models import Comment
 from friday.apps.tagging.models import Tag
 from friday.apps.restos.models import Resto, Dish
 from friday.apps.restos.access import RestoAccess
@@ -31,11 +32,22 @@ class RestosHome(Action):
     PAGE_TEMPLATE = "restos/home.html"
 
     def get_page(self):
-        newly_added = list(Resto.find(order_by="-update_date", limit=10))
-        random.shuffle(newly_added)
+        # Find newly added restos (randomly select 4 out of 10).
+        newly_added_restos = list(Resto.find(order_by="-update_date", limit=10))
+        random.shuffle(newly_added_restos)
+        newly_added_restos = newly_added_restos[:4]
+        # Find newly commented restos (a list of 2-tuple with resto and comment).
+        new_comments = Comment.find_recent(ref_type=Resto.__name__, limit=4)
+        newly_commented_restos = []
+        for comment in new_comments:
+            resto = Resto.get_unique(id=int(comment.ref_pk))
+            if resto:
+                newly_commented_restos.append((resto, comment))
+        # Render the response.
         data = {
             "categories": Resto.CATEGORIES,
-            "newly_added": newly_added[:4],
+            "newly_added_restos": newly_added_restos,
+            "newly_commented_restos": newly_commented_restos,
         }
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
