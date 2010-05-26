@@ -27,7 +27,7 @@
         {% if resto.logo_icon_url %}
           <img class="icon" src="{{ resto.logo_icon_url }}" alt="{{ resto|escape }}"/>
         {% else %}
-          <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="{{ resto|escape }}"/>
+          <img class="icon" src="{{ static_ }}/images/resto_icon.png" alt="{{ resto|escape }}"/>
         {% endif %}
         <h1>{{ resto|escape }}</h1>
         <div class="links">

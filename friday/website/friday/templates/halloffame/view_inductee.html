@@ -53,7 +53,12 @@
 {% block content %}
 
   <div class="section">
-    <h1>{{ inductee|escape }}</h1>
+    <h1>
+      {{ inductee.name|escape }}
+      {% if inductee.aka %}
+        aka. {{ inductee.aka|escape }}
+      {% endif %}
+    </h1>
     <h5>{{ inductee.summary|default:""|escape }}</h5>
   </div>
 

@@ -44,10 +44,10 @@
     </div>
 
     <div class="field">
-      <div class="label">Alias (also known as):</div>
-      <div class="input">{{ inductee_form.alias|safe }}</div>
-      {% if inductee_form.alias.errors %}
-        <div class="error-list">{{ inductee_form.alias.errors|safe }}</div>
+      <div class="label">Also known as (aka):</div>
+      <div class="input">{{ inductee_form.aka|safe }}</div>
+      {% if inductee_form.aka.errors %}
+        <div class="error-list">{{ inductee_form.aka.errors|safe }}</div>
       {% endif %}
     </div>
 
