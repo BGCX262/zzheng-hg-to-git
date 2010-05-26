@@ -41,15 +41,15 @@ class IncomingEmailHandler(InboundMailHandler):
 
     def receive(self, mail_message):
         subject = getattr(mail_message, "subject", None)
-        poster = _grab_emails(getattr(mail_message, "sender", None))
-        if len(poster) != 1:
-            logging.error("Fail to handle incoming email: suspicious sender %s" % poster)
+        poster_email = _grab_emails(getattr(mail_message, "sender", None))
+        if len(poster_email) != 1:
+            logging.error("Fail to handle incoming email: suspicious poster %s" % poster_email)
             return
-        poster = poster[0]
+        poster_email = poster_email[0]
         to = getattr(mail_message, "to", None)
         cc = getattr(mail_message, "cc", None)
         recipients = _grab_emails(to, cc)
-        count_post(subject=subject, poster=poster, recipients=recipients)
+        count_post(subject=subject, poster_email=poster_email, recipients=recipients)
 
 
 def main():

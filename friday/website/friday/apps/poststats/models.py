@@ -101,13 +101,12 @@ class PosterStat(models.Model):
 #---------------------------------------------------------------------------------------------------
 
 
-def count_post(subject, poster, recipients):
+def count_post(subject, poster_email, recipients):
     # TODO: currently we support only vivelevendredi Google Group.
     RECIPIENT_TO_GROUP_UID = {
         "vivelevendredi@googlegroups.com": "vivelevendredi",
     }
     try:
-        poster = users.get_user(poster)
         recipients = [
             recipient.lower()
             for recipient in recipients
@@ -122,9 +121,13 @@ def count_post(subject, poster, recipients):
             group_stat = GroupStat.get_or_create(group=group, date=datetime.date.today())
             group_stat.post_count += 1
             group_stat.save()
-            poster_stat = PosterStat.get_or_create(group_stat=group_stat, poster=poster)
-            poster_stat.post_count += 1
-            poster_stat.save()
+            poster = users.get_user_by_email(poster_email)
+            if poster is None:
+                logging.warning("Ignored poster %s: user cannot be found." % poster_email)
+            else:
+                poster_stat = PosterStat.get_or_create(group_stat=group_stat, poster=poster)
+                poster_stat.post_count += 1
+                poster_stat.save()
     except Exception, exc:
         logging.error("Failed to count post: %s" % exc)
         logging.exception(exc)

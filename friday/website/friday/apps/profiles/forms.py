@@ -19,6 +19,7 @@ from friday.apps.profiles.models import Profile
 class ProfileForm(forms.Form):
 
     name = forms.CharField(required=True)
+    alt_email = forms.EmailField(required=False)
     biography = forms.CharField(required=False, widget=forms.Textarea)
     tel = forms.CharField(required=False)
     website = forms.URLField(required=False)
@@ -28,6 +29,7 @@ class ProfileForm(forms.Form):
         if instance:
             initial = {
                 "name": instance.name,
+                "alt_email": instance.alt_email,
                 "biography": instance.biography,
                 "tel": instance.tel,
                 "website": instance.website,
@@ -39,6 +41,9 @@ class ProfileForm(forms.Form):
     @property
     def instance(self):
         return self._instance
+
+    def clean_alt_email(self):
+        return self.cleaned_data["alt_email"] or None
 
     def clean_website(self):
         return self.cleaned_data["website"] or None

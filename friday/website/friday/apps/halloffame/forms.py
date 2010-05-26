@@ -43,10 +43,10 @@ class InducteeForm(forms.Form):
         return self._instance
 
     def clean_user(self):
-        username = self.cleaned_data["user"]
-        user = users.get_user(username)
+        username_or_email = self.cleaned_data["user"]
+        user = users.get_user(username_or_email, create=False)
         if user is None:
-            message = "User %s cannot be found." % username
+            message = "User %s cannot be found." % username_or_email
             raise forms.ValidationError(message)
         return user
 

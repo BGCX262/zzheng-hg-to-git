@@ -19,6 +19,7 @@ class User(models.Model):
     # key_name is user's email address in lower case.
     user = db.UserProperty(required=True)
     name = db.StringProperty()
+    alt_email = db.EmailProperty()
     is_staff = db.BooleanProperty(required=True, default=False)
     join_date = db.DateTimeProperty(required=True, auto_now_add=True)
 
@@ -44,6 +45,12 @@ class User(models.Model):
     def is_authenticated(self):
         return True
 
+    def save(self):
+        # Force alternative email address to be lowercase.
+        if self.alt_email:
+            self.alt_email = self.alt_email.strip().lower()
+        return super(User, self).save()
+
     @classmethod
     def _make_pk(cls, google_user):
         return google_user.email().lower()
@@ -66,6 +73,11 @@ class User(models.Model):
             instance.save()
         return instance
 
+    @classmethod
+    def find_by_alt_email(cls, alt_email):
+        query = cls.objects.filter(alt_email=alt_email.strip().lower())
+        return query
+
 
 class AnonymousUser(object):
 
@@ -73,6 +85,7 @@ class AnonymousUser(object):
         super(AnonymousUser, self).__init__()
         self.username = None
         self.email = None
+        self.alt_email = None
         self.is_staff = False
 
     def __unicode__(self):

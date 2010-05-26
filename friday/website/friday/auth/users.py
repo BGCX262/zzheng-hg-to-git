@@ -42,18 +42,30 @@ def create_logout_url(dest_url):
     return users.create_logout_url(dest_url)
 
 
-def get_user(username, create=True):
-    username = username.strip()
-    if "@" in username:
-        email = username
+def get_user(username_or_email, create=True):
+    username_or_email = username_or_email.strip()
+    if "@" in username_or_email:
+        email = username_or_email
     else:
         email_domain = getattr(settings, "MY_EMAIL_DOMAIN")
-        email = "%s@%s" % (username, email_domain)
+        email = "%s@%s" % (username_or_email, email_domain)
     google_user = users.User(email)
     if create:
         return User.get_or_create(google_user)
     else:
         return User.get_unique(google_user)
+
+
+def get_user_by_email(email):
+    email = email.strip()
+    user = get_user(email, create=False)
+    if user is not None:
+        return user
+    users = User.find_by_alt_email(email)
+    if users:
+        return users[0]
+    else:
+        return None
 
 
 def is_webmaster(user):

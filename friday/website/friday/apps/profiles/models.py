@@ -47,6 +47,12 @@ class Profile(models.Model):
         self.user.name = value
     name = property(_get_name, _set_name)
 
+    def _get_alt_email(self):
+        return self.user.alt_email
+    def _set_alt_email(self, value):
+        self.user.alt_email = value
+    alt_email = property(_get_alt_email, _set_alt_email)
+
     def __unicode__(self):
         return unicode(self.user)
 
@@ -73,8 +79,12 @@ class Profile(models.Model):
         name = kwargs.get("name")
         if "name" in kwargs:
             del kwargs["name"]
+        alt_email = kwargs.get("alt_email")
+        if "alt_email" in kwargs:
+            del kwargs["alt_email"]
         instance = cls(key_name=pk, user=user, **kwargs)
         instance.name = name
+        instance.alt_email = alt_email
         return instance
 
     @classmethod

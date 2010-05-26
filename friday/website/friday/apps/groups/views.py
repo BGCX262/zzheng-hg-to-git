@@ -253,12 +253,19 @@ class BaseMemberAction(BaseGroupAction):
 
     def __init__(self, request, group_uid, username):
         super(BaseMemberAction, self).__init__(request, group_uid)
-        self._user = users.get_user(username)
+        self._username = username
+        self._user = users.get_user(username, create=False)
+
+    def get_user(self):
+        if not self._user:
+            message = "searched by username %s." % self._username
+            raise EntityNotFoundError(users.User, message)
+        return self._user
 
     def get_member(self):
-        member = Member.get_unique(group=self.get_group(), user=self._user)
+        member = Member.get_unique(group=self.get_group(), user=self.get_user())
         if not member:
-            message = "searched by user '%s'." % self._user.username
+            message = "searched by user %s." % self.get_user().username
             raise EntityNotFoundError(Member, message)
         return member
 
