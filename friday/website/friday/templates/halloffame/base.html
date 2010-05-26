@@ -18,7 +18,7 @@
       {% if group.logo_icon_url %}
         <img class="icon" src="{{ group.logo_icon_url }}" alt="{{ group|escape }} Hall of Fame"/>
       {% else %}
-        <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="{{ group|escape }} Hall of Fame"/>
+        <img class="icon" src="{{ static_ }}/images/group_icon.png" alt="{{ group|escape }} Hall of Fame"/>
       {% endif %}
       <h1>
         <a href="{% url friday.view_hall_of_fame group_uid=group.uid %}">Aux Grands Hommes le Group Reconnaissant</a>

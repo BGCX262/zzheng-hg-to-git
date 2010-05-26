@@ -28,7 +28,7 @@
         {% if group.logo_icon_url %}
           <img class="icon" src="{{ group.logo_icon_url }}" alt="{{ group|escape }}"/>
         {% else %}
-          <img class="icon" src="http://l.yimg.com/g/images/buddyicon.jpg" alt="{{ group|escape }}"/>
+          <img class="icon" src="{{ static_ }}/images/group_icon.png" alt="{{ group|escape }}"/>
         {% endif %}
 
         <h1><a href="{% url friday.view_group group_uid=group.uid %}">{{ group|escape }}</a></h1>
