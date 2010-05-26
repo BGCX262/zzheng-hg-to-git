@@ -23,9 +23,9 @@
 
         <div class="post-body">
           {% if group.description %}
-            {{ group.description|escape|linebreaks }}
+            {{ group.description|summary:200|escape }}
           {% else %}
-            <p class="aux">This group does not have a description.</p>
+            <div class="aux">This group does not have a description.</div>
           {% endif %}
         </div>
 

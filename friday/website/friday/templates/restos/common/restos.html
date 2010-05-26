@@ -20,9 +20,9 @@
 
       <div class="post-body">
         {% if resto.description %}
-          {{ resto.description|escape|linebreaks }}
+          {{ resto.description|summary:200|escape }}
         {% else %}
-          <p>This restaurant has no description.</p>
+          <div class="na">This restaurant has no description.</div>
         {% endif %}
       </div>
 

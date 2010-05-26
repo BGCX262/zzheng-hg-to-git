@@ -23,7 +23,7 @@
             &nbsp;
             <span class="aux">
               <img class="icon" src="{{ static_ }}/images/group.png" alt="Attenders"/>
-              <b>{{ activity.attenders.count }}</b> attender(s)
+              <b>{{ activity.attenders.count }}</b> attender{{ activity.attenders.count|pluralize }}
             </span>
           {% endif %}
           {% if activity.is_past or activity.is_closed %}
@@ -34,7 +34,7 @@
       </div>
 
       <div class="post-body">
-        {{ activity.content|escape|linebreaks }}
+        {{ activity.content|summary:200|escape }}
       </div>
 
       <div class="post-foot">

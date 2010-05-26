@@ -21,9 +21,10 @@ Group
 * Add confirmation page for quitting a group.
 * Add transferring of group ownership.
 * Add group feed (e.g. flickr group photo pool).
-* Add default group icon (used in group_base.html and prettify_group.html).
 * Allow group administrator to upload group banner image and group icon.
 * Allow group administrator to add member directly by email.
+* Send an email to Google Group when a user requests to join the group.
+* Send an email to the user when her request to join the group is approved.
 
 Hall of Fame
 ~~~~~~~~~~~~
@@ -53,7 +54,6 @@ Resto
 * Allow user to rate a resto.
 * Allow user to request for ownership of a resto.
 * Allow staff to add photos of a resto.
-* Add default resto icon.
 * Add confirmation page for deleting a resto.
 
 Portal
@@ -64,7 +64,8 @@ Portal
 Misc.
 ~~~~~
 
-* Prettify topbar.
+* Add website logo in topbar.
+* Add website favicon.
 * Add smart_url template tag for rendering URLs.
 * Add polls app.
 * When creating an instance with key name, check if the instance already exists.

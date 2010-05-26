@@ -15,7 +15,7 @@
 
     <h2>
       {% if attenders %}
-        {{ attenders.count }} attender(s):
+        {{ attenders.count }} attender{{ attenders.count|pluralize }}:
       {% else %}
         No attender yet.
       {% endif %}
