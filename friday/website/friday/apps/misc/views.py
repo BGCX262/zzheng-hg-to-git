@@ -116,7 +116,9 @@ def about(request, topic=None):
 
 def not_found(request):
     data = {"bad_url": request.path}
-    return render_to_response("misc/not_found.html", data, RequestContext(request))
+    response = render_to_response("misc/not_found.html", data, RequestContext(request))
+    response.status_code = 404  # not found.
+    return response
 
 
 # EOF
