@@ -1,0 +1,205 @@
+/**
+ Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+ Created on 2010-05-27.
+ $Id$
+ */
+
+/*--------------------------------------------------------------------------------------------------
+ * HTML elements
+ *------------------------------------------------------------------------------------------------*/
+
+body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font: normal normal 14px Arial,Helvetica,sans-serif;
+  line-height: 1.4em;
+}
+
+a, a:link, a:visited {
+  text-decoration: none;
+  color: #2090D0;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #2090D0;
+}
+
+a img {
+  border-width: 0;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  padding: 8px 0 8px 0;
+}
+
+h1 {
+  color: #888888;
+  font-weight: bold;
+  font-size: 200%;
+}
+
+h2 {
+  font-weight: normal;
+  font-size: 120%;
+  color: #666666;
+}
+
+h3 {
+  font-weight: normal;
+  font-size: 110%;
+}
+
+h5 {
+  margin: 0;
+  padding: 4px;
+  font-weight: normal;
+  font-size: 110%;
+  color: #666666;
+  text-align: right;
+  border-top: solid 1px #DDDDDD;
+}
+
+p {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 4px 0 4px 20px;
+}
+
+tt, code, pre, .code {
+  font-family: 'Courier New',courier,arial, sans-serif;
+}
+
+pre {
+  margin: 4px 0 4px 0;
+  padding: 4px;
+  border: solid 1px #888888;
+}
+
+
+/*--------------------------------------------------------------------------------------------------
+ * outer-wrapper
+ *------------------------------------------------------------------------------------------------*/
+
+#outer-wrapper {
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+  width: 990px;
+  min-width: 990px;
+  border: 1px solid #DDDDDD;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * topbar-wrapper and footer-wrapper
+ *------------------------------------------------------------------------------------------------*/
+
+#topbar-wrapper, #footer-wrapper {
+  margin: 0;
+  padding: 10px;
+  font-size: 85%;
+  line-height: 1.4em;
+  color: #888888;
+}
+
+#topbar-wrapper .topbar-left, #footer-wrapper .footer-left {
+  float: left;
+  white-space: nowrap;
+}
+
+#topbar-wrapper .topbar-right, #footer-wrapper .footer-right {
+  float: right;
+  text-align: right;
+  white-space: nowrap;
+}
+
+#footer-wrapper {
+  border-top: 1px solid #DDDDDD;
+}
+
+#footer-wrapper a {
+  color: #888888;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * main-wrapper, sidebar-wrapper and content-wrapper
+ *------------------------------------------------------------------------------------------------*/
+
+#main-wrapper {
+  margin: 0;
+  padding: 10px;
+}
+
+#sidebar-wrapper {
+  margin: 0;
+  padding: 0;
+  display: inline;
+  float: right;
+  width: 30%;
+  overflow: hidden;
+}
+
+#sidebar-wrapper h2 {
+  font: normal bold 120% "Century Gothic",Arial,Helvetica,sans-serif;
+  margin: 0;
+  padding: 4px 0 10px 0;
+  text-transform: uppercase;
+  color: #2090D0;
+}
+
+#sidebar-wrapper ul {
+  margin: 0;
+  padding: 0;
+}
+
+#sidebar-wrapper ul li {
+  margin: 0;
+  padding: 4px;
+  color: #666666;
+  font-size: 90%;
+  list-style: none outside none;
+  border-top: 1px solid #DDDDDD;
+  text-indent: 0;
+}
+
+#sidebar-wrapper ul li a {
+  color: #666666;
+}
+
+#sidebar-wrapper ul li a:hover {
+  text-decoration: none;
+  color: #2090D0;
+}
+
+#sidebar-wrapper dl {
+  margin: 0;
+  padding: 4px 0 4px 0;
+}
+
+#sidebar-wrapper dt {
+  margin: 0;
+  padding: 0 0 2px 0;
+  font-weight: bold;
+}
+
+#sidebar-wrapper dd {
+  margin: 0;
+  padding: 0 0 0 20px;
+}
+
+#content-wrapper {
+  margin: 0;
+  padding: 0;
+  display: inline;
+  float: left;
+  width: 68%;
+}
+
+
+

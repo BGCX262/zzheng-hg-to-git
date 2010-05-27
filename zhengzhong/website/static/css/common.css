@@ -1,0 +1,62 @@
+/**
+ Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+ Created on 2010-05-27.
+ $Id$
+ */
+
+/*--------------------------------------------------------------------------------------------------
+ * Common CSS classes
+ *------------------------------------------------------------------------------------------------*/
+
+.clear {
+  clear: both;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.section {
+  margin: 0;
+  padding: 0 0 10px 0;
+}
+
+.photo {
+  margin: 4px 0 4px 0;
+  padding: 4px;
+  border: 1px solid #BBBBBB;
+}
+
+.photo:hover {
+  border: 1px solid #888888;
+}
+
+a.image {
+  text-decoration: none;
+}
+
+img.icon {
+  vertical-align: text-bottom;
+}
+
+/*--------------------------------------------------------------------------------------------------
+ * Prompt
+ *------------------------------------------------------------------------------------------------*/
+
+.info-prompt, .error-prompt {
+  margin: 10px 0 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+.info-prompt {
+  background-color: #E8EEFA;
+  border: 1px solid #C3D9FF;
+}
+
+.error-prompt {
+  background-color: #FAFDCE;
+  border: 1px solid #FACC00;
+}

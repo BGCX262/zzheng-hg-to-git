@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-19.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} Error {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block main %}
+
+  <div class="section">
+    <h1>Oops! An error occurred...</h1>
+  </div>
+
+  <div class="section">
+    <div class="error-prompt">
+      {{ error|escape }}.
+      <a href="{% url zheng.home %}">Return home &raquo;</a>
+    </div>
+  </div>
+
+{% endblock %}
+

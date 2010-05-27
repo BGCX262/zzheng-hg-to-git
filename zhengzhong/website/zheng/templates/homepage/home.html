@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% comment %}
+<!--
+  Copyright (C) 2008 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2008-12-19.
+  $Id$
+-->
+{% endcomment %}
+
+{#________________________________________________________________________________________________#}
+
+{% block html_title %} About Me {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block content %}
+
+  <div class="section">
+    <h1>Hi.</h1>
+  </div>
+
+  <div class="section">
+    <p>
+      My name is ZHENG Zhong ( 郑重 in Chinese ), and I am a programmer from Nanjing, China.
+      I am currently living in Paris with my dog <a href="{% url zheng.about_java %}">Java</a>.
+      If you want to know more about me, you may visit
+      <a href="http://blog.zhengzhong.net/">my blog</a> and
+      <a href="http://www.flickr.com/photos/zhengzhong/">my Flickr photostream</a>.
+      You may get in touch with me via &lt;heavyzheng nospam-at gmail D0T com&gt;.
+    </p>
+  </div>
+
+  <div class="section" style="text-align: center;">
+    <a class="image" href="http://www.flickr.com/photos/zhengzhong/3119407786/">
+      <img class="photo" src="http://farm4.static.flickr.com/3203/3119407786_ef301503fb.jpg" alt="ZHENG Zhong"/>
+    </a>
+    <br/>
+    Sept. 8, 2003 - Maison des Mines et des Ponts et Chaussées, Paris
+  </div>
+
+{% endblock %}
+
+
+
