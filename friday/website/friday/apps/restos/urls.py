@@ -68,14 +68,19 @@ urlpatterns = patterns("",
         name="friday.delete_resto"
     ),
     url(
+        r"^(?P<resto_id>\d+)/change_fave/$",
+        change_resto_fave,
+        name="friday.change_resto_fave"
+    ),
+    url(
         r"^(?P<resto_id>\d+)/recommend/$",
         recommend_dish,
         name="friday.recommend_dish"
     ),
     url(
-        r"^(?P<resto_id>\d+)/(?P<dish_id>\d+)/like_or_unlike/$",
-        like_or_unlike_dish,
-        name="friday.like_or_unlike_dish"
+        r"^(?P<resto_id>\d+)/(?P<dish_id>\d+)/change_fan/$",
+        change_dish_fan,
+        name="friday.change_dish_fan"
     ),
     url(
         r"^(?P<resto_id>\d+)/(?P<dish_id>\d+)/edit/$",

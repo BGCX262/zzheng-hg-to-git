@@ -38,23 +38,19 @@ Activity
 
 * Allow user to add photos of an activity.
 * Add eligibility to activity (for group members only or for everyone).
-* Add confirmation page for deleting an activity.
 * Display recent activities, including past activities.
 
 Post Stats
 ~~~~~~~~~~
 
-* Restrict inbound email URL for poststats address.
 * Add page to display group trends.
 
 Resto
 ~~~~~
 
-* Allow user to add a resto as favorite.
 * Allow user to rate a resto.
 * Allow user to request for ownership of a resto.
 * Allow staff to add photos of a resto.
-* Add confirmation page for deleting a resto.
 
 Portal
 ~~~~~~

@@ -46,6 +46,13 @@ indexes:
   - name: popularity
     direction: desc
 
+- kind: Fave
+  properties:
+  - name: ref_pk
+  - name: ref_type
+  - name: add_date
+    direction: desc
+
 - kind: Inductee
   properties:
   - name: group

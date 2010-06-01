@@ -1,0 +1,43 @@
+{% comment %}
+<!--
+  Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+  Created on 2010-05-10.
+  $Id$
+-->
+{% endcomment %}
+
+{% load ilike_tags %}
+
+{% if resto %}
+
+  <div id="resto-faves-{{ resto.id }}" class="section">
+
+    <img class="icon" src="{{ static_ }}/images/like.png" alt="Fave"/>
+    <b>{{ resto.faves.count }}</b> people add this resto as a fave
+
+    {% if user_ %}
+      &bull;
+      {% withfave resto user_ as fave %}
+        <a href="javascript:void(0);" onclick="changeRestoFave_{{ resto.id }}();">
+          {{ fave|yesno:"Remove from,Add to" }} your faves
+        </a>
+      {% endwithfave %}
+    {% endif %}
+
+    {% if user_ %}
+      <script type="text/javascript">//<![CDATA[
+        function changeRestoFave_{{ resto.id }}() {
+          $.post(
+            "{% url friday.change_resto_fave resto_id=resto.id %}",
+            function(data) {
+              $("#resto-faves-{{ resto.id }}").after(data).remove();
+            }
+          );
+        }
+      //]]></script>
+    {% endif %}
+
+  </div>
+
+{% endif %}
+

@@ -6,7 +6,7 @@
 -->
 {% endcomment %}
 
-{% load fan_tags %}
+{% load ilike_tags %}
 
 {% if dish %}
 
@@ -38,12 +38,12 @@
     <div class="post-foot">
 
       <img class="icon" src="{{ static_ }}/images/like.png" alt="Like"/>
-      {{ dish.fans.count }} persons like this
+      <b>{{ dish.fans.count }}</b> persons like this
       {% if user_ %}
         {% withfan dish user_ as fan %}
           {{ fan|yesno:"(including you)," }}
           &bull;
-          <a href="javascript:void(0);" onclick="likeOrUnlikeDish_{{ dish.id }}();">
+          <a href="javascript:void(0);" onclick="changeDishFan_{{ dish.id }}();">
             {{ fan|yesno:"Un-like,Like" }}
           </a>
         {% endwithfan %}
@@ -60,9 +60,9 @@
 
     {% if user_ %}
       <script type="text/javascript">//<![CDATA[
-        function likeOrUnlikeDish_{{ dish.id }}() {
+        function changeDishFan_{{ dish.id }}() {
           $.post(
-            "{% url friday.like_or_unlike_dish resto_id=dish.resto.id dish_id=dish.id %}",
+            "{% url friday.change_dish_fan resto_id=dish.resto.id dish_id=dish.id %}",
             function(data) {
               $("#dish-{{ dish.id }}").after(data).remove();
             }

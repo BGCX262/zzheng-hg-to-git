@@ -302,6 +302,20 @@ class DeleteResto(BaseRestoAction):
             return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
+class ChangeRestoFave(BaseRestoAction):
+
+    AJAX_URL_NAME = "friday.change_resto_fave"
+    AJAX_TEMPLATE = "restos/common/resto_faves.html"
+
+    def post_ajax(self):
+        if not self.current_user:
+            message = "Anonymous user cannot add/remove a resto to/from faves."
+            raise BadRequestError(self.request, message)
+        resto = self.get_resto()
+        resto.change_fave(self.current_user)
+        return {}
+
+
 class RecommendDish(BaseRestoAction):
 
     PAGE_URL_NAME = "friday.recommend_dish"
@@ -356,9 +370,9 @@ class BaseDishAction(BaseRestoAction):
         return super(BaseDishAction, self).update_data(data)
 
 
-class LikeOrUnlikeDish(BaseDishAction):
+class ChangeDishFan(BaseDishAction):
 
-    AJAX_URL_NAME = "friday.like_or_unlike_dish"
+    AJAX_URL_NAME = "friday.change_dish_fan"
     AJAX_TEMPLATE = "restos/common/dish.html"
 
     def post_ajax(self):
@@ -366,7 +380,7 @@ class LikeOrUnlikeDish(BaseDishAction):
             message = "Anonymous user cannot like/unlike a dish."
             raise BadRequestError(self.request, message)
         dish = self.get_dish()
-        dish.like_or_unlike(self.current_user)
+        dish.change_fan(self.current_user)
         return {}
 
 
@@ -500,12 +514,16 @@ def delete_resto(request, resto_id):
     return DeleteResto(request, resto_id).process()
 
 
+def change_resto_fave(request, resto_id):
+    return ChangeRestoFave(request, resto_id).process()
+
+
 def recommend_dish(request, resto_id):
     return RecommendDish(request, resto_id).process()
 
 
-def like_or_unlike_dish(request, resto_id, dish_id):
-    return LikeOrUnlikeDish(request, resto_id, dish_id).process()
+def change_dish_fan(request, resto_id, dish_id):
+    return ChangeDishFan(request, resto_id, dish_id).process()
 
 
 def edit_dish(request, resto_id, dish_id):

@@ -16,7 +16,7 @@ from djangomockup.models.signals import pre_delete
 from friday.auth import users
 from friday.common.dbutils import filter_key, ord_to_key
 from friday.apps.tagging.models import Taggable
-from friday.apps.ilike.models import Fan
+from friday.apps.ilike.models import Fan, Fave
 
 
 _RESTO_CATEGORIES = (
@@ -107,8 +107,23 @@ class Resto(models.Model, Taggable):
     def dishes(self):
         return Dish.find_by_resto(resto=self)
 
+    @property
+    def faves(self):
+        return Fave.find_by_ref(ref_type=self.__class__.__name__, ref_pk=self.id)
+
     def __unicode__(self):
         return unicode(self.name)
+
+    def change_fave(self, user):
+        fave = Fave.get_unique(ref_type=self.__class__.__name__, ref_pk=self.id, user=user)
+        if fave is None:
+            fave = Fave.create(ref_type=self.__class__.__name__, ref_pk=self.id, user=user)
+            fave.save()
+            self.popularity += 5
+        else:
+            fave.delete()
+            self.popularity = max(0, self.popularity - 5)
+        self.save()
 
     def get_category_display(self):
         for category, display in self.CATEGORIES:
@@ -179,16 +194,19 @@ class Dish(models.Model):
     def __unicode__(self):
         return unicode(self.name)
 
-    def like_or_unlike(self, user):
+    def change_fan(self, user):
         fan = Fan.get_unique(ref_type=self.__class__.__name__, ref_pk=self.id, user=user)
-        if not fan:
+        if fan is None:
             fan = Fan.create_fan(ref_type=self.__class__.__name__, ref_pk=self.id, user=user)
             fan.save()
             self.popularity += 1
+            self.resto.popularity += 1
         else:
             fan.delete()
             self.popularity = max(0, self.popularity - 1)
+            self.resto.popularity = max(0, self.resto.popularity - 1)
         self.save()
+        self.resto.save()
 
     @classmethod
     def create(cls, **kwargs):
