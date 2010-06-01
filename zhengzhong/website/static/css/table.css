@@ -1,0 +1,48 @@
+/**
+ Copyright (C) 2010 ZHENG Zhong <http://www.zhengzhong.net/>
+
+ Created on 2008-12-03.
+ $Id$
+ */
+
+.table {
+  margin: 0;
+  padding: 4px 0 4px 0;
+  width: 100%;
+}
+
+.table th, .table td {
+  margin: 0;
+  padding: 4px;
+  text-align: left;
+  line-height: 1.2em;
+}
+
+.table thead th {
+  color: #666666;
+  font-weight: normal;
+  border-bottom: 1px solid #BBBBBB;
+}
+
+
+.zebra tbody tr.odd {
+  background-color: #FFFFFF;
+}
+
+.zebra tbody tr.even {
+  background-color: #E8E8E8;
+}
+
+.zebra tbody tr.odd:hover, .zebra tbody tr.even:hover {
+  background-color: #FFFFDD;
+}
+
+
+.table-info {
+  margin: 0;
+  padding: 4px 8px 4px 8px;
+  text-align: right;
+  color: #666666;
+}
+
+
