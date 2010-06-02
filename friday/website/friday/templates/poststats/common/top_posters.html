@@ -7,11 +7,11 @@
 {% endcomment %}
 
 
-{% if group_stat %}
+{% if group_stat and top_posters %}
 
   <div>
 
-    {% for top_poster in group_stat.top_posters %}
+    {% for top_poster in top_posters %}
       <div class="user-box">
         <div class="user-avatar">
           <a href="{% url friday.view_profile username=top_poster.poster.username %}">
@@ -40,7 +40,10 @@
 
 {% else %}
 
-  <p class="na">Group statistic not available.</p>
+  <p class="na">
+    <img class="icon" src="{{ static_ }}/images/error.png" alt="Error"/>
+    Group statistic not available.
+  </p>
 
 {% endif %}
 

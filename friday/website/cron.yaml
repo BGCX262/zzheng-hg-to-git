@@ -10,7 +10,6 @@ cron:
 - description: Send top posters to Google Groups
   url: /cron/send_top_posters/
   schedule: 1st day of month 06:00
-  timezone: Europe/Paris
 
 
 # EOF

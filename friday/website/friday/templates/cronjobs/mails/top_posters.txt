@@ -6,7 +6,7 @@
 
 现公布 {{ group_stat.group.name }} {{ group_stat.start_date.year }}年{{ group_stat.start_date.month }}月水王排行榜：
 
-{% for top_poster in group_stat.top_posters %}
+{% for top_poster in top_posters %}
   {{ forloop.counter }}: {{ top_poster.poster }} 灌水 {{ top_poster.post_count }} 篇
 {% endfor %}
 

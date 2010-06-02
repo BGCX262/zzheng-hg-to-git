@@ -22,68 +22,93 @@
     <h1>{{ group|escape }} / Post Stat</h1>
   </div>
 
-  {% if group_stat %}
+  {% if group_stat and top_posters %}
+
+    <!-- Top 3 posters of the month ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
     <div class="section">
 
-      <h2>
-        Top Posters as of {{ group_stat.start_date|date:"N Y" }}
-        (total {{ group_stat.post_count }} posts):
-      </h2>
+      <h2>Top 3 Posters as of {{ group_stat.start_date|date:"N Y" }} (total {{ group_stat.post_count }} posts):</h2>
 
-      {% if group_stat.top_posters %}
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th style="width: 30%;"><span class="nowrap">Champion</span></th>
-              <th style="width: 30%;"><span class="nowrap">Second Place</span></th>
-              <th style="width: 30%;"><span class="nowrap">Third Place</span></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              {% for top_poster in group_stat.top_posters %}
-                <td>
-                  <div class="nowrap">
-                    <div class="user-box">
-                      <div class="user-avatar">
-                        <a href="{% url friday.view_profile username=top_poster.poster.username %}">
-                          <img src="{% url friday.view_avatar username=top_poster.poster.username %}" alt="{{ top_poster|escape }}"/>
-                        </a>
-                      </div>
-                      <div class="user-info">
-                        <img class="icon" src="{{ static_ }}/images/award.png" alt="Top poster"/>
-                        <a href="{% url friday.view_profile username=top_poster.poster.username %}">
-                          {{ top_poster|escape }}
-                        </a>
-                        <br/>
-                        Posted <b>{{ top_poster.post_count }}</b> messages
-                      </div>
-                      <div class="clear"></div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 30%;"><span class="nowrap">Champion</span></th>
+            <th style="width: 30%;"><span class="nowrap">Second Place</span></th>
+            <th style="width: 30%;"><span class="nowrap">Third Place</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% for top_poster in top_posters|slice:":3" %}
+              <td>
+                <div class="nowrap">
+                  <div class="user-box">
+                    <div class="user-avatar">
+                      <a href="{% url friday.view_profile username=top_poster.poster.username %}">
+                        <img src="{% url friday.view_avatar username=top_poster.poster.username %}" alt="{{ top_poster|escape }}"/>
+                      </a>
                     </div>
+                    <div class="user-info">
+                      <img class="icon" src="{{ static_ }}/images/award.png" alt="Top poster"/>
+                      <a href="{% url friday.view_profile username=top_poster.poster.username %}">
+                        {{ top_poster|escape }}
+                      </a>
+                      <br/>
+                      Posted <b>{{ top_poster.post_count }}</b> messages
+                    </div>
+                    <div class="clear"></div>
                   </div>
-                </td>
-              {% endfor %}
+                </div>
+              </td>
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <!-- Top 10 posters of the month ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <div class="section">
+
+      <h2>Top 10 Posters:</h2>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 1%;"><span class="nowrap">Place</span></th>
+            <th style="width: 10%;"><span class="nowrap">Poster</span></th>
+            <th style="width: 20%;"><span class="nowrap">Email</span></th>
+            <th><span class="nowrap">Stat</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for top_poster in top_posters %}
+            <tr>
+              <td><span class="nowrap">#{{ forloop.counter }}</span></td>
+              <td>
+                <span class="big nowrap">
+                  <a href="{% url friday.view_profile username=top_poster.poster.username %}">
+                    {{ top_poster.poster|escape }}
+                  </a>
+                </span>
+              </td>
+              <td><span class="nowrap">{{ top_poster.poster.email|safe_email }}</span></td>
+              <td><span class="nowrap">{{ top_poster.post_count }} messages</span></td>
             </tr>
-          </tbody>
-
-        </table>
-
-      {% else %}
-
-        <p class="na">Top posters not available.</p>
-
-      {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
 
     </div>
 
   {% else %}
 
+    <!-- Group stat or top posters not available ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
     <div class="section">
-      <p class="na">Post statistic not available.</p>
+      <p class="na">Top posters not available.</p>
     </div>
 
   {% endif %}

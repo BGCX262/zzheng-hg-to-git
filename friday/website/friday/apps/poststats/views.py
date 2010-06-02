@@ -31,7 +31,11 @@ class ViewGroupStat(BaseGroupAction):
 
     def get_page(self):
         group_stat = GroupStat.get_unique(group=self.get_group(), date=self.date)
-        data = {"group_stat": group_stat}
+        if group_stat is not None:
+            top_posters = PosterStat.find_by_group_stat(group_stat=group_stat, limit=10)
+        else:
+            top_posters = None
+        data = {"group_stat": group_stat, "top_posters": top_posters}
         data = self.update_data(data)
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
@@ -43,7 +47,11 @@ class ViewTopPosters(BaseGroupAction):
 
     def get_ajax(self):
         group_stat = GroupStat.get_unique(group=self.get_group(), date=datetime.date.today())
-        return {"group_stat": group_stat}
+        if group_stat is not None:
+            top_posters = PosterStat.find_by_group_stat(group_stat=group_stat, limit=3)
+        else:
+            top_posters = None
+        return {"group_stat": group_stat, "top_posters": top_posters}
 
 
 #---------------------------------------------------------------------------------------------------

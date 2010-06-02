@@ -24,10 +24,6 @@ class GroupStat(models.Model):
     start_date = db.DateProperty(required=True)
     post_count = db.IntegerProperty(required=True, default=0)
 
-    @property
-    def top_posters(self):
-        return PosterStat.find_by_group_stat(group_stat=self, limit=3)
-
     @classmethod
     def _make_pk(cls, group, date):
         return "%s/%s/%s" % (group.uid, date.year, date.month)
