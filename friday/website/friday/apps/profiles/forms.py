@@ -102,7 +102,6 @@ class AvatarForm(forms.Form):
         return self.cleaned_data["avatar_url"] or None
 
     def clean(self):
-        logging.info("Called clean() ...")
         cleaned_data = self.cleaned_data
         avatar_source = cleaned_data.get("avatar_source")
         avatar_url = cleaned_data.get("avatar_url")

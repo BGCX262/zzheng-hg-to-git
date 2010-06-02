@@ -25,52 +25,6 @@ from friday.apps.poststats.models import GroupStat
 from friday.apps.notifications.signals import something_happened
 
 
-class BaseCronAction(Action):
-
-    PAGE_TEMPLATE = "cronjobs/cron_job.html"
-
-    JOB_TITLE = None
-    JOB_DESCRIPTION = None
-
-    CRON_HEADER = "X-AppEngine-Cron"
-    CRON_PARAM = "cron_"
-
-    def get_job_title(self):
-        return self.JOB_TITLE or self.__class__.__name__
-
-    def get_job_description(self):
-        return self.JOB_DESCRIPTION
-
-    def is_cron(self):
-        value = self.request.META.get(self.CRON_HEADER) \
-             or self.request.REQUEST.get(self.CRON_PARAM)
-        return (value == "true")
-
-    def get_page(self):
-        prompt = None
-        if self.is_cron():
-            logging.info("About to run cron job %s..." % self.get_job_title())
-            try:
-                message = self.run_cron_job()
-                logging.info("Cron job %s done: %s" % (self.get_job_title(), message))
-                prompt = Prompt(info=message)
-            except Exception, exc:
-                message = "Failed to run cron job %s: %s" % (self.get_job_title(), exc)
-                logging.error(message)
-                logging.exception(message)
-                prompt = Prompt(error=message)
-        data = {
-            "job_title": self.get_job_title(),
-            "job_description": self.get_job_description(),
-            "prompt": prompt,
-        }
-        data = self.update_data(data)
-        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
-
-    def run_cron_job(self):
-        raise NotImplementedError("sub-class should implement run_cron_job()")
-
-
 class CronJobsHome(Action):
 
     PAGE_URL_NAME = "friday.cron.cron_jobs_home"
@@ -81,19 +35,80 @@ class CronJobsHome(Action):
         return render_to_response(self.get_page_template(), data, RequestContext(self.request))
 
 
+class BaseCronAction(Action):
+
+    PAGE_TEMPLATE = "cronjobs/cron_job.html"
+
+    CRON_KEY = "X-AppEngine-Cron"
+
+    JOB_TITLE = None
+    JOB_DESCRIPTION = None
+
+    def get_job_title(self):
+        return self.JOB_TITLE or self.__class__.__name__
+
+    def get_job_description(self):
+        return self.JOB_DESCRIPTION
+
+    def is_cron(self, data_dict):
+        value = data_dict.get(self.CRON_KEY)
+        logging.info("Checking cron key: %s = %s" % (self.CRON_KEY, value))
+        return bool(value)
+
+    def get_page(self):
+        # Check if the incoming request is a cron request.
+        if self.is_cron(self.request.META):
+            is_cron_request, is_scheduled = True, True
+            logging.info("About to run scheduled cron job %s..." % self.get_job_title())
+        elif self.is_cron(self.request.GET):
+            is_cron_request, is_scheduled = True, False
+            logging.info("About to run cron job %s manually..." % self.get_job_title())
+        else:
+            is_cron_request, is_scheduled = False, False
+            logging.info("The incoming request is not a cron request.")
+        # Run cron job as necessary.
+        prompt = None
+        if is_cron_request:
+            try:
+                message = self.run_cron_job(is_scheduled)
+                logging.info("Cron job %s done: %s" % (self.get_job_title(), message))
+                prompt = Prompt(info=message)
+            except Exception, exc:
+                message = "Failed to run cron job %s: %s" % (self.get_job_title(), exc)
+                logging.error(message)
+                logging.exception(message)
+                prompt = Prompt(error=message)
+        # Render response.
+        data = {
+            "cron_key": self.CRON_KEY,
+            "job_title": self.get_job_title(),
+            "job_description": self.get_job_description(),
+            "prompt": prompt,
+        }
+        data = self.update_data(data)
+        return render_to_response(self.get_page_template(), data, RequestContext(self.request))
+
+    def run_cron_job(self, is_scheduled):
+        raise NotImplementedError("sub-class should implement run_cron_job()")
+
+
 class SendTopPosters(BaseCronAction):
 
     PAGE_URL_NAME = "friday.cron.send_top_posters"
 
-    _FROM_EMAIL = getattr(settings, "DEFAULT_FROM_EMAIL", None)
+    FROM_EMAIL = getattr(settings, "DEFAULT_FROM_EMAIL", None)
 
-    def run_cron_job(self):
-        today = datetime.date.today()
-        if today.day != 1:
-            message = "Nothing is done since %s is not the 1st day of month." % today.isoformat()
-            return message
-        if not self._FROM_EMAIL:
+    def run_cron_job(self, is_scheduled):
+        # Ensure that the webapp is properly configured for this cron job.
+        if not self.FROM_EMAIL:
             raise ImproperlyConfigured("DEFAULT_FROM_EMAIL not defined in settings.py")
+        # If the job is scheduled, run only on the 1st day of month.
+        if is_scheduled:
+            today = datetime.date.today()
+            if today.day != 1:
+                message = "Nothing is done: %s is not the 1st day of month." % today.isoformat()
+                return message
+        # Send top posters to Google Groups.
         groups = [group for group in Group.find_all() if group.google_group]
         mail_sent = 0
         for group in groups:
@@ -111,7 +126,7 @@ class SendTopPosters(BaseCronAction):
             return 0
         data = {"group_stat": group_stat, "http_host": getattr(settings, "MY_HTTP_HOST", None)}
         message = render_to_string("cronjobs/mails/top_posters.txt", data)
-        author = users.get_user(self._FROM_EMAIL)
+        author = users.get_user(self.FROM_EMAIL)
         recipient = "%s@googlegroups.com" % group.google_group
         something_happened.send(
             sender=Group.__name__,
