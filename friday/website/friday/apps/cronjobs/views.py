@@ -39,8 +39,6 @@ class BaseCronAction(Action):
 
     PAGE_TEMPLATE = "cronjobs/cron_job.html"
 
-    CRON_KEY = "X-AppEngine-Cron"
-
     JOB_TITLE = None
     JOB_DESCRIPTION = None
 
@@ -50,25 +48,43 @@ class BaseCronAction(Action):
     def get_job_description(self):
         return self.JOB_DESCRIPTION
 
-    def is_cron(self, data_dict):
-        value = data_dict.get(self.CRON_KEY)
-        logging.info("Checking cron key: %s = %s" % (self.CRON_KEY, value))
-        return bool(value)
+    def check_cron(self):
+        """
+        Checks whether the incoming request is a cron request. This function firstly checks the
+        request headers for AppEngine's cron key, to see if it's a scheduled cron request.
+        If not present, it checks the request's GET dict to see if it's a manual cron request.
+
+        According to Django's documentation, the header key "X-AppEngine-Cron" set by AppEngine's
+        cron service will be converted to "HTTP_X_APPENGINE_CRON":
+
+        Any HTTP headers in the request are converted to META keys by converting all characters to
+        uppercase, replacing any hyphens with underscores and adding an HTTP_ prefix to the name.
+
+        <http://docs.djangoproject.com/en/dev/ref/request-response/>
+
+        Returns:
+            A 2-tuple of bool (is_cron_request, is_scheduled).
+        """
+
+        _HEADER_CRON_KEY = "HTTP_X_APPENGINE_CRON"
+        value = self.request.META.get(_HEADER_CRON_KEY)
+        logging.info("Checking cron key in request headers: %s = %s" % (_HEADER_CRON_KEY, value))
+        if value == "true":
+            return True, True
+
+        _GET_CRON_KEY = "cron_"
+        value = self.request.GET.get(_GET_CRON_KEY)
+        logging.info("Checking cron key in request GET dict: %s = %s" % (_GET_CRON_KEY, value))
+        if value == "true":
+            return True, False
+
+        logging.info("The incoming request is not a cron request.")
+        return False, False
 
     def get_page(self):
-        # Check if the incoming request is a cron request.
-        if self.is_cron(self.request.META):
-            is_cron_request, is_scheduled = True, True
-            logging.info("About to run scheduled cron job %s..." % self.get_job_title())
-        elif self.is_cron(self.request.GET):
-            is_cron_request, is_scheduled = True, False
-            logging.info("About to run cron job %s manually..." % self.get_job_title())
-        else:
-            is_cron_request, is_scheduled = False, False
-            logging.info("The incoming request is not a cron request.")
-        # Run cron job as necessary.
-        prompt = None
+        is_cron_request, is_scheduled = self.check_cron()
         if is_cron_request:
+            logging.info("About to run cron job %s..." % self.get_job_title())
             try:
                 message = self.run_cron_job(is_scheduled)
                 logging.info("Cron job %s done: %s" % (self.get_job_title(), message))
@@ -78,9 +94,9 @@ class BaseCronAction(Action):
                 logging.error(message)
                 logging.exception(message)
                 prompt = Prompt(error=message)
-        # Render response.
+        else:
+            prompt = None
         data = {
-            "cron_key": self.CRON_KEY,
             "job_title": self.get_job_title(),
             "job_description": self.get_job_description(),
             "prompt": prompt,

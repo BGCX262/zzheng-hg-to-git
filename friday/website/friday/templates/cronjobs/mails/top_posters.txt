@@ -1,4 +1,4 @@
-{{ group_stat.group.name|safe }}, Load of the Water / {{ group_stat.start_date|date:"N Y" }}
+{{ group_stat.group.name|safe }}, Lord of the Water / {{ group_stat.start_date|date:"N Y" }}
 
 {% autoescape off %}
 
