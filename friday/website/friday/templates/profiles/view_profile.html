@@ -7,9 +7,72 @@
 -->
 {% endcomment %}
 
+{% load friday_extra %}
+
 {#________________________________________________________________________________________________#}
 
 {% block html_title %} {{ user|escape }} {% endblock %}
+
+{#________________________________________________________________________________________________#}
+
+{% block sidebar %}
+
+  {% if profile %}
+    <div class="section">
+      <h2>About {{ user|escape }}:</h2>
+      <dl>
+        <dt>
+          <img class="icon" src="{{ static_ }}/images/email.png" alt="Email"/>
+          Email:
+        </dt>
+        <dd>
+          {{ user.email|safe_email }}
+          {% if profile.alt_email %}
+            <br/>
+            {{ profile.alt_email|safe_email }} (alt.)
+          {% endif %}
+        </dd>
+      </dl>
+      {% if profile.tel %}
+        <dl>
+          <dt>
+            <img class="icon" src="{{ static_ }}/images/tel.png" alt="Telephone"/>
+            Telephone:
+          </dt>
+          <dd>{{ profile.tel }}</dd>
+        </dl>
+      {% endif %}
+      {% if profile.website %}
+        <dl>
+          <dt>
+            <img class="icon" src="{{ static_ }}/images/website.png" alt="Website"/>
+            Website:
+          </dt>
+          <dd><a href="{{ profile.website }}">{{ profile.website|summary:32 }}</a></dd>
+        </dl>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% ifequal user_ user %}
+
+    <div class="section">
+
+      {% if not profile %}
+        <h2><a href="{% url friday.edit_profile username=user.username %}">Create your profile</a></h2>
+      {% else %}
+        <h2>Edit your profile:</h2>
+        <ul>
+          <li><a href="{% url friday.edit_profile username=user.username %}">Basic information</a></li>
+          <li><a href="{% url friday.edit_avatar username=user.username %}">Avatar image</a></li>
+        </ul>
+      {% endif %}
+
+    </div>
+
+  {% endifequal %}
+
+{% endblock %}
 
 {#________________________________________________________________________________________________#}
 

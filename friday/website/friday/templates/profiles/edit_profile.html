@@ -40,31 +40,41 @@
         <div class="field">
           <div class="label">Your name: *</div>
           <div class="input required">{{ profile_form.name|safe }}</div>
-          <div class="error-list">{{ profile_form.name.errors|safe }}</div>
+          {% if profile_form.name.errors %}
+            <div class="error-list">{{ profile_form.name.errors|safe }}</div>
+          {% endif %}
         </div>
 
         <div class="field">
           <div class="label">Alternative Email address:</div>
           <div class="input">{{ profile_form.alt_email|safe }}</div>
-          <div class="error-list">{{ profile_form.alt_email.errors|safe }}</div>
+          {% if profile_form.alt_email.errors %}
+            <div class="error-list">{{ profile_form.alt_email.errors|safe }}</div>
+          {% endif %}
         </div>
 
         <div class="field">
           <div class="label">Your phone number:</div>
           <div class="input">{{ profile_form.tel|safe }}</div>
-          <div class="error-list">{{ profile_form.tel.errors|safe }}</div>
+          {% if profile_form.tel.errors %}
+            <div class="error-list">{{ profile_form.tel.errors|safe }}</div>
+          {% endif %}
         </div>
 
         <div class="field">
           <div class="label">Write something about yourself:</div>
           <div class="input">{{ profile_form.biography|safe }}</div>
-          <div class="error-list">{{ profile_form.biography.errors|safe }}</div>
+          {% if profile_form.biography.errors %}
+            <div class="error-list">{{ profile_form.biography.errors|safe }}</div>
+          {% endif %}
         </div>
 
         <div class="field">
           <div class="label">Your personal website:</div>
           <div class="input">{{ profile_form.website|safe }}</div>
-          <div class="error-list">{{ profile_form.website.errors|safe }}</div>
+          {% if profile_form.website.errors %}
+            <div class="error-list">{{ profile_form.website.errors|safe }}</div>
+          {% endif %}
         </div>
 
         <div class="field">
