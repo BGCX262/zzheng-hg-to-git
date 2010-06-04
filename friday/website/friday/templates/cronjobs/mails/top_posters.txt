@@ -21,6 +21,9 @@ http://{{ http_host }}{% url friday.view_group_stat group_uid=group_stat.group.u
 
 ----
 Java Doglas
-{{ group_stat.group.name }} 灌水统计局 发言人
+http://www.zhengzhong.net/java/
+
+On the Internet, nobody knows you're a dog
+                          -- Peter Steiner
 
 {% endautoescape %}

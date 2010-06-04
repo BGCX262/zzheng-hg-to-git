@@ -86,7 +86,7 @@
         <tbody>
           {% for top_poster in top_posters %}
             <tr>
-              <td><span class="nowrap">#{{ forloop.counter }}</span></td>
+              <td><span class="nowrap"># {{ forloop.counter }}</span></td>
               <td>
                 <span class="big nowrap">
                   <a href="{% url friday.view_profile username=top_poster.poster.username %}">
